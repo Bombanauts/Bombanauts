@@ -1,5 +1,9 @@
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 
 export const App = () => {
-  return (<div></div>)
+  return (
+    <div>
+      <h1>hello world</h1>
+    </div>
+  )
 }
