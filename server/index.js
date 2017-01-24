@@ -1,25 +1,25 @@
 
 
-var path = require('path');
-var chalk = require('chalk');
-var http = require('http');
-var server = http.createServer();
+const path = require('path');
+const chalk = require('chalk');
+const http = require('http');
+const server = http.createServer();
+const port = process.env.PORT || 1337;
 
-var express = require('express');
-var app = express();
+const express = require('express');
+const app = express();
 
+const socketio = require('socket.io');
 
-var socketio = require('socket.io');
 
 server.on('request', app);
-
 
 // creates a new connection server for web sockets and integrates
 // it into our HTTP server
 // this needs to be below the server.on('request', app) so that our
 // express app takes precedence over our socekt server for typical
 // HTTP requests
-var io = socketio(server);
+const io = socketio(server);
 
 
 // // use socket server as an event emitter in order to listen for new connctions
@@ -41,7 +41,7 @@ app.get('/', function (req, res) {
 });
 
 
-server.listen(1337, function () {
-    console.log('The server is listening on port 1337!');
+server.listen(port, function () {
+    console.log(`The server is listening on port ${port}!`);
 });
 
