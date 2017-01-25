@@ -1,9 +1,10 @@
 <html>
   <head>
-    <script src="socket.io/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
+    <script src="socket.io/socket.io.js" defer async></script>
     <script src="bundle.js" defer async></script>
+    <!-- <script src="browser/game/main.js" defer async></script> -->
      <style>
             html, body {
                 width: 100%;
@@ -54,109 +55,116 @@
 
         </div>
     <script>
-//       let scene;
-// let camera;
-// let renderer;
-// let geometry;
-// let materail;
-// let mesh;
+    //       let scene;
+    // let camera;
+    // let renderer;
+    // let geometry;
+    // let materail;
+    // let mesh;
 
-// // CANNON JS Global Variables
-// let world;
+    // // CANNON JS Global Variables
+    // let world;
 
-// // run our init function
-// init();
+    // // run our init function
+    // init();
 
-// // init THREE JS world
-//  function init() {
+    // // init THREE JS world
+    //  function init() {
 
-//   // init scene
-//   scene = new THREE.Scene()
+    //   // init scene
+    //   scene = new THREE.Scene()
 
-//   // init camera
-//   camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 1,2500)
+    //   // init camera
+    //   camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 1,2500)
 
-//   // add camera to scene
-//   scene.add(camera)
+    //   // add camera to scene
+    //   scene.add(camera)
 
-//   // make the ground
-//   geometry = new THREE.PlaneGeometry(300, 300, 50, 50);
+    //   // make the ground
+    //   geometry = new THREE.PlaneGeometry(300, 300, 50, 50);
 
-//   // rotate ground 90 degrees and give sthe ground a vector representation
-//   // as in the ground is now a vector instead of just an object
-//   // allows manipulations like rotation, scale, translation, etc.
-//   geometry.applyMatrix( new THREE.Matrix4().makeRotationX(-Math.PI / 2))
+    //   // rotate ground 90 degrees and give sthe ground a vector representation
+    //   // as in the ground is now a vector instead of just an object
+    //   // allows manipulations like rotation, scale, translation, etc.
+    //   geometry.applyMatrix( new THREE.Matrix4().makeRotationX(-Math.PI / 2))
 
-//   // MeshLambertMaterial is a dull kind of color for non shiny non metalic stuff
-//   // the color code I picked is like dark green because why not? :)
-//   material = new THREE.MeshLambertMaterial( { color:  0x002600 })
+    //   // MeshLambertMaterial is a dull kind of color for non shiny non metalic stuff
+    //   // the color code I picked is like dark green because why not? :)
+    //   material = new THREE.MeshLambertMaterial( { color:  0x002600 })
 
-//   // make mesh and combine the geometry and styling
-//   mesh = new THREE.Mesh( geometry, material );
+    //   // make mesh and combine the geometry and styling
+    //   mesh = new THREE.Mesh( geometry, material );
 
-//   // add some cool shadow affects;
-//   mesh.castShadow = true;
-//   mesh.receiveShadow = true;
+    //   // add some cool shadow affects;
+    //   mesh.castShadow = true;
+    //   mesh.receiveShadow = true;
 
-//   // finally add it to the scene
-//   scene.add( mesh )
+    //   // finally add it to the scene
+    //   scene.add( mesh )
 
-//   renderer = new THREE.WebGLRenderer()
-//   renderer.shadowMapEnabled = true;
-//   renderer.shadowMapSoft = true;
-//   renderer.setSize( window.innerWidth, window.innerHeight );
+    //   renderer = new THREE.WebGLRenderer()
+    //   renderer.shadowMapEnabled = true;
+    //   renderer.shadowMapSoft = true;
+    //   renderer.setSize( window.innerWidth, window.innerHeight );
 
-//   document.body.appendChild( renderer.domElement );
+    //   document.body.appendChild( renderer.domElement );
 
-// }
-  var PointerLockControls = function ( camera, cannonBody ) {
+    // }
 
-    var eyeYPos = 2; // eyes are 2 meters above the ground
-    var velocityFactor = 0.2;
-    var jumpVelocity = 20;
-    var scope = this;
 
-    var pitchObject = new THREE.Object3D();
-    pitchObject.add( camera );
+  var PointerLockControls = function(camera, cannonBody) {
 
-    var yawObject = new THREE.Object3D();
-    yawObject.position.y = 2;
-    yawObject.add( pitchObject );
+      var eyeYPos = 2; // eyes are 2 meters above the ground
+      var velocityFactor = 0.2;
+      var jumpVelocity = 20;
+      var scope = this;
 
-    var quat = new THREE.Quaternion();
+      var pitchObject = new THREE.Object3D();
+      pitchObject.add(camera);
 
     var moveForward = false;
     var moveBackward = false;
-    var moveLeft = false; 
+    var moveLeft = false;
     var moveRight = false;
 
-    var canJump = false;
+      var yawObject = new THREE.Object3D();
+      yawObject.position.y = 2;
+      yawObject.add(pitchObject);
 
-    var contactNormal = new CANNON.Vec3(); // Normal in the contact, pointing *out* of whatever the player touched
-    var upAxis = new CANNON.Vec3(0,1,0);
-    cannonBody.addEventListener("collide",function(e){
+      var quat = new THREE.Quaternion();
+
+      var moveForward = false;
+      var moveBackward = false;
+      var moveLeft = false;
+      var moveRight = false;
+
+      var canJump = false;
+
+      var contactNormal = new CANNON.Vec3(); // Normal in the contact, pointing *out* of whatever the player touched
+      var upAxis = new CANNON.Vec3(0, 1, 0);
+      cannonBody.addEventListener("collide", function(e) {
         var contact = e.contact;
 
         // contact.bi and contact.bj are the colliding bodies, and contact.ni is the collision normal.
         // We do not yet know which one is which! Let's check.
-        if(contact.bi.id == cannonBody.id)  // bi is the player body, flip the contact normal
-            contact.ni.negate(contactNormal);
+        if (contact.bi.id == cannonBody.id) // bi is the player body, flip the contact normal
+          contact.ni.negate(contactNormal);
         else
-            contactNormal.copy(contact.ni); // bi is something else. Keep the normal as it is
+          contactNormal.copy(contact.ni); // bi is something else. Keep the normal as it is
 
         // If contactNormal.dot(upAxis) is between 0 and 1, we know that the contact normal is somewhat in the up direction.
-        if(contactNormal.dot(upAxis) > 0.5) // Use a "good" threshold value between 0 and 1 here!
-            canJump = true;
-    });
+        if (contactNormal.dot(upAxis) > 0.5) // Use a "good" threshold value between 0 and 1 here!
+          canJump = true;
+      });
 
-    var velocity = cannonBody.velocity;
+      var velocity = cannonBody.velocity;
 
-    var PI_2 = Math.PI / 2;
+      var PI_2 = Math.PI / 2;
 
-    // maybe fix this later to use ray caster instead of yawObject
-    var onMouseMove = function ( event ) {
+      // maybe fix this later to use ray caster instead of yawObject
+      var onMouseMove = function(event) {
 
-        if ( scope.enabled === false ) return;
+        if (scope.enabled === false) return;
 
         var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
         var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
@@ -164,108 +172,117 @@
         yawObject.rotation.y -= movementX * 0.002;
         pitchObject.rotation.x -= movementY * 0.002;
 
-        pitchObject.rotation.x = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
-    };
+        pitchObject.rotation.x = Math.max(-PI_2, Math.min(PI_2, pitchObject.rotation.x));
+      };
 
-    var onKeyDown = function ( event ) {
+      var onKeyDown = function(event) {
 
-        switch ( event.keyCode ) {
+        switch (event.keyCode) {
 
-            case 38: // up
-            case 87: // w
-                moveForward = true;
-                break;
+          case 38: // up
+          case 87: // w
+            socket.emit('moveForward', {
+              position: {
+                x: sphereBody.position.x,
+                y: sphereBody.position.y,
+                z: sphereBody.position.z
+              },
+              id: socket.id
+            })
+            moveForward = true;
+            break;
 
-            case 37: // left
-            case 65: // a
-                moveLeft = true; break;
+          case 37: // left
+          case 65: // a
+            moveLeft = true;
+            break;
 
-            case 40: // down
-            case 83: // s
-                moveBackward = true;
-                break;
+          case 40: // down
+          case 83: // s
+            moveBackward = true;
+            break;
 
-            case 39: // right
-            case 68: // d
-                moveRight = true;
-                break;
+          case 39: // right
+          case 68: // d
+            moveRight = true;
+            break;
 
-            case 32: // space
-                if ( canJump === true ){
-                    velocity.y = jumpVelocity;
-                }
-                canJump = false;
-                break;
+          case 32: // space
+            if (canJump === true) {
+              velocity.y = jumpVelocity;
+            }
+            canJump = false;
+            break;
         }
 
-    };
+      };
 
-    var onKeyUp = function ( event ) {
+      var onKeyUp = function(event) {
 
-        switch( event.keyCode ) {
+        switch (event.keyCode) {
 
-            case 38: // up
-            case 87: // w
-                moveForward = false;
-                break;
+          case 38: // up
+          case 87: // w
+            moveForward = false;
+            break;
 
-            case 37: // left
-            case 65: // a
-                moveLeft = false;
-                break;
+          case 37: // left
+          case 65: // a
+            moveLeft = false;
+            break;
 
-            case 40: // down
-            case 83: // a
-                moveBackward = false;
-                break;
+          case 40: // down
+          case 83: // a
+            moveBackward = false;
+            break;
 
-            case 39: // right
-            case 68: // d
-                moveRight = false;
-                break;
+          case 39: // right
+          case 68: // d
+            moveRight = false;
+            break;
 
         }
 
-    };
+      };
 
-    document.addEventListener( 'mousemove', onMouseMove, false );
-    document.addEventListener( 'keydown', onKeyDown, false );
-    document.addEventListener( 'keyup', onKeyUp, false );
+      document.addEventListener('mousemove', onMouseMove, false);
+      document.addEventListener('keydown', onKeyDown, false);
+      document.addEventListener('keyup', onKeyUp, false);
 
-    this.enabled = false;
+      this.enabled = false;
 
-    this.getObject = function () {
+      this.getObject = function() {
         return yawObject;
-    };
+      };
 
-    this.getDirection = function(targetVec){
-        targetVec.set(0,0,-1);
+      this.getDirection = function(targetVec) {
+        targetVec.set(0, 0, -1);
         quat.multiplyVector3(targetVec);
-    }
+      }
 
-    // Moves the camera to the Cannon.js object position and adds velocity to the object if the run key is down
-    var inputVelocity = new THREE.Vector3();
-    var euler = new THREE.Euler();
-    this.update = function ( delta ) {
+      // Moves the camera to the Cannon.js object position and adds velocity to the object if the run key is down
+      var inputVelocity = new THREE.Vector3();
+      var euler = new THREE.Euler();
+      this.update = function(delta) {
 
-        if ( scope.enabled === false ) return;
+        if (scope.enabled === false) return;
 
         delta *= 0.1;
 
-        inputVelocity.set(0,0,0);
+        inputVelocity.set(0, 0, 0);
 
-        if ( moveForward ){
-            inputVelocity.z = -velocityFactor * delta;
+        if (moveForward) {
+          inputVelocity.z = -velocityFactor * delta;
         }
-        if ( moveBackward ){
-            inputVelocity.z = velocityFactor * delta;
+        if (moveBackward) {
+          inputVelocity.z = velocityFactor * delta;
         }
 
-        if ( moveLeft ){
-            inputVelocity.x = -velocityFactor * delta;
+        if (moveLeft) {
+          inputVelocity.x = -velocityFactor * delta;
         }
-        if ( moveRight ){
-            inputVelocity.x = velocityFactor * delta;
+        if (moveRight) {
+          inputVelocity.x = velocityFactor * delta;
         }
 
         // Convert velocity to world coordinates
@@ -281,8 +298,9 @@
         velocity.z += inputVelocity.z;
 
         yawObject.position.copy(cannonBody.position);
+      };
     };
-};
+
 
   var sphereShape, sphereBody, world, physicsMaterial, walls=[], balls=[], ballMeshes=[], boxes=[], boxMeshes=[];
       var camera, scene, renderer;
@@ -462,7 +480,7 @@
                   if (map[j][k] === 2) {
                     let x = (j + mapW) * 4 - 65 / Math.sqrt(2); //
                     let  y = 2
-                    let z = -(k + mapW) * 4 + 65 / Math.sqrt(2); //                  
+                    let z = -(k + mapW) * 4 + 65 / Math.sqrt(2); //
 
                     var boxBody = new CANNON.Body({ mass: 0 });
                     boxBody.addShape(boxShape);
@@ -478,7 +496,7 @@
                   } else if (map[j][k] === 1){
                     let x = (j + mapW) * 4 - 65 / Math.sqrt(2); //
                     let  y = 2
-                    let z = -(k + mapW) * 4 + 65 / Math.sqrt(2); //                  
+                    let z = -(k + mapW) * 4 + 65 / Math.sqrt(2); //
 
                     var wallBody = new CANNON.Body({ mass: 0 });
                     wallBody.addShape(wallShape);
@@ -562,7 +580,7 @@
           controls.update( Date.now() - time );
           renderer.render( scene, camera );
           time = Date.now();
-      } 
+      }
 
 
       // SHOOTING BOMBS HERE

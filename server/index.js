@@ -28,6 +28,13 @@ io.on('connection', function(socket){
   console.log(chalk.blue('A new client has connected'));
   console.log(chalk.yellow('socket id: ', socket.id));
 
+  socket.on('moveForward', function(data) {
+    console.log('position: ', data.position)
+    console.log('socket id: ', data.id)
+
+    io.sockets.emit('movefwd', data)
+  })
+
   socket.on('disconnect', function(){
     console.log('socket id ' + socket.id + ' has disconnected. : (');
   })
