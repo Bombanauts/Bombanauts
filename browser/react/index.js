@@ -1,4 +1,4 @@
-import '../socket.io/index'
+import '../socket/index'
 
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
