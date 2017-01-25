@@ -27,6 +27,10 @@ io.on('connection', function(socket){
 
   console.log(chalk.blue('A new client has connected'));
   console.log(chalk.yellow('socket id: ', socket.id));
+  socket.on('move', () => {
+    console.log('It moved')
+    socket.emit('fire')
+  });
 
   socket.on('disconnect', function(){
     console.log('socket id ' + socket.id + ' has disconnected. : (');
