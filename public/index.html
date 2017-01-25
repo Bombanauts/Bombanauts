@@ -194,25 +194,43 @@
 
           case 37: // left
           case 65: // a
+            socket.emit('moveLeft', {
+              position: {
+                x: sphereBody.position.x,
+                y: sphereBody.position.y,
+                z: sphereBody.position.z
+              },
+              id: socket.id
+            })
             moveLeft = true;
             break;
 
           case 40: // down
           case 83: // s
+            socket.emit('moveDown', {
+              position: {
+                x: sphereBody.position.x,
+                y: sphereBody.position.y,
+                z: sphereBody.position.z
+              },
+              id: socket.id
+            })
             moveBackward = true;
             break;
 
           case 39: // right
           case 68: // d
+            socket.emit('moveRight', {
+              position: {
+                x: sphereBody.position.x,
+                y: sphereBody.position.y,
+                z: sphereBody.position.z
+              },
+              id: socket.id
+            })
             moveRight = true;
             break;
 
-          case 32: // space
-            if (canJump === true) {
-              velocity.y = jumpVelocity;
-            }
-            canJump = false;
-            break;
         }
 
       };
