@@ -259,6 +259,16 @@ var dt = 1/60; // change in time for walking
   // animate the walking and the box positions movements
 
 export function animate() {
+    if(socket) {
+      socket.emit('update_players_position', {
+          position: {
+            x: sphereBody.position.x,
+            y: sphereBody.position.y,
+            z: sphereBody.position.z
+          },
+          id: socket.id
+      });
+    }
     requestAnimationFrame( animate );
     if(controls.enabled){
         world.step(dt); // function that allows walking from CANNON
@@ -292,7 +302,7 @@ export function animate() {
 var projector = new THREE.Projector();
 
 // get shoot direction might need to be adjusted to use ray caster instead
-export function getShootDir(targetVec){
+const getShootDir = function(targetVec){
     var vector = targetVec;
     targetVec.set(0,0,1);
     projector.unprojectVector(vector, camera);
@@ -300,4 +310,4 @@ export function getShootDir(targetVec){
     targetVec.copy(ray.direction);
 }
 
-export { scene, camera, renderer, controls, light }
+export { scene, camera, renderer, controls, light, getShootDir }
