@@ -77,22 +77,22 @@ export function init() {
     camera.position.set(0, 3, 0)
     scene = new THREE.Scene();
     scene.fog = new THREE.Fog( 0x000000, 0, 500 );
-    var ambient = new THREE.AmbientLight( 0x111111 );
+    var ambient = new THREE.AmbientLight( 0xffffff );
     scene.add( ambient );
     light = new THREE.SpotLight( 0xffffff );
     light.position.set( 10, 30, 20 );
     light.target.position.set( 0, 0, 0 );
-    if(true){
-        light.castShadow = false;
-        light.shadowCameraNear = 20;
-        light.shadowCameraFar = 50;//camera.far;
-        light.shadowCameraFov = 40;
-        light.shadowMapBias = 0.1;
-        // light.shadowMapDarkness = 0.7;
-        light.shadowMapWidth = 2*512;
-        // light.shadowMapHeight = 2*512;
-        // light.shadowCameraVisible = true;
-    }
+    // if(true){
+    //     light.castShadow = false;
+    //     light.shadowCameraNear = 20;
+    //     light.shadowCameraFar = 50;//camera.far;
+    //     light.shadowCameraFov = 40;
+    //     light.shadowMapBias = 0.1;
+    //     light.shadowMapDarkness = 0.7;
+    //     light.shadowMapWidth = 2*512;
+    //     light.shadowMapHeight = 2*512;
+    //     light.shadowCameraVisible = true;
+    // }
     scene.add( light );
 
     // this attaches bomb to the player (maybe)
@@ -103,17 +103,17 @@ export function init() {
     scene.add( controls.getObject() );
 
     // floor
-    geometry = new THREE.PlaneGeometry( 125, 125, 50, 50 );
+    geometry = new THREE.PlaneBufferGeometry( 125, 125, 50, 50 );
     geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-    material = new THREE.MeshLambertMaterial( { color: 0xdddddd } );
+    material = new THREE.MeshLambertMaterial( { color: 0x3f7cba } );
     mesh = new THREE.Mesh( geometry, material );
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     scene.add( mesh );
 
     renderer = new THREE.WebGLRenderer();
-    renderer.shadowMapEnabled = true;
-    renderer.shadowMapSoft = true;
+    // renderer.shadowMapEnabled = true;
+    // renderer.shadowMapSoft = true;
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.setClearColor( scene.fog.color, 1 );
     document.body.appendChild( renderer.domElement );
@@ -194,16 +194,12 @@ export function createMap() {
                [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 6
                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // 7
                [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 8
-               [1, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 1],
-               [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 8
-               [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-               [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 8
-               [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-               [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 8
-               [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-               [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 8
-               [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // 9
-               [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // 10
+               [1, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 1], // 9
+               [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 10
+               [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // 11
+               [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 12
+               [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // 13
+               [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // 14
                ]
 
 
