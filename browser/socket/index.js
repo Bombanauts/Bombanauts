@@ -1,6 +1,7 @@
 // we need this socket object to send messages to our server
 window.socket = io(window.location.origin)
 
+import { initCannon, init, animate } from '../game/main';
 
 socket.on('connect', function() {
   console.log('I have made a persistent two-way connection to the server!')
@@ -31,5 +32,11 @@ socket.on('connect', function() {
     boxes.push(boxBody);
     boxMeshes.push(boxMesh);
 
+  })
+
+  socket.on('start', function(data) {
+    initCannon();
+    init();
+    animate();
   })
 })
