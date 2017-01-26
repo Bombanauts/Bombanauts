@@ -102,7 +102,7 @@ export function init() {
     console.log('CONTROLS INSIDE INIT', controls)
     scene.add( controls.getObject() );
     // floor
-    geometry = new THREE.PlaneGeometry( 125, 125, 50, 50 );
+    geometry = new THREE.PlaneGeometry( 100, 100, 50, 50 );
     geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
     material = new THREE.MeshLambertMaterial( { color: 0xdddddd } );
     mesh = new THREE.Mesh( geometry, material );
@@ -122,10 +122,7 @@ export function init() {
     // add event listen to actually shoot
   if (controls) {
     window.addEventListener("click",function(e){
-    console.log('CLICKEDD PLSSS')
       if(controls.enabled==true){
-        console.log()
-        console.log('INSIDE CLICK IF')
           // because sphereBody position is dependent on camera position
           var x = sphereBody.position.x;
           var y = sphereBody.position.y;
@@ -195,16 +192,12 @@ export function createMap() {
                [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 6
                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // 7
                [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 8
-               [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-               [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 8
-               [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-               [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 8
-               [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-               [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 8
-               [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-               [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 8
                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // 9
-               [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // 10
+               [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 10
+               [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // 11
+               [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 12
+               [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // 13
+               [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // 14
                ]
 
   let mapW = map.length, mapH = map[0].length;
@@ -212,9 +205,9 @@ export function createMap() {
   for (let j = 0; j < mapW; j++) {
     for (let k = 0; k < mapH; k++) {
 
-      let x = (j + mapW) * 4 - 100;
+      let x = (j + mapW) * 4 - 120;
       let y = 2
-      let z = -(k + mapW) * 4 + 100;
+      let z = -(k + mapW) * 4 + 120;
 
       if (map[j][k] === 2) { // create box
 
