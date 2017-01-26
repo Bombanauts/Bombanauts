@@ -321,9 +321,7 @@ export function animate() {
         }
 
         for(let i=0; i < players.length; i++){
-
             playerMeshes[i].position.copy(state.players.otherPlayers[playerIds[i]]);
-            playerMeshes[i].quaternion.copy(players[i].quaternion);
         }
 
         for(let i=0; i<balls.length; i++){
