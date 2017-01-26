@@ -1,11 +1,11 @@
 import {
-  GET_PLAYERS_LOCATIONS,
+  UPDATE_PLAYER_LOCATIONS,
   ADD_PLAYER
 } from './constants';
 
-export const getPlayersPosition = (players) => ({
-  type: GET_PLAYERS_LOCATIONS,
-  players
+export const updatePlayerLocations = (otherPlayers) => ({
+  type: UPDATE_PLAYER_LOCATIONS,
+  otherPlayers
 });
 
 export const addPlayer = (player) => ({
