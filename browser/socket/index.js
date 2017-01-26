@@ -19,12 +19,7 @@ socket.on('connect', function() {
       delete data['undefined']
     }
     store.dispatch(getPlayersPosition(data));
-    console.log(store.getState());
+    // console.log(store.getState());
   })
 
-  socket.on('start', function(data) {
-    initCannon();
-    init();
-    animate();
-  })
 })
