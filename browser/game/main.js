@@ -124,10 +124,7 @@ export function init() {
     // add event listen to actually shoot
   if (controls) {
     window.addEventListener("click",function(e){
-    console.log('CLICKEDD PLSSS')
       if(controls.enabled==true){
-        console.log()
-        console.log('INSIDE CLICK IF')
           // because sphereBody position is dependent on camera position
           var x = sphereBody.position.x;
           var y = sphereBody.position.y;
@@ -278,17 +275,20 @@ var dt = 1/60; // change in time for walking
   // animate the walking and the box positions movements
 
 export function animate() {
-    if(socket) {
-      socket.emit('update_players_position', {
-          position: {
-            x: sphereBody.position.x,
-            y: sphereBody.position.y,
-            z: sphereBody.position.z
-          },
-          id: socket.id
-      });
-    }
-    requestAnimationFrame( animate );
+
+    setTimeout(() => {
+      if(socket) {
+        socket.emit('update_players_position', {
+            position: {
+              x: sphereBody.position.x,
+              y: sphereBody.position.y,
+              z: sphereBody.position.z
+            },
+            id: socket.id
+        });
+      }
+      requestAnimationFrame( animate );
+    }, 1000/30)
     if(controls.enabled){
         world.step(dt); // function that allows walking from CANNON
 
@@ -296,34 +296,46 @@ export function animate() {
         // the bombs in our game
 
         // UPDATES PLAYERS HERE
-        console.log('STORE STATE', store.getState())
+
         let state = store.getState();
         let playerIds = Object.keys(state.players.players)
 
         if (playerIds.length > players.length) {
           var halfExtents = new CANNON.Vec3(2,2,2);
+          var boxShape = new CANNON.Box(halfExtents);
           var boxGeometry = new THREE.BoxGeometry(halfExtents.x*1.9,halfExtents.y*1.9,halfExtents.z*1.9);
-          var boxMesh = new THREE.Mesh( boxGeometry, material );
 
-          console.log(state.players.players[playerIds[playerIds.length - 1]])
-          let {x,y,z} = state.players.players[playerIds[playerIds.length - 1]]
+          var playerBox = new CANNON.Body({ mass: 1 }); //
+          playerBox.addShape(boxShape) //
+          let color = new THREE.MeshLambertMaterial( { color: 0x8B4513 } );
+          var playerMesh = new THREE.Mesh( boxGeometry, color );
+          world.addBody(playerBox); //
+          scene.add(playerMesh);
+          let pos = state.players.players[playerIds[playerIds.length - 1]];
 
-          boxMesh.position.set(x,y,z);
-          scene.add(boxMesh);
+          let {x, y, z} = pos;
 
-          players.push(playerIds[playerIds.length - 1])
+
+          playerBox.position.set(x, y + 5, z);
+          playerMesh.position.set(x, y + 5, z);
+          playerMesh.castShadow = true;
+          playerMesh.receiveShadow = true;
+          players.push(playerBox);
+          playerMeshes.push(playerMesh);
         }
 
-        for(var i=0; i<balls.length; i++){
-            players[i].position.copy(balls[i].position);
+        for(let i=0; i < players.length; i++){
+
+            playerMeshes[i].position.copy(state.players.players[playerIds[i]]);
+            playerMeshes[i].quaternion.copy(players[i].quaternion);
         }
 
-        for(var i=0; i<balls.length; i++){
+        for(let i=0; i<balls.length; i++){
             ballMeshes[i].position.copy(balls[i].position);
             ballMeshes[i].quaternion.copy(balls[i].quaternion);
         }
         // // Update box positions
-        for(var i=0; i<boxes.length; i++){
+        for(let i=0; i<boxes.length; i++){
             boxMeshes[i].position.copy(boxes[i].position);
             boxMeshes[i].quaternion.copy(boxes[i].quaternion);
         }
