@@ -1,20 +1,22 @@
 import {
-  GET_PLAYERS_LOCATIONS,
+  UPDATE_PLAYER_LOCATIONS,
   ADD_PLAYER
 } from './constants';
 
-let initialState = {};
+let initialState = {
+  otherPlayers: {}
+};
 
 export const players = (state = initialState, action) => {
   let newState;
   switch (action.type) {
-    case GET_PLAYERS_LOCATIONS:
+    case UPDATE_PLAYER_LOCATIONS:
       newState = Object.assign({}, state);
-      newState.players = action.players;
+      newState.otherPlayers = action.otherPlayers;
       return newState;
     case ADD_PLAYER:
       newState = Object.assign({}, state);
-      newState[action.player.id] = action.player.position;
+      newState.otherPlayers[action.player.id] = action.player.position;
       return newState;
     default:
       return state;
