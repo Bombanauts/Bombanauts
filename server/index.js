@@ -11,6 +11,9 @@ const app = express();
 
 const socketio = require('socket.io');
 
+const {updatePlayers, removePlayer} = require('./players/action-creator');
+
+const store = require('./store')
 
 server.on('request', app);
 
@@ -27,15 +30,16 @@ io.on('connection', function(socket){
 
   console.log(chalk.blue('A new client has connected'));
   console.log(chalk.yellow('socket id: ', socket.id));
-
-  socket.on('moveForward', function(data) {
-    console.log('position: ', data.position)
-    console.log('socket id: ', data.id)
-
-    io.sockets.emit('movefwd', data)
+  store.dispatch(updatePlayers({id: socket.id,
+                            position: {x: 0, y: 0, z: 0}
+                          }));
+  socket.on('update_players_position', function(data) {
+    store.dispatch(updatePlayers(data));
+    io.sockets.emit('update_players_position', store.getState().players)
   })
-
+  //REMOVE ON DISCONECT
   socket.on('disconnect', function(){
+    store.dispatch(removePlayer(socket.id))
     console.log('socket id ' + socket.id + ' has disconnected. : (');
   })
 
