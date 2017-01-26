@@ -2,10 +2,11 @@
 const THREE = require('three')
 const CANNON = require('cannon')
 // const PointerLockControls = require('./PointerLockControls');
+import store from '../store';
 
 import { PointerLockControls } from './PointerLockControls';
 
-var sphereShape, sphereBody, world, physicsMaterial, walls=[], balls=[], ballMeshes=[], boxes=[], boxMeshes=[];
+var sphereShape, sphereBody, world, physicsMaterial, walls=[], balls=[], ballMeshes=[], boxes=[], boxMeshes=[], players=[], playerMeshes=[];
 var camera, scene, renderer, light;
 var geometry, material, mesh;
 var controls,time = Date.now();
@@ -99,8 +100,8 @@ export function init() {
     // sphereBody.position = (0,5,0) so the sphere should be 5+ in y direction above camera
 
     controls = new PointerLockControls( camera , sphereBody );
-    console.log('CONTROLS INSIDE INIT', controls)
     scene.add( controls.getObject() );
+
     // floor
     geometry = new THREE.PlaneGeometry( 125, 125, 50, 50 );
     geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
@@ -109,6 +110,7 @@ export function init() {
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     scene.add( mesh );
+
     renderer = new THREE.WebGLRenderer();
     renderer.shadowMapEnabled = true;
     renderer.shadowMapSoft = true;
@@ -122,10 +124,7 @@ export function init() {
     // add event listen to actually shoot
   if (controls) {
     window.addEventListener("click",function(e){
-    console.log('CLICKEDD PLSSS')
       if(controls.enabled==true){
-        console.log()
-        console.log('INSIDE CLICK IF')
           // because sphereBody position is dependent on camera position
           var x = sphereBody.position.x;
           var y = sphereBody.position.y;
@@ -179,7 +178,7 @@ export function createMap() {
   // Add boxes
     var halfExtents = new CANNON.Vec3(2,2,2);
     var boxShape = new CANNON.Box(halfExtents);
-    var boxGeometry = new THREE.BoxGeometry(halfExtents.x*2,halfExtents.y*2,halfExtents.z*2);
+    var boxGeometry = new THREE.BoxGeometry(halfExtents.x*1.9,halfExtents.y*1.9,halfExtents.z*1.9);
 
     var wallShape = new CANNON.Box(halfExtents);
     var wallGeometry = new THREE.BoxGeometry(halfExtents.x*2,halfExtents.y*3.5,halfExtents.z*2);
@@ -195,7 +194,7 @@ export function createMap() {
                [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 6
                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // 7
                [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 8
-               [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+               [1, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 1],
                [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 8
                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 8
@@ -206,6 +205,7 @@ export function createMap() {
                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // 9
                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // 10
                ]
+
 
   let mapW = map.length, mapH = map[0].length;
 
@@ -243,7 +243,23 @@ export function createMap() {
         wallMesh.receiveShadow = true;
         boxes.push(wallBody);
         boxMeshes.push(wallMesh);
+
+      } else if (map[j][k] === 3){ // create wall
+
+        var boxBody = new CANNON.Body({ mass: 1 }); //
+        boxBody.addShape(boxShape) //
+        let color = new THREE.MeshLambertMaterial( { color: 0x8B4513 } );
+        var boxMesh = new THREE.Mesh( boxGeometry, color );
+        world.addBody(boxBody); //
+        scene.add(boxMesh);
+        boxBody.position.set(x,y,z);
+        boxMesh.position.set(x,y,z);
+        boxMesh.castShadow = true;
+        boxMesh.receiveShadow = true;
+        boxes.push(boxBody);
+        boxMeshes.push(boxMesh);
       }
+
     }
   }
 }
@@ -259,31 +275,70 @@ var dt = 1/60; // change in time for walking
   // animate the walking and the box positions movements
 
 export function animate() {
-    if(socket) {
-      socket.emit('update_players_position', {
-          position: {
-            x: sphereBody.position.x,
-            y: sphereBody.position.y,
-            z: sphereBody.position.z
-          },
-          id: socket.id
-      });
-    }
-    requestAnimationFrame( animate );
+
+    setTimeout(() => {
+      if(socket) {
+        socket.emit('update_players_position', {
+            position: {
+              x: sphereBody.position.x,
+              y: sphereBody.position.y,
+              z: sphereBody.position.z
+            },
+            id: socket.id
+        });
+      }
+      requestAnimationFrame( animate );
+    }, 1000/30)
     if(controls.enabled){
         world.step(dt); // function that allows walking from CANNON
 
         // Update ball positions
         // the bombs in our game
-        for(var i=0; i<balls.length; i++){
+
+        // UPDATES PLAYERS HERE
+
+        let state = store.getState();
+        let playerIds = Object.keys(state.players.players)
+
+        if (playerIds.length > players.length) {
+          var halfExtents = new CANNON.Vec3(2,2,2);
+          var boxShape = new CANNON.Box(halfExtents);
+          var boxGeometry = new THREE.BoxGeometry(halfExtents.x*1.9,halfExtents.y*1.9,halfExtents.z*1.9);
+
+          var playerBox = new CANNON.Body({ mass: 1 }); //
+          playerBox.addShape(boxShape) //
+          let color = new THREE.MeshLambertMaterial( { color: 0x8B4513 } );
+          var playerMesh = new THREE.Mesh( boxGeometry, color );
+          world.addBody(playerBox); //
+          scene.add(playerMesh);
+          let pos = state.players.players[playerIds[playerIds.length - 1]];
+
+          let {x, y, z} = pos;
+
+
+          playerBox.position.set(x, y + 5, z);
+          playerMesh.position.set(x, y + 5, z);
+          playerMesh.castShadow = true;
+          playerMesh.receiveShadow = true;
+          players.push(playerBox);
+          playerMeshes.push(playerMesh);
+        }
+
+        for(let i=0; i < players.length; i++){
+
+            playerMeshes[i].position.copy(state.players.players[playerIds[i]]);
+            playerMeshes[i].quaternion.copy(players[i].quaternion);
+        }
+
+        for(let i=0; i<balls.length; i++){
             ballMeshes[i].position.copy(balls[i].position);
             ballMeshes[i].quaternion.copy(balls[i].quaternion);
         }
         // // Update box positions
-        // for(var i=0; i<boxes.length; i++){
-        //     boxMeshes[i].position.copy(boxes[i].position);
-        //     boxMeshes[i].quaternion.copy(boxes[i].quaternion);
-        // }
+        for(let i=0; i<boxes.length; i++){
+            boxMeshes[i].position.copy(boxes[i].position);
+            boxMeshes[i].quaternion.copy(boxes[i].quaternion);
+        }
     }
 
     controls.update( Date.now() - time );
