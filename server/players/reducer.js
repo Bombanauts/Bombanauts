@@ -1,6 +1,7 @@
 const {
   GET_PLAYERS,
-  ADD_PLAYER
+  UPDATE_PLAYERS,
+  REMOVE_PLAYER
 } = require('./constants');
 
 
@@ -11,9 +12,13 @@ const players = (state = initialState, action) => {
   switch (action.type) {
     case GET_PLAYERS:
       return state.players;
-    case ADD_PLAYER:
+    case UPDATE_PLAYERS:
       newState = Object.assign({}, state);
       newState[action.player.id] = action.player.position;
+      return newState;
+    case REMOVE_PLAYER:
+      delete state[action.id]
+      newState = Object.assign({}, state);
       return newState;
     default:
       return state;

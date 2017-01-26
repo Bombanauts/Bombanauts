@@ -181,53 +181,21 @@
 
           case 38: // up
           case 87: // w
-            socket.emit('moveForward', {
-              position: {
-                x: sphereBody.position.x,
-                y: sphereBody.position.y,
-                z: sphereBody.position.z
-              },
-              id: socket.id
-            })
             moveForward = true;
             break;
 
           case 37: // left
           case 65: // a
-            socket.emit('moveLeft', {
-              position: {
-                x: sphereBody.position.x,
-                y: sphereBody.position.y,
-                z: sphereBody.position.z
-              },
-              id: socket.id
-            })
             moveLeft = true;
             break;
 
           case 40: // down
           case 83: // s
-            socket.emit('moveDown', {
-              position: {
-                x: sphereBody.position.x,
-                y: sphereBody.position.y,
-                z: sphereBody.position.z
-              },
-              id: socket.id
-            })
             moveBackward = true;
             break;
 
           case 39: // right
           case 68: // d
-            socket.emit('moveRight', {
-              position: {
-                x: sphereBody.position.x,
-                y: sphereBody.position.y,
-                z: sphereBody.position.z
-              },
-              id: socket.id
-            })
             moveRight = true;
             break;
 
@@ -475,6 +443,9 @@
           var wallShape = new CANNON.Box(halfExtents);
           var wallGeometry = new THREE.BoxGeometry(halfExtents.x*2,halfExtents.y*3.5,halfExtents.z*2);
 
+          var enemyShape = new CANNON.Box(halfExtents);
+          var enemyGeometry = new THREE.BoxGeometry(halfExtents.x,halfExtents.y,halfExtents.z);
+
           // // Map 1 = Wall, 2 = StaticBox
           let map = [ // 1  2  3  4  5  6  7  8  9  10 11 12
                      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // 0
@@ -486,7 +457,7 @@
                      [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 6
                      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // 7
                      [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 8
-                     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // 9
+                     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1], // 9
                      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // 10
                      ], mapW = map.length, mapH = map[0].length;
 
@@ -527,6 +498,21 @@
                     wallMesh.receiveShadow = true;
                     // boxes.push(wallBody);
                     // boxMeshes.push(wallMesh);
+                  } else if (map[j][k] === 3){
+                    let x = (j + mapW) * 4 - 65 / Math.sqrt(2); //
+                    let  y = 2
+                    let z = -(k + mapW) * 4 + 65 / Math.sqrt(2); //
+
+                    var enemyBody = new CANNON.Body({ mass: 0 });
+                    enemyBody.addShape(enemyShape);
+                    var enemyMesh = new THREE.Mesh( enemyGeometry, material );
+                    console.log(enemyMesh)
+                    world.addBody(enemyBody);
+                    scene.add(enemyMesh);
+                    enemyBody.position.set(x,y,z);
+                    enemyMesh.position.set(x,y,z);
+                    enemyMesh.castShadow = true;
+                    enemyMesh.receiveShadow = true;
                   }
                 }
               }
@@ -578,6 +564,16 @@
       // animate the walking and the box positions movements
 
       function animate() {
+          if(window.socket) {
+            window.socket.emit('update_players_position', {
+              position: {
+                x: sphereBody.position.x,
+                y: sphereBody.position.y,
+                z: sphereBody.position.z
+              },
+              id: socket.id
+            });
+          }
           requestAnimationFrame( animate );
           if(controls.enabled){
               world.step(dt); // function that allows walking from CANNON

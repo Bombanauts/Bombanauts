@@ -1,6 +1,7 @@
 const {
   GET_PLAYERS,
-  ADD_PLAYER
+  UPDATE_PLAYERS,
+  REMOVE_PLAYER
 } = require('./constants');
 
 const getPlayers = () => ({
@@ -8,12 +9,18 @@ const getPlayers = () => ({
   players
 });
 
-const addPlayer = (player) => ({
-  type: ADD_PLAYER,
+const updatePlayers = (player) => ({
+  type: UPDATE_PLAYERS,
   player
 });
 
+const removePlayer = (id) => ({
+  type: REMOVE_PLAYER,
+  id
+})
+
 module.exports = {
   getPlayers,
-  addPlayer
+  updatePlayers,
+  removePlayer
 }
