@@ -43,7 +43,6 @@ function pointerChecker() {
       var element = document.body;
       var pointerlockchange = function ( event ) {
           if ( document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element ) {
-            console.log('controls:', controls)
               controls.enabled = true;
               blocker.style.display = 'none';
           } else {
