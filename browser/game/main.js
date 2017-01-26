@@ -288,7 +288,7 @@ export function animate() {
         });
       }
       requestAnimationFrame( animate );
-    }, 1000/30)
+    }, 1000 / 45)
     if(controls.enabled){
         world.step(dt); // function that allows walking from CANNON
 
@@ -298,7 +298,7 @@ export function animate() {
         // UPDATES PLAYERS HERE
 
         let state = store.getState();
-        let playerIds = Object.keys(state.players.players)
+        let playerIds = Object.keys(state.players.otherPlayers)
 
         if (playerIds.length > players.length) {
           var halfExtents = new CANNON.Vec3(2,2,2);
@@ -311,7 +311,7 @@ export function animate() {
           var playerMesh = new THREE.Mesh( boxGeometry, color );
           world.addBody(playerBox); //
           scene.add(playerMesh);
-          let pos = state.players.players[playerIds[playerIds.length - 1]];
+          let pos = state.players.otherPlayers[playerIds[playerIds.length - 1]];
 
           let {x, y, z} = pos;
 
@@ -326,7 +326,7 @@ export function animate() {
 
         for(let i=0; i < players.length; i++){
 
-            playerMeshes[i].position.copy(state.players.players[playerIds[i]]);
+            playerMeshes[i].position.copy(state.players.otherPlayers[playerIds[i]]);
             playerMeshes[i].quaternion.copy(players[i].quaternion);
         }
 
