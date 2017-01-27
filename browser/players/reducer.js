@@ -1,6 +1,7 @@
 import {
   UPDATE_PLAYER_LOCATIONS,
-  ADD_PLAYER
+  ADD_PLAYER,
+  REMOVE_PLAYER
 } from './constants';
 
 let initialState = {
@@ -17,6 +18,10 @@ export const players = (state = initialState, action) => {
     case ADD_PLAYER:
       newState = Object.assign({}, state);
       newState.otherPlayers[action.player.id] = action.player.position;
+      return newState;
+    case REMOVE_PLAYER:
+      delete state[action.id]
+      newState = Object.assign({}, state);
       return newState;
     default:
       return state;
