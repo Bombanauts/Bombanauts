@@ -5,6 +5,7 @@ const CANNON = require('cannon')
 import store from '../store';
 
 import { PointerLockControls } from './PointerLockControls';
+import Player from './Player'
 
 var sphereShape, sphereBody, world, physicsMaterial, walls=[], balls=[], ballMeshes=[], boxes=[], boxMeshes=[], players=[], playerMeshes=[];
 var camera, scene, renderer, light;
@@ -120,6 +121,17 @@ export function init() {
     window.addEventListener( 'resize', onWindowResize, false );
 
     createMap();
+
+    let { players } = store.getState();
+    let newPlayer;
+
+    console.log(players.otherPlayers)
+
+      for (var key in players.otherPlayers) {
+        console.log('key', key)
+        newPlayer = new Player(id, key.x, key.y, key.z)
+        newPlayer.init()
+      }
 
     // add event listen to actually shoot
   if (controls) {
