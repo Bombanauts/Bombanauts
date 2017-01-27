@@ -192,6 +192,7 @@ export function init() {
         z += shootDirection.z * (sphereShape.radius * 1.02 + ballShape.radius);
         ballBody.position.set(x, y, z);
         ballMesh.position.set(x, y, z);
+
       }
     });
   }
@@ -319,16 +320,16 @@ export function animate() {
   if (controls.enabled) {
     world.step(dt); // function that allows walking from CANNON
 
-    // Update ball positions
-    // the bombs in our game
-
-    // UPDATES PLAYERS HERE
-
     let state = store.getState();
     let playerIds = Object.keys(state.players.otherPlayers)
     let allBombs = state.bombs.allBombs
-    // console.log('allBombs: ', allBombs)
+    let sceneBombs = [];
+    for (let key in allBombs) {
+      sceneBombs.push(...allBombs[key])
+    }
+    console.log(sceneBombs)
 
+    // add new player if there is one
     if (playerIds.length > players.length) {
       var halfExtents = new CANNON.Vec3(2, 2, 2);
       var boxShape = new CANNON.Box(halfExtents);
@@ -341,9 +342,7 @@ export function animate() {
       world.addBody(playerBox); //
       scene.add(playerMesh);
       let pos = state.players.otherPlayers[playerIds[playerIds.length - 1]];
-
       let { x, y, z } = pos;
-
 
       playerBox.position.set(x, y + 5, z);
       playerMesh.position.set(x, y + 5, z);
@@ -353,14 +352,35 @@ export function animate() {
       playerMeshes.push(playerMesh);
     }
 
+    //update player positions
     for (let i = 0; i < players.length; i++) {
       let { x, y, z } = state.players.otherPlayers[playerIds[i]]
       playerMeshes[i].position.set(x, y, z);
     }
 
-    for (let i = 0; i < allBombs.length; i++) {
-      ballMeshes[i].position.set(allBombs[i].position);
-      ballMeshes[i].quaternion.copy(allBombs[i].quaternion);
+    // add new bomb if there is one
+    if (sceneBombs.length > bombs.length) {
+      console.log('making bomb')
+      var ballBody = new CANNON.Body({ mass: 1 });
+      ballBody.addShape(ballShape);
+      var ballMesh = new THREE.Mesh(ballGeometry, material);
+      world.addBody(ballBody);
+
+      scene.add(ballMesh);
+
+      ballMesh.castShadow = true;
+      ballMesh.receiveShadow = true;
+
+      ballMeshes.push(ballMesh);
+
+      ballBody.position.set(sceneBombs[sceneBombs.length - 1].position)
+      ballMesh.position.set(sceneBombs[sceneBombs.length - 1].position)
+    }
+
+    //update bomb positions
+    for (let i = 0; i < sceneBombs.length; i++) {
+      ballMeshes[i].position.copy(sceneBombs[i].position);
+      ballMeshes[i].quaternion.copy(sceneBombs[i].quaternion);
     }
     // // // Update box positions
     // for(let i=0; i<boxes.length; i++){
