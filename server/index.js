@@ -22,30 +22,35 @@ server.on('request', app);
 // this needs to be below the server.on('request', app) so that our
 // express app takes precedence over our socekt server for typical
 // HTTP requests
-const io = socketio(server);
+const io = socketio(server)
 
 
-// // use socket server as an event emitter in order to listen for new connctions
+//  use socket server as an event emitter in order to listen for new connctions
 io.on('connection', function(socket){
 
   console.log(chalk.blue('A new client has connected'));
   console.log(chalk.yellow('socket id: ', socket.id));
+
+  //on connection add this new player to our store
   store.dispatch(updatePlayers({id: socket.id,
                                 position: {x: 0, y: 0, z: 0}
                               }));
 
+  //constantly send out all the player locations to everyone
   socket.on('update_players_position', function(data) {
     store.dispatch(updatePlayers(data));
     io.sockets.emit('update_player_locations', store.getState().players)
   })
 
-  //REMOVE PLAYER ON DISCONECT
+  //remove the player from the state on socket disconnect
   socket.on('disconnect', function(){
     store.dispatch(removePlayer(socket.id))
+    io.sockets.emit('remove_player', socket.id)
+
     console.log('socket id ' + socket.id + ' has disconnected. : (');
   })
-
 })
+
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
 

@@ -1,6 +1,7 @@
 import {
   UPDATE_PLAYER_LOCATIONS,
-  ADD_PLAYER
+  ADD_PLAYER,
+  REMOVE_PLAYER
 } from './constants';
 
 export const updatePlayerLocations = (otherPlayers) => ({
@@ -13,7 +14,7 @@ export const addPlayer = (player) => ({
   player
 });
 
-// export const getPlayersLocations = (players) => ({
-//   type: GET_ALL_PLAYERS,
-//   players
-// });
+export const removePlayer = (id) => ({
+  type: REMOVE_PLAYER,
+  id
+});
