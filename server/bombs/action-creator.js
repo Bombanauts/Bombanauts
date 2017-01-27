@@ -9,10 +9,10 @@ const addBomb = (newBomb) => {
     newBomb
   }
 }
-const updateBombPositions = (allBombs) => {
+const updateBombPositions = (bombs) => {
   return {
     type: UPDATE_BOMB_POSITIONS,
-    allBombs
+    bombs
   }
 }
 
