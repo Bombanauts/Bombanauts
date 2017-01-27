@@ -18,6 +18,7 @@ socket.on('connect', function() {
   })
 
   socket.on('update_bomb_positions', (data) => {
+    delete data[socket.id];
     store.dispatch(updateBombLocations(data.allBombs))
     // console.log('state: ', store.getState().bombs.allBombs)
   })

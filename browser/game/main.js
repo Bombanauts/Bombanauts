@@ -160,13 +160,14 @@ export function init() {
         ballMesh.receiveShadow = true;
 
         //take just the id and position of the ball
-        const bombInfo = { id: Math.random(), position: ballBody.position, quaternion: ballBody.quaternion }
+        const bombInfo = { id: ballBody.id, position: ballBody.position, quaternion: ballBody.quaternion }
           // push it into our global balls array
 
         bombs.push(bombInfo);
 
         socket.emit('add_bomb', {
-          newBomb: bombInfo
+          userId: socket.id,
+          bomb: bombInfo
         })
 
         // push ball meshes
@@ -307,7 +308,8 @@ export function animate() {
       });
       if (bombs.length) {
         socket.emit('update_bomb_positions', {
-          allBombs: bombs
+          userId: socket.id,
+          bombs : bombs
         })
       }
     }
