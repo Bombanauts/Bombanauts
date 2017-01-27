@@ -19,6 +19,9 @@ socket.on('connect', function() {
 
   socket.on('update_bomb_positions', (data) => {
     delete data[socket.id];
+    if (data['undefined']) {
+      delete data['undefined']
+    }
     store.dispatch(updateBombLocations(data.allBombs))
   })
 
