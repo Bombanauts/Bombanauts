@@ -5,6 +5,7 @@ import store from '../store';
 
 import { PointerLockControls } from './PointerLockControls';
 import Player from './Player'
+import Bomb from './Bomb'
 
 var sphereShape, sphereBody, world, physicsMaterial, walls = [],
   bombs = [],
@@ -132,7 +133,6 @@ export function init() {
   let newPlayer;
 
   for (var key in players.otherPlayers) {
-    console.log('key', key)
     newPlayer = new Player(id, key.x, key.y, key.z)
     newPlayer.init()
   }
@@ -146,21 +146,10 @@ export function init() {
         var y = sphereBody.position.y;
         var z = sphereBody.position.z;
 
-        // create the ball
-        var ballBody = new CANNON.Body({ mass: 1 });
-        ballBody.addShape(ballShape);
-        var ballMesh = new THREE.Mesh(ballGeometry, material);
-        world.addBody(ballBody);
-
-        // add it to the scene
-        scene.add(ballMesh);
-
-        // shadow affects
-        ballMesh.castShadow = true;
-        ballMesh.receiveShadow = true;
+        const newBomb = new Bomb(Math.random(), { x: x, y: y, z: z });
 
         //take just the id and position of the ball
-        const bombInfo = { id: ballBody.id, position: ballBody.position, quaternion: ballBody.quaternion }
+        const bombInfo = { id: newBomb.id, position: newBomb.position }
           // push it into our global balls array
 
         bombs.push(bombInfo);
@@ -171,7 +160,7 @@ export function init() {
         })
 
         // push ball meshes
-        ballMeshes.push(ballMesh);
+        ballMeshes.push(newBomb.bombMesh);
 
         // get its direction using getShootDir function
         // returns shootDirection altered with correct data
@@ -180,7 +169,7 @@ export function init() {
 
         // give it a velocity
         // shootVelo is global defined as 15
-        ballBody.velocity.set(shootDirection.x * shootVelo,
+        newBomb.bombBody.velocity.set(shootDirection.x * shootVelo,
           shootDirection.y * shootVelo,
           shootDirection.z * shootVelo);
 
@@ -190,9 +179,8 @@ export function init() {
         x += shootDirection.x * (sphereShape.radius * 1.02 + ballShape.radius);
         y += shootDirection.y * (sphereShape.radius * 1.02 + ballShape.radius);
         z += shootDirection.z * (sphereShape.radius * 1.02 + ballShape.radius);
-        ballBody.position.set(x, y, z);
-        ballMesh.position.set(x, y, z);
-
+        newBomb.bombBody.position.set(x, y, z);
+        newBomb.bombMesh.position.set(x, y, z);
       }
     });
   }
@@ -310,7 +298,7 @@ export function animate() {
       if (bombs.length) {
         socket.emit('update_bomb_positions', {
           userId: socket.id,
-          bombs : bombs
+          bombs: bombs
         })
       }
     }
@@ -327,7 +315,6 @@ export function animate() {
     for (let key in allBombs) {
       sceneBombs.push(...allBombs[key])
     }
-    console.log(sceneBombs)
 
     // add new player if there is one
     if (playerIds.length > players.length) {
@@ -360,27 +347,23 @@ export function animate() {
 
     // add new bomb if there is one
     if (sceneBombs.length > bombs.length) {
-      console.log('making bomb')
-      var ballBody = new CANNON.Body({ mass: 1 });
-      ballBody.addShape(ballShape);
-      var ballMesh = new THREE.Mesh(ballGeometry, material);
-      world.addBody(ballBody);
+      const mostRecentBomb = sceneBombs[sceneBombs.length - 1]
+      const newBomb = new Bomb(mostRecentBomb.id, mostRecentBomb.position)
 
-      scene.add(ballMesh);
+      bombs.push(newBomb)
+      ballMeshes.push(newBomb.bombMesh)
 
-      ballMesh.castShadow = true;
-      ballMesh.receiveShadow = true;
-
-      ballMeshes.push(ballMesh);
-
-      ballBody.position.set(sceneBombs[sceneBombs.length - 1].position)
-      ballMesh.position.set(sceneBombs[sceneBombs.length - 1].position)
+      newBomb.bombBody.position.set(mostRecentBomb.position)
+      newBomb.bombMesh.position.set(mostRecentBomb.position)
     }
 
     //update bomb positions
+    // console.log('scene bombs: ', sceneBombs)
+    // console.log('ball meshes: ', ballMeshes)
     for (let i = 0; i < sceneBombs.length; i++) {
-      ballMeshes[i].position.copy(sceneBombs[i].position);
-      ballMeshes[i].quaternion.copy(sceneBombs[i].quaternion);
+      // console.log('scene bomb in loop', sceneBombs[i])
+      ballMeshes[i].position.set(sceneBombs[i].position);
+      ballMeshes[i].quaternion.set(sceneBombs[i].quaternion);
     }
     // // // Update box positions
     // for(let i=0; i<boxes.length; i++){
@@ -413,4 +396,4 @@ const getShootDir = function(targetVec) {
   targetVec.copy(ray.direction);
 }
 
-export { scene, camera, renderer, controls, light, getShootDir }
+export { scene, camera, renderer, controls, light, getShootDir, world }

@@ -47,7 +47,7 @@ io.on('connection', (socket) => {
   //constantly receive and update all bomb positions coming from each user
   socket.on('update_bomb_positions', (data) => {
     store.dispatch(updateBombPositions(data))
-    // console.log('bombs: ', store.getState().bombs)
+    console.log('bombs: ', store.getState().bombs.allBombs[socket.id])
     io.sockets.emit('update_bomb_positions', store.getState().bombs)
   })
 

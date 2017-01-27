@@ -17,8 +17,7 @@ const bombs = (state = initialState, action) => {
       if (!newState.allBombs[newBomb.userId]) newState.allBombs[newBomb.userId] = [];
       newState.allBombs[newBomb.userId].push({
           id: newBomb.bomb.id,
-          position: newBomb.bomb.position,
-          quaternion: newBomb.bomb.quaternion
+          position: newBomb.bomb.position
       })
       return newState;
     case UPDATE_BOMB_POSITIONS:
