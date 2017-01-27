@@ -132,7 +132,6 @@ export function init() {
   let newPlayer;
 
   for (var key in players.otherPlayers) {
-    console.log('key', key)
     newPlayer = new Player(id, key.x, key.y, key.z)
     newPlayer.init()
   }
@@ -146,52 +145,51 @@ export function init() {
         var y = sphereBody.position.y;
         var z = sphereBody.position.z;
 
-        // create the ball
-        var ballBody = new CANNON.Body({ mass: 1 });
-        ballBody.addShape(ballShape);
-        var ballMesh = new THREE.Mesh(ballGeometry, material);
-        world.addBody(ballBody);
 
-        // add it to the scene
-        scene.add(ballMesh);
+    let { bombs } = store.getState();
+    let newBomb;
 
-        // shadow affects
-        ballMesh.castShadow = true;
-        ballMesh.receiveShadow = true;
+    for (var id in bombs.allBombs) {
+      let bombInfo = bombs.allBombs[id]
+      for (var i = 0; i < bombInfo.length; i++) {
+        newBomb = new Bomb(bombInfo[i].id, bombInfo[i].position, bombInfo[i].quaternion)
+        newBomb.init()
+      }
+    }
 
-        //take just the id and position of the ball
-        const bombInfo = { id: ballBody.id, position: ballBody.position, quaternion: ballBody.quaternion }
-          // push it into our global balls array
+      //take just the id and position of the ball
+      const bombInfo = { id: newBomb.id, position: newBomb.position, quaternion: newBomb.quaternion }
+        // push it into our global balls array
 
-        bombs.push(bombInfo);
+      bombs.push(bombInfo);
 
-        socket.emit('add_bomb', {
-          userId: socket.id,
-          bomb: bombInfo
-        })
+      socket.emit('add_bomb', {
+        userId: socket.id,
+        bomb: bombInfo
+      })
 
-        // push ball meshes
-        ballMeshes.push(ballMesh);
+      // push ball meshes
+      ballMeshes.push(ballMesh);
 
-        // get its direction using getShootDir function
-        // returns shootDirection altered with correct data
-        getShootDir(shootDirection);
+      // get its direction using getShootDir function
+      // returns shootDirection altered with correct data
+      getShootDir(shootDirection);
 
 
-        // give it a velocity
-        // shootVelo is global defined as 15
-        ballBody.velocity.set(shootDirection.x * shootVelo,
-          shootDirection.y * shootVelo,
-          shootDirection.z * shootVelo);
+      // give it a velocity
+      // shootVelo is global defined as 15
+      bombBody.velocity.set(shootDirection.x * shootVelo,
+        shootDirection.y * shootVelo,
+        shootDirection.z * shootVelo);
 
-        // Move the ball outside the player sphere
-        // not sure about this shit here
-        // x,y,z adjusted so it's actually updating the position of the sphere
-        x += shootDirection.x * (sphereShape.radius * 1.02 + ballShape.radius);
-        y += shootDirection.y * (sphereShape.radius * 1.02 + ballShape.radius);
-        z += shootDirection.z * (sphereShape.radius * 1.02 + ballShape.radius);
-        ballBody.position.set(x, y, z);
-        ballMesh.position.set(x, y, z);
+      // Move the ball outside the player sphere
+      // not sure about this shit here
+      // x,y,z adjusted so it's actually updating the position of the sphere
+      x += shootDirection.x * (sphereShape.radius * 1.02 + ballShape.radius);
+      y += shootDirection.y * (sphereShape.radius * 1.02 + ballShape.radius);
+      z += shootDirection.z * (sphereShape.radius * 1.02 + ballShape.radius);
+      bombBody.position.set(x, y, z);
+      ballMesh.position.set(x, y, z);
 
       }
     });
@@ -327,7 +325,6 @@ export function animate() {
     for (let key in allBombs) {
       sceneBombs.push(...allBombs[key])
     }
-    console.log(sceneBombs)
 
     // add new player if there is one
     if (playerIds.length > players.length) {
