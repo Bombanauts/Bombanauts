@@ -327,7 +327,7 @@ export function animate() {
     let state = store.getState();
     let playerIds = Object.keys(state.players.otherPlayers)
     let allBombs = state.bombs.allBombs
-    console.log('allBombs: ', allBombs)
+    // console.log('allBombs: ', allBombs)
 
     if (playerIds.length > players.length) {
       var halfExtents = new CANNON.Vec3(2, 2, 2);

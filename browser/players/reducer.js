@@ -8,6 +8,7 @@ const initialState = {
   otherPlayers: {}
 };
 
+//the players are stored in the state each with a key of their socket id, with a property of an object containing their x, y, z coordinates
 export const players = (state = initialState, action) => {
   let newState;
   switch (action.type) {
