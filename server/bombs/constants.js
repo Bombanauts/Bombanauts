@@ -1,0 +1,7 @@
+const UPDATE_BOMB_POSITIONS = 'UPDATE_BOMB_POSITIONS';
+const ADD_BOMB = 'ADD_BOMB'
+
+module.exports = {
+  UPDATE_BOMB_POSITIONS,
+  ADD_BOMB
+}

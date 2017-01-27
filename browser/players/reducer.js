@@ -4,7 +4,7 @@ import {
   REMOVE_PLAYER
 } from './constants';
 
-let initialState = {
+const initialState = {
   otherPlayers: {}
 };
 

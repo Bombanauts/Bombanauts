@@ -2,8 +2,7 @@ const {
   GET_PLAYERS,
   UPDATE_PLAYERS,
   REMOVE_PLAYER
-} = require('./constants');
-
+} = require('./constants')
 
 let initialState = {};
 
