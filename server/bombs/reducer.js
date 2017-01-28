@@ -1,26 +1,34 @@
 const {
   ADD_BOMB,
-  UPDATE_BOMB_POSITIONS
+  UPDATE_BOMB_POSITIONS,
+  REMOVE_PLAYER_BOMBS
 } = require('./constants')
 
 let initialState = {
-  allBombs: []
+  allBombs: {}
 }
 
-//the bombs are stored in an 'allBombs' array with each of the bombs' information and the time they were created
+//the bombs are stored in an 'allBombs' object within the state, that has keys of the user's socket ID, each with a property of an array of that user's bomb objects
 const bombs = (state = initialState, action) => {
   let newState;
   switch (action.type) {
     case ADD_BOMB:
+      const newBomb = action.newBomb
       newState = Object.assign({}, state)
-      let array = newState.allBombs.concat([action.newBomb.bomb])
-      newState.allBombs = array;
+      if (!newState.allBombs[newBomb.userId]) newState.allBombs[newBomb.userId] = [];
+      newState.allBombs[newBomb.userId].push({
+          id: newBomb.bomb.id,
+          position: newBomb.bomb.position,
+          quaternion: newBomb.bomb.quaternion
+      })
       return newState;
     case UPDATE_BOMB_POSITIONS:
       newState = Object.assign({}, state)
-      if (action.bombs.length !== 0) {
-        newState.allBombs = action.bombs;
-      }
+      newState.allBombs[action.bombs.userId] = action.bombs.bombs
+      return newState;
+    case REMOVE_PLAYER_BOMBS:
+      newState = Object.assign({}, state)
+      delete newState.allBombs[action.id]
       return newState;
     default:
       return state;
