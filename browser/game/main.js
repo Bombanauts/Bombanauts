@@ -8,9 +8,9 @@ import Player from './Player'
 import Bomb from './Bomb'
 
 var sphereShape, sphereBody, world, physicsMaterial, walls = [],
-  bombs = [],
   ballMeshes = [],
   boxes = [],
+  bombs = [],
   boxMeshes = [],
   players = [],
   playerMeshes = [];
@@ -149,20 +149,22 @@ export function init() {
         const newBomb = new Bomb(Math.random(), { x: x, y: y, z: z });
         newBomb.init()
         //take just the id and position of the ball
-        const bombInfo = { id: newBomb.id, position: newBomb.position, created: Date.now() }
-          // push it into our global balls array
+        //stack overflow from sending bombBody?
+        const bombInfo = { id: newBomb.bombBody.id, position: newBomb.bombBody.position, created: Date.now() }
+
+        // push it into our global bombs array
+        bombs.push(bombInfo)
 
 
         socket.emit('add_bomb', {
+          userId: socket.id,
           bomb: bombInfo
         })
 
-        // bombs.push(newBomb.bombBody)
 
         // push ball meshes
         ballMeshes.push(newBomb.bombMesh);
-        let body = newBomb.bombBody
-        bombs.push(newBomb.bombBody)
+        // let body = newBomb.bombBody
         // console.log(newBomb.bombMesh)
 
         // get its direction using getShootDir function
@@ -285,7 +287,7 @@ export function onWindowResize() {
 var dt = 1 / 60; // change in time for walking
 
 // animate the walking and the box positions movements
-
+let prevState = [];
 export function animate() {
 
   setTimeout(() => {
@@ -300,6 +302,7 @@ export function animate() {
       });
       if (bombs.length) {
         socket.emit('update_bomb_positions', {
+          userId: socket.id,
           bombs: bombs
         })
       }
@@ -312,7 +315,7 @@ export function animate() {
 
     let state = store.getState();
     let playerIds = Object.keys(state.players.otherPlayers)
-    let allBombs = state.bombs.allBombs
+    let allBombs = state.bombs.allBombs;
     let sceneBombs = [];
     for (let key in allBombs) {
       sceneBombs.push(...allBombs[key])
@@ -348,22 +351,25 @@ export function animate() {
     }
 
     // add new bomb if there is one
+    //we are only adding to the bombs array and bombMesh array when we receive back from the update bombs socket emitter, not when we first create the bomb
     if (sceneBombs.length > bombs.length) {
       const mostRecentBomb = sceneBombs[sceneBombs.length - 1]
       const newBomb = new Bomb(mostRecentBomb.id, mostRecentBomb.position)
+      newBomb.init()
+      const bombInfo = { id: newBomb.id, position: newBomb.position, created: Date.now() }
+      // console.log('most recent: ', mostRecentBomb.position)
+      // console.log('new bomb: ', newBomb)
+      // console.log('new bomb mesh: ', newBomb.bombMesh.position)
 
-      bombs.push(newBomb)
+      // window.bombs.push({id: mostRecentBomb.id, position: mostRecentBomb.position})
       ballMeshes.push(newBomb.bombMesh)
 
       newBomb.bombBody.position.set(mostRecentBomb.position)
       newBomb.bombMesh.position.set(mostRecentBomb.position)
     }
 
-    //update bomb positions
-    // console.log(bombs)
-    for (let i = 0; i < bombs.length; i++) {
-      // console.log(bombs[i])
-      ballMeshes[i].position.copy(bombs[i].position);
+    for (let i = 0; i < sceneBombs.length; i++) {
+      ballMeshes[i].position.copy(sceneBombs[i].position);
     }
 
   }
@@ -392,4 +398,4 @@ const getShootDir = function(targetVec) {
   targetVec.copy(ray.direction);
 }
 
-export { scene, camera, renderer, controls, light, getShootDir, world }
+export { scene, camera, renderer, controls, light, getShootDir, world, bombs }
