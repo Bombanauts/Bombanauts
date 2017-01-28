@@ -6,19 +6,37 @@ import store from '../store';
 import { PointerLockControls } from './PointerLockControls';
 import Player from './Player'
 
-var sphereShape, sphereBody, world, physicsMaterial, walls = [],
-  bombs = [],
-  ballMeshes = [],
-  boxes = [],
-  boxMeshes = [],
-  players = [],
-  playerMeshes = [];
+import {Particle, Block} from './Explosion.js';
+
+import Maps from './maps/maps'
+
+import generateMap from './utils/generateMap';
+
+var sphereShape, sphereBody, world, physicsMaterial;
 var camera, scene, renderer, light;
 var geometry, material, mesh;
 var controls, time = Date.now();
+var SCREEN_WIDTH = window.innerWidth;
+var SCREEN_HEIGHT = window.innerHeight;
+
+export let walls = [];
+export let bombs = [];
+export let ballMeshes = [];
+export let boxes = [];
+export let boxMeshes = [];
+export let destroyableBoxes = [];
+export let destroyableBoxMeshes = [];
+export let players = [];
+export let playerMeshes = [];
+
+var blocks = new Array();
+var blockCount = 25;
 
 export function initCannon() {
   //     // Setup our world
+  if (socket) {
+      socket.emit('get_players', {});
+  }
   world = new CANNON.World();
   world.quatNormalizeSkip = 0;
   world.quatNormalizeFast = false;
@@ -88,7 +106,7 @@ export function init() {
   scene.add(ambient);
   light = new THREE.SpotLight(0xffffff);
   light.position.set(10, 30, 20);
-  light.target.position.set(0, 0, 0);
+  light.target.position.set(0, 5, 0);
   // if(true){
   //     light.castShadow = false;
   //     light.shadowCameraNear = 20;
@@ -118,6 +136,14 @@ export function init() {
   mesh.receiveShadow = true;
   scene.add(mesh);
 
+
+  // Init Blocks
+  for (var i = 0; i < blockCount; i++) {
+    var block = new Block(scene, world);
+    blocks.push(block);
+  }
+
+
   renderer = new THREE.WebGLRenderer();
   // renderer.shadowMapEnabled = true;
   // renderer.shadowMapSoft = true;
@@ -127,14 +153,28 @@ export function init() {
   window.addEventListener('resize', onWindowResize, false);
 
   createMap();
+  sphereBody.position.x = 0;
+  sphereBody.position.y = 10;
+  sphereBody.position.z = 0;
 
-  let { players } = store.getState();
+  let others = store.getState().players.otherPlayers.players;
   let newPlayer;
-
-  for (var key in players.otherPlayers) {
-    console.log('key', key)
-    newPlayer = new Player(id, key.x, key.y, key.z)
+  if (socket) {
+      socket.emit('update_players_position', {
+        position: {
+          x: sphereBody.position.x,
+          y: sphereBody.position.y,
+          z: sphereBody.position.z
+        },
+        id: socket.id
+      });
+  }
+  for (var player in others) {
+    newPlayer = new Player(socket.id, others[player].x, others[player].y, others[player].z)
     newPlayer.init()
+    players.push(newPlayer.playerBox)
+    playerMeshes.push(newPlayer.playerMesh)
+
   }
 
   // add event listen to actually shoot
@@ -197,90 +237,8 @@ export function init() {
 }
 
 export function createMap() {
-  // Add boxes
-  var halfExtents = new CANNON.Vec3(2, 2, 2);
-  var boxShape = new CANNON.Box(halfExtents);
-  var boxGeometry = new THREE.BoxGeometry(halfExtents.x * 1.9, halfExtents.y * 1.9, halfExtents.z * 1.9);
-
-  var wallShape = new CANNON.Box(halfExtents);
-  var wallGeometry = new THREE.BoxGeometry(halfExtents.x * 2, halfExtents.y * 3.5, halfExtents.z * 2);
-
-  // // Map 1 = Wall, 2 = StaticBox
-  let map = [ // 1  2  3  4  5  6  7  8  9  10 11 12
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // 0
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // 1
-    [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 2
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // 3
-    [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 4
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // 5
-    [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 6
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // 7
-    [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 8
-    [1, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 1], // 9
-    [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 10
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // 11
-    [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1], // 12
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // 13
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // 14
-  ]
-
-
-  let mapW = map.length,
-    mapH = map[0].length;
-
-  for (let j = 0; j < mapW; j++) {
-    for (let k = 0; k < mapH; k++) {
-
-      let x = (j + mapW) * 4 - 100;
-      let y = 2
-      let z = -(k + mapW) * 4 + 100;
-
-      if (map[j][k] === 2) { // create box
-
-        var boxBody = new CANNON.Body({ mass: 0 }); //
-        boxBody.addShape(boxShape) //
-        var boxMesh = new THREE.Mesh(boxGeometry, material);
-        world.addBody(boxBody); //
-        scene.add(boxMesh);
-        boxBody.position.set(x, y, z);
-        boxMesh.position.set(x, y, z);
-        boxMesh.castShadow = true;
-        boxMesh.receiveShadow = true;
-        boxes.push(boxBody);
-        boxMeshes.push(boxMesh);
-
-      } else if (map[j][k] === 1) { // create wall
-
-        var wallBody = new CANNON.Body({ mass: 0 }); //
-        wallBody.addShape(wallShape); //
-        var wallMesh = new THREE.Mesh(wallGeometry, material);
-        world.addBody(wallBody); //
-        scene.add(wallMesh);
-        wallBody.position.set(x, y, z); //
-        wallMesh.position.set(x, y, z);
-        wallMesh.castShadow = true;
-        wallMesh.receiveShadow = true;
-        boxes.push(wallBody);
-        boxMeshes.push(wallMesh);
-
-      } else if (map[j][k] === 3) { // create wall
-
-        var boxBody = new CANNON.Body({ mass: 1 }); //
-        boxBody.addShape(boxShape) //
-        let color = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
-        var boxMesh = new THREE.Mesh(boxGeometry, color);
-        world.addBody(boxBody); //
-        scene.add(boxMesh);
-        boxBody.position.set(x, y, z);
-        boxMesh.position.set(x, y, z);
-        boxMesh.castShadow = true;
-        boxMesh.receiveShadow = true;
-        boxes.push(boxBody);
-        boxMeshes.push(boxMesh);
-      }
-
-    }
-  }
+  let map0 = Maps[0]
+  generateMap(map0);
 }
 
 export function onWindowResize() {
@@ -292,6 +250,7 @@ export function onWindowResize() {
 var dt = 1 / 60; // change in time for walking
 
 // animate the walking and the box positions movements
+
 
 export function animate() {
 
@@ -312,7 +271,7 @@ export function animate() {
       }
     }
     requestAnimationFrame(animate);
-  }, 1000 / 45)
+  }, 1000 / 60)
 
   if (controls.enabled) {
     world.step(dt); // function that allows walking from CANNON
@@ -322,48 +281,43 @@ export function animate() {
 
     // UPDATES PLAYERS HERE
 
-    let state = store.getState();
-    let playerIds = Object.keys(state.players.otherPlayers)
-    let allBombs = state.bombs.allBombs
-    console.log('allBombs: ', allBombs)
+    let others = store.getState().players.otherPlayers;
+    let playerIds = Object.keys(others)
+    let allBombs = store.getState().bombs.allBombs
 
-    if (playerIds.length > players.length) {
-      var halfExtents = new CANNON.Vec3(2, 2, 2);
-      var boxShape = new CANNON.Box(halfExtents);
-      var boxGeometry = new THREE.BoxGeometry(halfExtents.x * 1.9, halfExtents.y * 1.9, halfExtents.z * 1.9);
-
-      var playerBox = new CANNON.Body({ mass: 1 }); //
-      playerBox.addShape(boxShape) //
-      let color = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
-      var playerMesh = new THREE.Mesh(boxGeometry, color);
-      world.addBody(playerBox); //
-      scene.add(playerMesh);
-      let pos = state.players.otherPlayers[playerIds[playerIds.length - 1]];
-
-      let { x, y, z } = pos;
-
-
-      playerBox.position.set(x, y + 5, z);
-      playerMesh.position.set(x, y + 5, z);
-      playerMesh.castShadow = true;
-      playerMesh.receiveShadow = true;
-      players.push(playerBox);
-      playerMeshes.push(playerMesh);
+    if (playerIds.length !== players.length) {
+      players = [];
+      playerMeshes = [];
+      for (let player in others) {
+        let newPlayer;
+        newPlayer = new Player(socket.id, others[player].x, others[player].y, others[player].z)
+        newPlayer.init()
+        players.push(newPlayer.playerBox)
+        playerMeshes.push(newPlayer.playerMesh)
+        newPlayer.playerMesh.castShadow = true;
+        newPlayer.playerMesh.receiveShadow = true;
+      }
     }
 
-    for (let i = 0; i < players.length; i++) {
-      let { x, y, z } = state.players.otherPlayers[playerIds[i]]
-      playerMeshes[i].position.set(x, y, z);
+      for (let i = 0; i < players.length; i++) {
+        let { x, y, z } = others[playerIds[i]]
+        playerMeshes[i].position.set(x, y, z);
+        players[i].position.x = x;
+        players[i].position.y = y;
+        players[i].position.z = z;
+      }
+
+    for (var i = 0; i < blockCount; i++) {
+      blocks[i].loop();
     }
 
     for (let i = 0; i < allBombs.length; i++) {
       ballMeshes[i].position.set(allBombs[i].position);
       ballMeshes[i].quaternion.copy(allBombs[i].quaternion);
     }
-    // // // Update box positions
-    // for(let i=0; i<boxes.length; i++){
-    //     boxMeshes[i].position.copy(boxes[i].position);
-    //     boxMeshes[i].quaternion.copy(boxes[i].quaternion);
+    // Update box positions
+    // for(let i=0; i<destroyableBoxes.length; i++){
+    //     destroyableBoxMeshes[i].position.set(destroyableBoxes[i].position);
     // }
   }
 
@@ -391,4 +345,4 @@ const getShootDir = function(targetVec) {
   targetVec.copy(ray.direction);
 }
 
-export { scene, camera, renderer, controls, light, getShootDir }
+export { scene, camera, renderer, controls, light, getShootDir, world}
