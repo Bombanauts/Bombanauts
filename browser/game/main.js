@@ -292,7 +292,7 @@ export function animate() {
 
   setTimeout(() => {
     if (socket) {
-      socket.emit('update_player_positions', {
+      socket.emit('update_players_position', {
         position: {
           x: sphereBody.position.x,
           y: sphereBody.position.y,
