@@ -23,7 +23,7 @@ const io = socketio(server)
 
 //  use socket server as an event emitter in order to listen for new connctions
 io.on('connection', (socket) => {
-
+  io.sockets.emit('initial', store.getState());
   console.log(chalk.blue('A new client has connected'));
   console.log(chalk.yellow('socket id: ', socket.id));
 
@@ -31,7 +31,9 @@ io.on('connection', (socket) => {
   store.dispatch(updatePlayers({id: socket.id,
                                 position: {x: 0, y: 0, z: 0}
                               }));
-
+  socket.on('get_players', () => {
+    socket.emit('get_players', store.getState().players);
+  })
   //constantly send out all the player locations to everyone
   socket.on('update_players_position', (data) => {
     store.dispatch(updatePlayers(data));
@@ -55,8 +57,8 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     store.dispatch(removePlayer(socket.id))
     store.dispatch(removePlayerBombs(socket.id))
-    io.sockets.emit('remove_player', socket.id)
 
+    io.sockets.emit('remove_player', socket.id)
     console.log('socket id ' + socket.id + ' has disconnected. : (');
   })
 
