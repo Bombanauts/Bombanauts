@@ -320,26 +320,18 @@ export function animate() {
       const mostRecentBomb = stateBombs[stateBombs.length - 1]
       const newBomb = new Bomb(mostRecentBomb.id, mostRecentBomb.position)
       newBomb.init()
-      // const bombInfo = { id: newBomb.id, position: newBomb.position, created: Date.now() }
-
-      // newBomb.bombBody.position.copy(mostRecentBomb.position)
-      // newBomb.bombMesh.position.copy(mostRecentBomb.position)
 
       bombs.push(newBomb.bombBody)
       ballMeshes.push(newBomb.bombMesh)
-
-      // console.log(newBomb.bombBody)
-      // give it a velocity
-      // shootVelo is global defined as 15
-
     }
 
     for (let i = 0; i < bombs.length; i++) {
-      // let { x, y, z} = bombs[i].position
+      let { x, y, z } = stateBombs[i].position
       ballMeshes[i].position.copy(bombs[i].position)
-      // bombs[i].position.x = x;
-      // bombs[i].position.y = y;
-      // bombs[i].position.z = z;
+      bombs[i].position.x = x;
+      bombs[i].position.y = y;
+      bombs[i].position.z = z;
+      // bombs[i].position.copy(stateBombs[i].position)
     }
 
     for (let i = 0; i < yourBombs.length; i++) {
