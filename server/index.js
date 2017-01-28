@@ -8,7 +8,7 @@ const app = express();
 const socketio = require('socket.io');
 
 const {updatePlayers, removePlayer} = require('./players/action-creator');
-const { addBomb, updateBombPositions } = require('./bombs/action-creator')
+const { addBomb, updateBombPositions, removePlayerBombs } = require('./bombs/action-creator')
 
 const store = require('./store')
 
@@ -54,6 +54,7 @@ io.on('connection', (socket) => {
   //remove the player from the state on socket disconnect
   socket.on('disconnect', () => {
     store.dispatch(removePlayer(socket.id))
+    store.dispatch(removePlayerBombs(socket.id))
     io.sockets.emit('remove_player', socket.id)
 
     console.log('socket id ' + socket.id + ' has disconnected. : (');
@@ -72,4 +73,3 @@ app.get('/', function (req, res) {
 server.listen(port, function () {
     console.log(`The server is listening on port ${port}!`);
 });
-

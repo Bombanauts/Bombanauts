@@ -1,4 +1,4 @@
-import { UPDATE_BOMB_LOCATIONS } from './constants'
+import { UPDATE_BOMB_LOCATIONS, REMOVE_PLAYER_BOMBS } from './constants'
 
 const initialState = {
   allBombs: {}
@@ -13,6 +13,10 @@ export const bombs = (state = initialState, action) => {
       for (let key in action.allBombs) {
         newState.allBombs[key] = action.allBombs[key]
       }
+      return newState;
+    case REMOVE_PLAYER_BOMBS:
+      newState = Object.assign({}, state)
+      delete newState.allBombs[action.id]
       return newState;
     default:
       return state;

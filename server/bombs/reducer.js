@@ -1,6 +1,7 @@
 const {
   ADD_BOMB,
-  UPDATE_BOMB_POSITIONS
+  UPDATE_BOMB_POSITIONS,
+  REMOVE_PLAYER_BOMBS
 } = require('./constants')
 
 let initialState = {
@@ -24,6 +25,10 @@ const bombs = (state = initialState, action) => {
     case UPDATE_BOMB_POSITIONS:
       newState = Object.assign({}, state)
       newState.allBombs[action.bombs.userId] = action.bombs.bombs
+      return newState;
+    case REMOVE_PLAYER_BOMBS:
+      newState = Object.assign({}, state)
+      delete newState.allBombs[action.id]
       return newState;
     default:
       return state;

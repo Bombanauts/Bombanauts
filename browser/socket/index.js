@@ -3,7 +3,7 @@ window.socket = io(window.location.origin)
 
 import store from '../store';
 import { updatePlayerLocations, removePlayer } from '../players/action-creator';
-import { updateBombLocations } from '../bombs/action-creator'
+import { updateBombLocations, removePlayerBombs } from '../bombs/action-creator'
 
 import { initCannon, init, animate } from '../game/main';
 
@@ -27,6 +27,7 @@ socket.on('connect', function() {
 
   socket.on('remove_player', (data) => {
     store.dispatch(removePlayer(data.id))
+    store.dispatch(removePlayerBombs(data.id))
   })
 
 })
