@@ -14,14 +14,6 @@ import Maps from './maps/maps'
 import generateMap from './utils/generateMap';
 
 var sphereShape, sphereBody, world, physicsMaterial;
-var sphereShape, sphereBody, world, physicsMaterial, walls = [],
-  ballMeshes = [],
-  boxes = [],
-  bombs = [],
-  boxMeshes = [],
-  players = [],
-  playerMeshes = [];
-
 var camera, scene, renderer, light;
 var geometry, material, mesh;
 var controls, time = Date.now();
@@ -287,7 +279,14 @@ export function animate() {
 
     let others = store.getState().players.otherPlayers;
     let playerIds = Object.keys(others)
-    let allBombs = store.getState().bombs.allBombs
+
+    let state = store.getState();
+    let allBombs = state.bombs.allBombs;
+    let sceneBombs = [];
+
+    for (let key in allBombs) {
+      sceneBombs.push(...allBombs[key])
+    }
 
     if (playerIds.length !== players.length) {
       players = [];
@@ -315,12 +314,7 @@ export function animate() {
       blocks[i].loop();
     }
 
-    let state = store.getState();
-    let allBombs = state.bombs.allBombs;
-    let sceneBombs = [];
-    for (let key in allBombs) {
-      sceneBombs.push(...allBombs[key])
-    }
+
 
 //     // add new player if there is one
 //     if (playerIds.length > players.length) {
@@ -401,4 +395,4 @@ const getShootDir = function(targetVec) {
   targetVec.copy(ray.direction);
 }
 
-export { scene, camera, renderer, controls, light, getShootDir, world, bombs }
+export { scene, camera, renderer, controls, light, getShootDir, world}
