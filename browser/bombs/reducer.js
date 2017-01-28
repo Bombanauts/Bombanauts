@@ -10,7 +10,6 @@ export const bombs = (state = initialState, action) => {
   switch (action.type) {
     case UPDATE_BOMB_LOCATIONS:
       newState = Object.assign({}, state)
-      console.log('in reducer', action.allBombs)
       newState.allBombs = action.allBombs;
       return newState;
     default:

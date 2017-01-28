@@ -33,22 +33,22 @@ io.on('connection', (socket) => {
                               }));
 
   //constantly send out all the player locations to everyone
-  socket.on('update_players_position', (data) => {
-    store.dispatch(updatePlayers(data));
-    io.sockets.emit('update_player_locations', store.getState().players)
+  socket.on('update_player_positions', (data) => {
+    store.dispatch(updatePlayers(data))
+    io.sockets.emit('update_player_positions', store.getState().players)
   })
 
   //add new bomb to the state when a player clicks
   socket.on('add_bomb', (data) => {
     // console.log('data: ', data)
     store.dispatch(addBomb(data))
-    console.log(store.getState())
     io.sockets.emit('update_bomb_positions', store.getState().bombs)
   })
 
-  //constantly receive and update all bomb positions coming from each user
+  // constantly receive and update all bomb positions coming from each user
   socket.on('update_bomb_positions', (data) => {
-    store.dispatch(updateBombPositions(data))
+    store.dispatch(updateBombPositions(data.bombs))
+    // console.log(store.getState().bombs.allBombs.length)
     io.sockets.emit('update_bomb_positions', store.getState().bombs)
   })
 

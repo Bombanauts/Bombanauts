@@ -8,9 +8,9 @@ import Player from './Player'
 import Bomb from './Bomb'
 
 var sphereShape, sphereBody, world, physicsMaterial, walls = [],
-  bombs = [],
   ballMeshes = [],
   boxes = [],
+  bombs = [],
   boxMeshes = [],
   players = [],
   playerMeshes = [];
@@ -157,12 +157,12 @@ export function init() {
           bomb: bombInfo
         })
 
-        // bombs.push(newBomb.bombBody)
+        // bombs.push(bombInfo)
 
         // push ball meshes
-        ballMeshes.push(newBomb.bombMesh);
-        let body = newBomb.bombBody
-        bombs.push(newBomb.bombBody)
+        // ballMeshes.push(newBomb.bombMesh);
+        // let body = newBomb.bombBody
+        // bombs.push(newBomb.bombBody)
         // console.log(newBomb.bombMesh)
 
         // get its direction using getShootDir function
@@ -285,12 +285,12 @@ export function onWindowResize() {
 var dt = 1 / 60; // change in time for walking
 
 // animate the walking and the box positions movements
-
+let prevState = [];
 export function animate() {
 
   setTimeout(() => {
     if (socket) {
-      socket.emit('update_players_position', {
+      socket.emit('update_player_positions', {
         position: {
           x: sphereBody.position.x,
           y: sphereBody.position.y,
@@ -298,11 +298,9 @@ export function animate() {
         },
         id: socket.id
       });
-      if (bombs.length) {
-        socket.emit('update_bomb_positions', {
-          bombs: bombs
-        })
-      }
+      socket.emit('update_bomb_positions', {
+        bombs: bombs
+      })
     }
     requestAnimationFrame(animate);
   }, 1000 / 45)
@@ -311,12 +309,10 @@ export function animate() {
     world.step(dt); // function that allows walking from CANNON
 
     let state = store.getState();
-    let playerIds = Object.keys(state.players.otherPlayers)
-    let allBombs = state.bombs.allBombs
-    let sceneBombs = [];
-    for (let key in allBombs) {
-      sceneBombs.push(...allBombs[key])
-    }
+    console.log('state: ', state)
+    let playerIds = [];
+    if (state.players.otherPlayers) playerIds = Object.keys(state.players.otherPlayers)
+    let stateBombs = state.bombs.allBombs;
 
     // add new player if there is one
     if (playerIds.length > players.length) {
@@ -348,22 +344,36 @@ export function animate() {
     }
 
     // add new bomb if there is one
-    if (sceneBombs.length > bombs.length) {
-      const mostRecentBomb = sceneBombs[sceneBombs.length - 1]
+    //we are only adding to the bombs array and bombMesh array when we receive back from the update bombs socket emitter, not when we first create the bomb
+    if (stateBombs.length > bombs.length) {
+      console.log('HELLO')
+      const mostRecentBomb = stateBombs[stateBombs.length - 1]
       const newBomb = new Bomb(mostRecentBomb.id, mostRecentBomb.position)
+      newBomb.init()
+      const bombInfo = { id: newBomb.id, position: newBomb.position, created: Date.now() }
+      // console.log('most recent: ', mostRecentBomb.position)
+      // console.log('new bomb: ', newBomb)
+      // console.log('new bomb mesh: ', newBomb.bombMesh.position)
 
-      bombs.push(newBomb)
+      // window.bombs.push({id: mostRecentBomb.id, position: mostRecentBomb.position})
       ballMeshes.push(newBomb.bombMesh)
+      bombs.push(bombInfo)
 
       newBomb.bombBody.position.set(mostRecentBomb.position)
       newBomb.bombMesh.position.set(mostRecentBomb.position)
     }
+    // prevState = stateBombs;
 
+    // console.log('window: ', window.bombs.length)
+    // console.log('state bombs: ', stateBombs.length)
+    // console.log('prevState: ', prevState.length)
+    // console.log('ballmeshes: ', ballMeshes.length)
     //update bomb positions
     // console.log(bombs)
-    for (let i = 0; i < bombs.length; i++) {
-      // console.log(bombs[i])
-      ballMeshes[i].position.copy(bombs[i].position);
+      // console.log('state bombs:', stateBombs.length)
+      // console.log('ball mesh: ', ballMeshes.length)
+    for (let i = 0; i < stateBombs.length; i++) {
+      ballMeshes[i].position.set(stateBombs[i].position);
     }
 
   }
@@ -392,4 +402,4 @@ const getShootDir = function(targetVec) {
   targetVec.copy(ray.direction);
 }
 
-export { scene, camera, renderer, controls, light, getShootDir, world }
+export { scene, camera, renderer, controls, light, getShootDir, world, bombs }
