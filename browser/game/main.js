@@ -142,31 +142,34 @@ export function init() {
     window.addEventListener("click", function(e) {
       if (controls.enabled == true) {
         // because sphereBody position is dependent on camera position
-        var x = sphereBody.position.x;
-        var y = sphereBody.position.y;
-        var z = sphereBody.position.z;
+        let x = sphereBody.position.x;
+        let y = sphereBody.position.y;
+        let z = sphereBody.position.z;
 
         const newBomb = new Bomb(Math.random(), { x: x, y: y, z: z });
-
+        newBomb.init()
         //take just the id and position of the ball
-        const bombInfo = { id: newBomb.id, position: newBomb.position }
+        const bombInfo = { id: newBomb.id, position: newBomb.position, created: Date.now() }
           // push it into our global balls array
 
-        bombs.push(bombInfo);
 
         socket.emit('add_bomb', {
-          userId: socket.id,
           bomb: bombInfo
         })
 
+        // bombs.push(newBomb.bombBody)
+
         // push ball meshes
         ballMeshes.push(newBomb.bombMesh);
+        let body = newBomb.bombBody
+        bombs.push(newBomb.bombBody)
+        // console.log(newBomb.bombMesh)
 
         // get its direction using getShootDir function
         // returns shootDirection altered with correct data
         getShootDir(shootDirection);
 
-
+        // console.log(newBomb.bombBody)
         // give it a velocity
         // shootVelo is global defined as 15
         newBomb.bombBody.velocity.set(shootDirection.x * shootVelo,
@@ -176,9 +179,9 @@ export function init() {
         // Move the ball outside the player sphere
         // not sure about this shit here
         // x,y,z adjusted so it's actually updating the position of the sphere
-        x += shootDirection.x * (sphereShape.radius * 1.02 + ballShape.radius);
-        y += shootDirection.y * (sphereShape.radius * 1.02 + ballShape.radius);
-        z += shootDirection.z * (sphereShape.radius * 1.02 + ballShape.radius);
+        x += shootDirection.x * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
+        y += shootDirection.y * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
+        z += shootDirection.z * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
         newBomb.bombBody.position.set(x, y, z);
         newBomb.bombMesh.position.set(x, y, z);
       }
@@ -297,7 +300,6 @@ export function animate() {
       });
       if (bombs.length) {
         socket.emit('update_bomb_positions', {
-          userId: socket.id,
           bombs: bombs
         })
       }
@@ -358,18 +360,12 @@ export function animate() {
     }
 
     //update bomb positions
-    // console.log('scene bombs: ', sceneBombs)
-    // console.log('ball meshes: ', ballMeshes)
-    for (let i = 0; i < sceneBombs.length; i++) {
-      // console.log('scene bomb in loop', sceneBombs[i])
-      ballMeshes[i].position.set(sceneBombs[i].position);
-      ballMeshes[i].quaternion.set(sceneBombs[i].quaternion);
+    // console.log(bombs)
+    for (let i = 0; i < bombs.length; i++) {
+      // console.log(bombs[i])
+      ballMeshes[i].position.copy(bombs[i].position);
     }
-    // // // Update box positions
-    // for(let i=0; i<boxes.length; i++){
-    //     boxMeshes[i].position.copy(boxes[i].position);
-    //     boxMeshes[i].quaternion.copy(boxes[i].quaternion);
-    // }
+
   }
 
   controls.update(Date.now() - time);

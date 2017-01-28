@@ -7,7 +7,7 @@ const PointerLockControls = require('./PointerLockControls')
 
 import { scene, world } from './main'
 
-let bombBody, bombMesh, material;
+let bombBody, bombMesh;
 
 export default class Bomb {
   constructor(id, position) {
@@ -15,23 +15,24 @@ export default class Bomb {
     this.position = position;
     this.bombMesh;
     this.bombBody;
+    this.bombShape;
+    this.material;
     this.init = this.init.bind(this);
-    this.init();
   }
   init() {
 
-    let bombShape = new CANNON.Sphere(1.5);
+    this.bombShape = new CANNON.Sphere(1.5);
     // three sphere(radius, numFaces per xyz) higher num means rounder sphere
     // 32 should be enough for spheres
-    let bombGeometry = new THREE.SphereGeometry(bombShape.radius, 32, 32);
+    let bombGeometry = new THREE.SphereGeometry(this.bombShape.radius, 32, 32);
     // generates a vector with no units if you want units you input
     // Vector3(x,y,z)
-    material = new THREE.MeshLambertMaterial({ color: 0x3f7cba });
+    this.material = new THREE.MeshLambertMaterial({ color: 0x3f7cba });
 
     // create the ball
     this.bombBody = new CANNON.Body({ mass: 1 });
-    this.bombBody.addShape(bombShape);
-    this.bombMesh = new THREE.Mesh(bombGeometry, material);
+    this.bombBody.addShape(this.bombShape);
+    this.bombMesh = new THREE.Mesh(bombGeometry, this.material);
     world.addBody(this.bombBody);
     // add it to the scene
     scene.add(this.bombMesh);

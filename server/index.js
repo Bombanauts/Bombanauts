@@ -40,14 +40,15 @@ io.on('connection', (socket) => {
 
   //add new bomb to the state when a player clicks
   socket.on('add_bomb', (data) => {
+    // console.log('data: ', data)
     store.dispatch(addBomb(data))
+    console.log(store.getState())
     io.sockets.emit('update_bomb_positions', store.getState().bombs)
   })
 
   //constantly receive and update all bomb positions coming from each user
   socket.on('update_bomb_positions', (data) => {
     store.dispatch(updateBombPositions(data))
-    console.log('bombs: ', store.getState().bombs.allBombs[socket.id])
     io.sockets.emit('update_bomb_positions', store.getState().bombs)
   })
 
