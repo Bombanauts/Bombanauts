@@ -21,8 +21,8 @@ export const players = (state = initialState, action) => {
       newState.otherPlayers[action.player.id] = action.player.position;
       return newState;
     case REMOVE_PLAYER:
-      delete state[action.id]
       newState = Object.assign({}, state);
+      delete newState[action.id]
       return newState;
     default:
       return state;

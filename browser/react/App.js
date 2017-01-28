@@ -8,16 +8,25 @@ const fontStyle = {
   'fontSize': '40px'
 }
 
+function delay(t) {
+  return new Promise(resolve => {
+    setTimeout(resolve, t)
+  })
+}
+
 export default class App extends Component {
   constructor(props) {
     super(props)
   }
 
   componentDidMount() {
-    pointerChecker()
-    initCannon()
-    init()
-    animate()
+    delay(250)
+    .then(() => {
+      pointerChecker()
+      initCannon()
+      init()
+      animate()
+    })
   }
 
   render() {

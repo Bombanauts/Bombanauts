@@ -8,15 +8,15 @@ const PointerLockControls = require('./PointerLockControls')
 import { scene, world } from './main'
 
 let geometry, material, shape, playerMesh, controls, color, playerBox;
-
+   //TODO: // NEED TO FIND WHY INIT DOESN"T CONSOLE LOGGING PLAYERMESH
 export default class Player {
-  constructor(id, x, y, z) {
-    this.id = id;
+  constructor(socketId, x, y, z) {
     this.x = x;
     this.y = y;
     this.z = z;
-    this.playerMesh;
-
+    this.playerMesh = [];
+    this.playerBox = [];
+    this.socketId = socketId;
     this.init = this.init.bind(this)
   }
 
@@ -30,13 +30,15 @@ export default class Player {
     let boxGeometry = new THREE.BoxGeometry(halfExtents.x*1.9,halfExtents.y*1.9,halfExtents.z*1.9);
 
       // creating player
-      playerBox = new CANNON.Body({ mass: 1 }); //
-      playerBox.addShape(boxShape) //
+      playerBox = new CANNON.Body({ mass: 1 });
+      playerBox.addShape(boxShape)
       color = new THREE.MeshLambertMaterial( { color: 0x8B4513 } );
       playerMesh = new THREE.Mesh( boxGeometry, color );
-      world.addBody(playerBox); //
-      scene.add(playerMesh);
+      playerMesh.name = this.socketId;
+      playerBox.name = this.socketId;
 
+      world.addBody(playerBox);
+      scene.add(playerMesh);
       // set spawn position
 	    playerMesh.position.set(this.x, this.y, this.z);
 
@@ -46,6 +48,7 @@ export default class Player {
 	    world.add(playerBox)
 
 	    this.playerMesh = playerMesh;
+      this.playerBox = playerBox;
 
   }
 }
