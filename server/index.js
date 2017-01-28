@@ -8,7 +8,7 @@ const app = express();
 const socketio = require('socket.io');
 
 const {updatePlayers, removePlayer} = require('./players/action-creator');
-const { addBomb, updateBombPositions } = require('./bombs/action-creator')
+const { addBomb, updateBombPositions, removePlayerBombs } = require('./bombs/action-creator')
 
 const store = require('./store')
 
@@ -42,19 +42,21 @@ io.on('connection', (socket) => {
 
   //add new bomb to the state when a player clicks
   socket.on('add_bomb', (data) => {
-    store.dispatch(addBomb(data.newBomb))
+    store.dispatch(addBomb(data))
     io.sockets.emit('update_bomb_positions', store.getState().bombs)
   })
 
-  //constantly receive and update all bomb positions
+  //constantly receive and update all bomb positions coming from each user
   socket.on('update_bomb_positions', (data) => {
-    store.dispatch(updateBombPositions(data.allBombs))
+    store.dispatch(updateBombPositions(data))
+    // console.log('bombs: ', store.getState().bombs)
     io.sockets.emit('update_bomb_positions', store.getState().bombs)
   })
 
   //remove the player from the state on socket disconnect
   socket.on('disconnect', () => {
     store.dispatch(removePlayer(socket.id))
+    store.dispatch(removePlayerBombs(socket.id))
 
     io.sockets.emit('remove_player', socket.id)
     console.log('socket id ' + socket.id + ' has disconnected. : (');
@@ -73,4 +75,3 @@ app.get('/', function (req, res) {
 server.listen(port, function () {
     console.log(`The server is listening on port ${port}!`);
 });
-

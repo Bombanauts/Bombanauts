@@ -1,6 +1,7 @@
 const {
   ADD_BOMB,
-  UPDATE_BOMB_POSITIONS
+  UPDATE_BOMB_POSITIONS,
+  REMOVE_PLAYER_BOMBS
 } = require('./constants')
 
 const addBomb = (newBomb) => {
@@ -9,14 +10,22 @@ const addBomb = (newBomb) => {
     newBomb
   }
 }
-const updateBombPositions = (allBombs) => {
+const updateBombPositions = (bombs) => {
   return {
     type: UPDATE_BOMB_POSITIONS,
-    allBombs
+    bombs
+  }
+}
+
+const removePlayerBombs = (id) => {
+  return {
+    type: REMOVE_PLAYER_BOMBS,
+    id
   }
 }
 
 module.exports = {
   addBomb,
-  updateBombPositions
+  updateBombPositions,
+  removePlayerBombs
 }

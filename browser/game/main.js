@@ -5,6 +5,7 @@ import store from '../store';
 
 import { PointerLockControls } from './PointerLockControls';
 import Player from './Player'
+import Bomb from './Bomb'
 
 import {Particle, Block} from './Explosion.js';
 
@@ -13,6 +14,14 @@ import Maps from './maps/maps'
 import generateMap from './utils/generateMap';
 
 var sphereShape, sphereBody, world, physicsMaterial;
+var sphereShape, sphereBody, world, physicsMaterial, walls = [],
+  ballMeshes = [],
+  boxes = [],
+  bombs = [],
+  boxMeshes = [],
+  players = [],
+  playerMeshes = [];
+
 var camera, scene, renderer, light;
 var geometry, material, mesh;
 var controls, time = Date.now();
@@ -182,55 +191,50 @@ export function init() {
     window.addEventListener("click", function(e) {
       if (controls.enabled == true) {
         // because sphereBody position is dependent on camera position
-        var x = sphereBody.position.x;
-        var y = sphereBody.position.y;
-        var z = sphereBody.position.z;
+        let x = sphereBody.position.x;
+        let y = sphereBody.position.y;
+        let z = sphereBody.position.z;
 
-        // create the ball
-        var ballBody = new CANNON.Body({ mass: 1 });
-        ballBody.addShape(ballShape);
-        var ballMesh = new THREE.Mesh(ballGeometry, material);
-        world.addBody(ballBody);
-
-        // add it to the scene
-        scene.add(ballMesh);
-
-        // shadow affects
-        ballMesh.castShadow = true;
-        ballMesh.receiveShadow = true;
-
+        const newBomb = new Bomb(Math.random(), { x: x, y: y, z: z });
+        newBomb.init()
         //take just the id and position of the ball
-        const bombInfo = { id: Math.random(), position: ballBody.position, quaternion: ballBody.quaternion }
-          // push it into our global balls array
+        //stack overflow from sending bombBody?
+        const bombInfo = { id: newBomb.bombBody.id, position: newBomb.bombBody.position, created: Date.now() }
 
-        bombs.push(bombInfo);
+        // push it into our global bombs array
+        bombs.push(bombInfo)
+
 
         socket.emit('add_bomb', {
-          newBomb: bombInfo
+          userId: socket.id,
+          bomb: bombInfo
         })
 
+
         // push ball meshes
-        ballMeshes.push(ballMesh);
+        ballMeshes.push(newBomb.bombMesh);
+        // let body = newBomb.bombBody
+        // console.log(newBomb.bombMesh)
 
         // get its direction using getShootDir function
         // returns shootDirection altered with correct data
         getShootDir(shootDirection);
 
-
+        // console.log(newBomb.bombBody)
         // give it a velocity
         // shootVelo is global defined as 15
-        ballBody.velocity.set(shootDirection.x * shootVelo,
+        newBomb.bombBody.velocity.set(shootDirection.x * shootVelo,
           shootDirection.y * shootVelo,
           shootDirection.z * shootVelo);
 
         // Move the ball outside the player sphere
         // not sure about this shit here
         // x,y,z adjusted so it's actually updating the position of the sphere
-        x += shootDirection.x * (sphereShape.radius * 1.02 + ballShape.radius);
-        y += shootDirection.y * (sphereShape.radius * 1.02 + ballShape.radius);
-        z += shootDirection.z * (sphereShape.radius * 1.02 + ballShape.radius);
-        ballBody.position.set(x, y, z);
-        ballMesh.position.set(x, y, z);
+        x += shootDirection.x * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
+        y += shootDirection.y * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
+        z += shootDirection.z * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
+        newBomb.bombBody.position.set(x, y, z);
+        newBomb.bombMesh.position.set(x, y, z);
       }
     });
   }
@@ -251,7 +255,6 @@ var dt = 1 / 60; // change in time for walking
 
 // animate the walking and the box positions movements
 
-
 export function animate() {
 
   setTimeout(() => {
@@ -266,7 +269,8 @@ export function animate() {
       });
       if (bombs.length) {
         socket.emit('update_bomb_positions', {
-          allBombs: bombs
+          userId: socket.id,
+          bombs: bombs
         })
       }
     }
@@ -311,14 +315,66 @@ export function animate() {
       blocks[i].loop();
     }
 
-    for (let i = 0; i < allBombs.length; i++) {
-      ballMeshes[i].position.set(allBombs[i].position);
-      ballMeshes[i].quaternion.copy(allBombs[i].quaternion);
+    let state = store.getState();
+    let allBombs = state.bombs.allBombs;
+    let sceneBombs = [];
+    for (let key in allBombs) {
+      sceneBombs.push(...allBombs[key])
     }
+
+//     // add new player if there is one
+//     if (playerIds.length > players.length) {
+//       var halfExtents = new CANNON.Vec3(2, 2, 2);
+//       var boxShape = new CANNON.Box(halfExtents);
+//       var boxGeometry = new THREE.BoxGeometry(halfExtents.x * 1.9, halfExtents.y * 1.9, halfExtents.z * 1.9);
+
+//       var playerBox = new CANNON.Body({ mass: 1 }); //
+//       playerBox.addShape(boxShape) //
+//       let color = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+//       var playerMesh = new THREE.Mesh(boxGeometry, color);
+//       world.addBody(playerBox); //
+//       scene.add(playerMesh);
+//       let pos = state.players.otherPlayers[playerIds[playerIds.length - 1]];
+//       let { x, y, z } = pos;
+
+//       playerBox.position.set(x, y + 5, z);
+//       playerMesh.position.set(x, y + 5, z);
+//       playerMesh.castShadow = true;
+//       playerMesh.receiveShadow = true;
+//       players.push(playerBox);
+//       playerMeshes.push(playerMesh);
+//     }
+
+
+    // add new bomb if there is one
+    //we are only adding to the bombs array and bombMesh array when we receive back from the update bombs socket emitter, not when we first create the bomb
+    if (sceneBombs.length > bombs.length) {
+      const mostRecentBomb = sceneBombs[sceneBombs.length - 1]
+      const newBomb = new Bomb(mostRecentBomb.id, mostRecentBomb.position)
+      newBomb.init()
+      const bombInfo = { id: newBomb.id, position: newBomb.position, created: Date.now() }
+      // console.log('most recent: ', mostRecentBomb.position)
+      // console.log('new bomb: ', newBomb)
+      // console.log('new bomb mesh: ', newBomb.bombMesh.position)
+
+      // window.bombs.push({id: mostRecentBomb.id, position: mostRecentBomb.position})
+      ballMeshes.push(newBomb.bombMesh)
+
+      newBomb.bombBody.position.set(mostRecentBomb.position)
+      newBomb.bombMesh.position.set(mostRecentBomb.position)
+    }
+
+    for (let i = 0; i < sceneBombs.length; i++) {
+      ballMeshes[i].position.copy(sceneBombs[i].position);
+    }
+
     // Update box positions
     // for(let i=0; i<destroyableBoxes.length; i++){
     //     destroyableBoxMeshes[i].position.set(destroyableBoxes[i].position);
     // }
+
+
+
   }
 
   controls.update(Date.now() - time);
@@ -345,4 +401,4 @@ const getShootDir = function(targetVec) {
   targetVec.copy(ray.direction);
 }
 
-export { scene, camera, renderer, controls, light, getShootDir, world}
+export { scene, camera, renderer, controls, light, getShootDir, world, bombs }
