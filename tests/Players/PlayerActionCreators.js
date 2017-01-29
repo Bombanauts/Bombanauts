@@ -4,11 +4,10 @@ const { getPlayers, updatePlayers, removePlayer } = require('../../server/player
 
 describe('Player Action Creators Tests', () => {
 
-  TODO: // getPlayers Function doesn't make sense
   describe('getPlayers function', () => {
-    // it('should return an object with type and players', () => {
-    //   const actionCreator = getPlayers()
-    // })
+    it('should return an object with type', () => {
+      expect(getPlayers()).to.deep.equal({ type: GET_PLAYERS })
+    })
   })
 
   describe('updatePlayers', () => {
