@@ -1,25 +1,43 @@
 const {expect} = require('chai');
 const { GET_PLAYERS, UPDATE_PLAYERS, REMOVE_PLAYER } = require('../../server/players/constants');
-const { players } = require('../../server/players/reducer');
+const players = require('../../server/players/reducer');
 
 describe('Player Reducer', () => {
   it('return default state if action.type has no case', () => {
-    expect(players()).to.equal({})
+    expect(players({}, {gibberish: 'mo gibberish' })).to.deep.equal({})
   })
 
-  // GET PLAYERS DOESN'T MAKE SENSE
-  // it('GET_PLAYERS', () => {
-  //   const action = {type: GET_PLAYERS, players: 'socketID'}
-  //   expect(players({}, state)).to.equal(state)
-  // })
+  it('GET_PLAYERS', () => {
+    const state = {
+      id: 'stuff'
+    }
+
+    const action = {
+      type: GET_PLAYERS
+    }
+
+    expect(players(state, action)).to.equal(state)
+  })
 
   it('UPDATE_PLAYERS', () => {
-    let prevState = { players: ['one', 'two'] }
-    expect().to.equal()
+    const prevState = { id1: 'x1y1z1', id2: 'x2y2z2' }
+
+    const action = {
+      type: UPDATE_PLAYERS,
+      player: { id: 'id3', position: 'x3y3z3' }
+    }
+    expect(players(prevState, action)).to.deep.equal(Object.assign({}, prevState, { id3: 'x3y3z3' }))
   })
 
   it('REMOVE_PLAYER', () => {
-    expect().to.equal()
+    const prevState = { id1: 'x1y1z1', id2: 'x2y2z2' }
+
+    const action = {
+      type: REMOVE_PLAYER,
+      id: 'id1'
+    }
+
+    expect(players(prevState, action)).to.deep.equal({ id2: 'x2y2z2'})
   })
 
 })
