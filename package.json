@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha --compilers js:babel-register tests/*.js tests/*.jsx",
+    "test": "mocha --compilers js:babel-register tests/*.js tests/*.jsx tests/**/*.js",
     "test-watch": "mocha --compilers js:babel-register --watch tests/*.js tests/*.jsx",
     "build": "webpack",
     "build-watch": "webpack -w",
