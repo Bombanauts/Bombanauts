@@ -27,7 +27,7 @@ export default class Player {
     // three
     let halfExtents = new CANNON.Vec3(2,2,2);
     let boxShape = new CANNON.Box(halfExtents);
-    let boxGeometry = new THREE.BoxGeometry(halfExtents.x*1.9,halfExtents.y*1.9,halfExtents.z*1.9);
+    let boxGeometry = new THREE.BoxGeometry(halfExtents.x * 1.5, halfExtents.y * 1.5, halfExtents.z * 1.5);
 
       // creating player
       playerBox = new CANNON.Body({ mass: 1 });
