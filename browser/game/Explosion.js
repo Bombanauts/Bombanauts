@@ -81,30 +81,27 @@ export const Block = function (scene, world, position) {
 }
 
 Block.prototype.reset = function(x, y, z){
-
   const MAX_SPEED = 0.03;
-  const MAX_ROT = .1;
+  const MAX_ROT = 0.1;
 
-  this.xd = Math.random()*MAX_SPEED*2 - MAX_SPEED ;
-  this.yd = Math.abs(Math.random()*MAX_SPEED*2 - MAX_SPEED) ;
-  this.zd = Math.random()*MAX_SPEED*2 - MAX_SPEED ;
+  this.xd = Math.random() * MAX_SPEED * 2 - MAX_SPEED ;
+  this.yd = Math.abs(Math.random() * MAX_SPEED * 2 - MAX_SPEED) ;
+  this.zd = Math.random() * MAX_SPEED * 2 - MAX_SPEED ;
 
   this.particle.position.x = x;
   this.particle.position.y = y;
   this.particle.position.z = z;
 
-  this.xrd = Math.random()*MAX_ROT*2 - MAX_ROT;
-  this.zrd = Math.random()*MAX_ROT*2 - MAX_ROT;
+  this.xrd = Math.random() * MAX_ROT * 2 - MAX_ROT;
+  this.zrd = Math.random() * MAX_ROT * 2 - MAX_ROT;
 
-  this.particle.rotation.x = Math.random()*360;
-  this.particle.rotation.z = Math.random()*360;
+  this.particle.rotation.x = Math.random() * 360;
+  this.particle.rotation.z = Math.random() * 360;
 
   this.ticks = 0;
-
 }
 
 Block.prototype.loop = function(){
-
   this.particle.position.x += this.xd;
   this.particle.position.y += this.yd;
   this.particle.position.z += this.zd;
@@ -112,6 +109,7 @@ Block.prototype.loop = function(){
   this.particle.rotation.x += this.xrd;
   this.particle.rotation.z += this.zrd;
   this.ticks ++;
-  if (this.ticks > 300) return scene.remove(this.particle)
-
+  if (this.ticks > 300) {
+    return scene.remove(this.particle)
+  }
 }
