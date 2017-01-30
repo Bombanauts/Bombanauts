@@ -1,6 +1,5 @@
 const THREE = require('three')
 const CANNON = require('cannon')
-  // const PointerLockControls = require('./PointerLockControls');
 import store from '../store';
 
 import { PointerLockControls } from './PointerLockControls';
@@ -15,43 +14,42 @@ import Maps from './maps/maps'
 
 import generateMap from './utils/generateMap';
 
-var sphereShape, sphereBody, world, physicsMaterial;
-var camera, scene, renderer, light;
-var geometry, material, mesh;
-var controls, time = Date.now();
-var SCREEN_WIDTH = window.innerWidth;
-var SCREEN_HEIGHT = window.innerHeight;
-let fire, clock;
+let sphereShape, sphereBody, world, physicsMaterial;
+let camera, scene, renderer, light;
+let geometry, material, mesh;
+let controls, time = Date.now();
+const SCREEN_WIDTH = window.innerWidth;
+const SCREEN_HEIGHT = window.innerHeight;
 
-export let walls = [];
-export let bombs = [];
-export let ballMeshes = [];
-export let boxes = [];
-export let boxMeshes = [];
-export let destroyableBoxes = [];
-export let destroyableBoxMeshes = [];
+export const walls = [];
+export const bombs = [];
+export const ballMeshes = [];
+export const boxes = [];
+export const boxMeshes = [];
+export const destroyableBoxes = [];
+export const destroyableBoxMeshes = [];
 export let players = [];
 export let playerMeshes = [];
 export let yourBombs = [];
 export let yourballMeshes = [];
 
-var blocks = new Array();
-var blockCount = 25;
+const blocks = new Array();
+const blockCount = 25;
 
 export function initCannon() {
-  //     // Setup our world
+  //set up our world, check for other players
   if (socket) {
     socket.emit('get_players', {});
   }
   world = new CANNON.World();
   world.quatNormalizeSkip = 0;
   world.quatNormalizeFast = false;
-  var solver = new CANNON.GSSolver();
+  const solver = new CANNON.GSSolver();
   world.defaultContactMaterial.contactEquationStiffness = 1e9;
   world.defaultContactMaterial.contactEquationRelaxation = 4;
   solver.iterations = 7;
   solver.tolerance = 0.1;
-  var split = true;
+  const split = true;
   if (split)
     world.solver = new CANNON.SplitSolver(solver);
   else
@@ -61,7 +59,7 @@ export function initCannon() {
 
   //     // Create a slippery material (friction coefficient = 0.0)
   physicsMaterial = new CANNON.Material("slipperyMaterial");
-  var physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
+  const physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
     physicsMaterial,
     0.0, // friction coefficient
     0.3 // restitution
@@ -70,7 +68,7 @@ export function initCannon() {
   world.addContactMaterial(physicsContactMaterial);
 
   //     // Create a sphere
-  var mass = 5,
+  const mass = 5,
     radius = 1.3;
   sphereShape = new CANNON.Sphere(radius);
   sphereBody = new CANNON.Body({ mass: mass });
@@ -80,35 +78,36 @@ export function initCannon() {
   world.addBody(sphereBody);
 
   // Create a plane
-  var groundShape = new CANNON.Plane();
-  var groundBody = new CANNON.Body({ mass: 0 });
+  const groundShape = new CANNON.Plane();
+  const groundBody = new CANNON.Body({ mass: 0 });
   groundBody.addShape(groundShape);
   groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
   world.addBody(groundBody);
 }
 
-// SHOOTING BOMBS HERE
-
 // cannon sphere(radius)
-var ballShape = new CANNON.Sphere(1.5);
+const ballShape = new CANNON.Sphere(1.5);
+const ballGeometry = new THREE.SphereGeometry(ballShape.radius, 32, 32);
+const shootDirection = new THREE.Vector3();
+const shootVelo = 8;
 
-// three sphere(radius, numFaces per xyz) higher num means rounder sphere
-// 32 should be enough for spheres
-var ballGeometry = new THREE.SphereGeometry(ballShape.radius, 32, 32);
+const projector = new THREE.Projector();
 
-// generates a vector with no units if you want units you input
-// Vector3(x,y,z)
-var shootDirection = new THREE.Vector3();
-
-// speed of ball (m/s maybe?)
-var shootVelo = 15;
+// get shoot direction might need to be adjusted to use ray caster instead
+const getShootDir = function(targetVec) {
+  var vector = targetVec;
+  targetVec.set(0, 0, 1);
+  projector.unprojectVector(vector, camera);
+  var ray = new THREE.Ray(sphereBody.position, vector.sub(sphereBody.position).normalize());
+  targetVec.copy(ray.direction);
+}
 
 export function init() {
-  camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1500);
   camera.position.set(0, 3, 0)
   scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0x000000, 0, 500);
-  var ambient = new THREE.AmbientLight(0xffffff);
+  // scene.fog = new THREE.Fog(0x000000, 0, 500);
+  const ambient = new THREE.AmbientLight(0xffffff);
   scene.add(ambient);
   light = new THREE.SpotLight(0xffffff);
   light.position.set(10, 30, 20);
@@ -125,8 +124,7 @@ export function init() {
   //     light.shadowCameraVisible = true;
   // }
   scene.add(light);
-
-
+  
   //Create Fire
   clock = new THREE.Clock()
   let fireWidth = 4
@@ -139,9 +137,6 @@ export function init() {
   VolumetricFire.texturePath = '../../public/assets/images';
   scene.add(fire.mesh)
   console.log('fire', fire)
-  // this attaches bomb to the player (maybe)
-  // look at PointerLockControls function
-  // sphereBody.position = (0,5,0) so the sphere should be 5+ in y direction above camera
 
   controls = new PointerLockControls(camera, sphereBody);
   scene.add(controls.getObject());
@@ -149,25 +144,33 @@ export function init() {
   // floor
   geometry = new THREE.PlaneBufferGeometry(125, 125, 50, 50);
   geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
-  material = new THREE.MeshLambertMaterial({ color: 0x3f7cba });
+  const texture = new THREE.TextureLoader().load('images/grass.jpeg');
+  material = new THREE.MeshLambertMaterial({ map: texture });
+  //repeat texture tiling for the floor
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.x = 20;
+  texture.repeat.y = 20;
   mesh = new THREE.Mesh(geometry, material);
   mesh.castShadow = true;
   mesh.receiveShadow = true;
   scene.add(mesh);
 
+  const skyGeo = new THREE.SphereGeometry(1000, 32, 32);
+  const skyTexture = new THREE.TextureLoader().load('images/sky.jpg');
+  const skyMaterial = new THREE.MeshBasicMaterial({ map: skyTexture });
+  const sky = new THREE.Mesh(skyGeo, skyMaterial);
+  sky.material.side = THREE.BackSide;
+  scene.add(sky);
 
-  // Init Blocks
-  for (var i = 0; i < blockCount; i++) {
-    var block = new Block(scene, world);
+  // init map blocks
+  for (let i = 0; i < blockCount; i++) {
+    let block = new Block(scene, world);
     blocks.push(block);
   }
 
-
   renderer = new THREE.WebGLRenderer();
-  // renderer.shadowMapEnabled = true;
-  // renderer.shadowMapSoft = true;
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setClearColor(scene.fog.color, 1);
   document.body.appendChild(renderer.domElement);
   window.addEventListener('resize', onWindowResize, false);
 
@@ -188,55 +191,46 @@ export function init() {
       id: socket.id
     });
   }
-  for (var player in others) {
+
+  for (let player in others) {
     newPlayer = new Player(socket.id, others[player].x, others[player].y, others[player].z)
     newPlayer.init()
     players.push(newPlayer.playerBox)
     playerMeshes.push(newPlayer.playerMesh)
-
   }
 
-  // add event listen to actually shoot
   if (controls) {
     window.addEventListener("click", function(e) {
       if (controls.enabled == true) {
-        // because sphereBody position is dependent on camera position
+        // get current self position to shoot
         let x = sphereBody.position.x;
         let y = sphereBody.position.y;
         let z = sphereBody.position.z;
 
         const newBomb = new Bomb(Math.random(), { x: x, y: y, z: z });
         newBomb.init()
-        //take just the id and position of the ball
-        //stack overflow from sending bombBody?
+
+        //take relevant bomb info and emit
         const bombInfo = { id: newBomb.bombBody.id, position: newBomb.bombBody.position, created: Date.now() }
-
-        // push it into our global bombs array
-
 
         socket.emit('add_bomb', {
           userId: socket.id,
           position: { x: x, y: y, z: z }
         })
 
-
+        //add bomb and mesh to your bombs arrays
         yourBombs.push(bombInfo)
-        // push ball meshes
         yourballMeshes.push(newBomb.bombMesh);
 
         // get its direction using getShootDir function
-        // returns shootDirection altered with correct data
         getShootDir(shootDirection);
 
-        // console.log(newBomb.bombBody)
-        // give it a velocity
-        // shootVelo is global defined as 15
+        // give it a shoot velocity
         newBomb.bombBody.velocity.set(shootDirection.x * shootVelo,
           shootDirection.y * shootVelo,
           shootDirection.z * shootVelo);
 
         // Move the ball outside the player sphere
-        // not sure about this shit here
         // x,y,z adjusted so it's actually updating the position of the sphere
         x += shootDirection.x * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
         y += shootDirection.y * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
@@ -261,44 +255,38 @@ export function onWindowResize() {
 
 var dt = 1 / 60; // change in time for walking
 
-// animate the walking and the box positions movements
-
+//animation GAME LOOP
 export function animate() {
 
   setTimeout(() => {
-    if (socket) {
-      socket.emit('update_players_position', {
-        position: {
-          x: sphereBody.position.x,
-          y: sphereBody.position.y,
-          z: sphereBody.position.z
-        },
-        id: socket.id
-      });
-      if (bombs.length) {
-        socket.emit('update_bomb_positions', {
-          userId: socket.id,
-          bombs: yourBombs
-        })
+      if (socket) {
+        socket.emit('update_players_position', {
+          position: {
+            x: sphereBody.position.x,
+            y: sphereBody.position.y,
+            z: sphereBody.position.z
+          },
+          id: socket.id
+        });
+        if (bombs.length) {
+          socket.emit('update_bomb_positions', {
+            userId: socket.id,
+            bombs: yourBombs
+          })
+        }
       }
-    }
-    requestAnimationFrame(animate);
-  }, 1000 / 60)
+      requestAnimationFrame(animate);
+    }, 1000 / 60) //throttled to 60 times per second
 
   if (controls.enabled) {
     world.step(dt); // function that allows walking from CANNON
 
-    // Update ball positions
-    // the bombs in our game
+    const others = store.getState().players.otherPlayers;
+    const playerIds = Object.keys(others)
 
-    // UPDATES PLAYERS HERE
-
-    let others = store.getState().players.otherPlayers;
-    let playerIds = Object.keys(others)
-
-    let state = store.getState();
-    let allBombs = state.bombs.allBombs;
-    let stateBombs = [];
+    const state = store.getState();
+    const allBombs = state.bombs.allBombs;
+    const stateBombs = [];
 
     for (let key in allBombs) {
       stateBombs.push(...allBombs[key])
@@ -307,8 +295,8 @@ export function animate() {
     //Animate Fire w/ Bombs
     let elapsed = clock.getElapsedTime()
     fire.update(elapsed)
-    // console.log('elapsed', elapsed)
 
+    //make a new player object if there is one
     if (playerIds.length !== players.length) {
       players = [];
       playerMeshes = [];
@@ -323,6 +311,7 @@ export function animate() {
       }
     }
 
+    //updating player positions
     for (let i = 0; i < players.length; i++) {
       let { x, y, z } = others[playerIds[i]]
       playerMeshes[i].position.set(x, y, z);
@@ -336,7 +325,6 @@ export function animate() {
     }
 
     // add new bomb if there is one
-    //we are only adding to the bombs array and bombMesh array when we receive back from the update bombs socket emitter, not when we first create the bomb
     if (stateBombs.length > bombs.length) {
       const mostRecentBomb = stateBombs[stateBombs.length - 1]
       const newBomb = new Bomb(mostRecentBomb.id, mostRecentBomb.position)
@@ -346,6 +334,7 @@ export function animate() {
       ballMeshes.push(newBomb.bombMesh)
     }
 
+    //update bomb position
     for (let i = 0; i < bombs.length; i++) {
       let { x, y, z } = stateBombs[i].position
       ballMeshes[i].position.copy(bombs[i].position)
@@ -363,9 +352,6 @@ export function animate() {
     // for(let i=0; i<destroyableBoxes.length; i++){
     //     destroyableBoxMeshes[i].position.set(destroyableBoxes[i].position);
     // }
-
-
-
   }
 
   controls.update(Date.now() - time);
@@ -373,23 +359,8 @@ export function animate() {
   time = Date.now();
 }
 
-
-
-
 // this is outdated should use raycaster instead since it gives more info anyway
 // also projector is moved.
 // to adjust to use raycaster we need to adjust yawObject and pitch object
-
-TODO: // HERE
-  var projector = new THREE.Projector();
-
-// get shoot direction might need to be adjusted to use ray caster instead
-const getShootDir = function(targetVec) {
-  var vector = targetVec;
-  targetVec.set(0, 0, 1);
-  projector.unprojectVector(vector, camera);
-  var ray = new THREE.Ray(sphereBody.position, vector.sub(sphereBody.position).normalize());
-  targetVec.copy(ray.direction);
-}
 
 export { scene, camera, renderer, controls, light, getShootDir, world }
