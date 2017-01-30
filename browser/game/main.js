@@ -7,6 +7,8 @@ import Player from './Player'
 import Bomb from './Bomb'
 
 import { Particle, Block } from './Explosion.js';
+import { VolumetricFire } from '../bombs/ParticleEngine.js';
+
 
 import Maps from './maps/maps'
 
@@ -85,14 +87,8 @@ export function initCannon() {
 
 // cannon sphere(radius)
 const ballShape = new CANNON.Sphere(1.5);
-
-// three sphere(radius, numFaces per xyz) higher num means rounder sphere
 const ballGeometry = new THREE.SphereGeometry(ballShape.radius, 32, 32);
-
-// generates a vector with no units if you want units you input
-// Vector3(x,y,z)
 const shootDirection = new THREE.Vector3();
-
 const shootVelo = 8;
 
 const projector = new THREE.Projector();
@@ -128,6 +124,19 @@ export function init() {
   //     light.shadowCameraVisible = true;
   // }
   scene.add(light);
+  
+  //Create Fire
+  clock = new THREE.Clock()
+  let fireWidth = 4
+  let fireHeight = 16
+  let fireDepth = 4
+  let sliceSpacing = 0.5
+
+  fire = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
+  fire.mesh.position.set(12,7.5,12)
+  VolumetricFire.texturePath = '../../public/assets/images';
+  scene.add(fire.mesh)
+  console.log('fire', fire)
 
   controls = new PointerLockControls(camera, sphereBody);
   scene.add(controls.getObject());
@@ -154,15 +163,6 @@ export function init() {
   sky.material.side = THREE.BackSide;
   scene.add(sky);
 
-  // const skyTexture = new THREE.TextureLoader().load('images/space.png');
-  // const sphere = new THREE.Mesh(
-  //   new THREE.SphereGeometry(100, 32, 32),
-  //   new THREE.MeshBasicMaterial({
-  //     map: skyTexture
-  //   })
-  // );
-  // scene.add(sphere)
-
   // init map blocks
   for (let i = 0; i < blockCount; i++) {
     let block = new Block(scene, world);
@@ -170,10 +170,7 @@ export function init() {
   }
 
   renderer = new THREE.WebGLRenderer();
-  // renderer.shadowMapEnabled = true;
-  // renderer.shadowMapSoft = true;
   renderer.setSize(window.innerWidth, window.innerHeight);
-  // renderer.setClearColor(scene.fog.color, 1);
   document.body.appendChild(renderer.domElement);
   window.addEventListener('resize', onWindowResize, false);
 
@@ -295,6 +292,10 @@ export function animate() {
       stateBombs.push(...allBombs[key])
     }
 
+    //Animate Fire w/ Bombs
+    let elapsed = clock.getElapsedTime()
+    fire.update(elapsed)
+
     //make a new player object if there is one
     if (playerIds.length !== players.length) {
       players = [];
@@ -361,8 +362,5 @@ export function animate() {
 // this is outdated should use raycaster instead since it gives more info anyway
 // also projector is moved.
 // to adjust to use raycaster we need to adjust yawObject and pitch object
-
-//TODO: // HERE
-
 
 export { scene, camera, renderer, controls, light, getShootDir, world }
