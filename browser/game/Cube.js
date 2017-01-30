@@ -14,15 +14,13 @@ export default class DestroyableCube {
     this.x = x;
     this.y = y;
     this.z = z;
-    this.destroyed = false;
+    this.exploded = false;
     this.cubeMesh = {};
     this.cubeBox = {};
     this.init();
   }
 
   init() {
-
-    let particles = []
 
     let halfExtents = new CANNON.Vec3(2,2,2);
     let boxShape = new CANNON.Box(halfExtents);
@@ -44,14 +42,21 @@ export default class DestroyableCube {
 
     scene.add(cubeMesh)
     world.add(cubeBox)
-    for (var i = 0; i < blockCount; i++) {
-      var block = new Block(scene, world, {x: this.x, y: this.y, z: this.z});
-      particles.push(block);
-    }
 
     this.cubeMesh = cubeMesh;
     this.cubeBox = cubeBox;
-    blocksArr.push(particles.slice());
+    setTimeout(() => {this.explode()}, 10000)
+  }
 
+  explode () {
+    this.exploded = true;
+    let particles = [];
+    for (let i = 0; i < blockCount; i++) {
+      const block = new Block(scene, world, {x: this.x, y: this.y, z: this.z});
+      particles.push(block);
+      blocksArr.push(particles.slice());
+    }
+    world.remove(this.cubeBox)
+    scene.remove(this.cubeMesh)
   }
 }
