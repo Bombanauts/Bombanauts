@@ -5,8 +5,7 @@ const {
 } = require('./constants');
 
 const getPlayers = () => ({
-  type: GET_PLAYERS,
-  players
+  type: GET_PLAYERS
 });
 
 const updatePlayers = (player) => ({
