@@ -4,11 +4,10 @@ import store from '../store';
 
 import { PointerLockControls } from './PointerLockControls';
 import Player from './Player'
-import Bomb from './Bomb'
+import Bomb, { fire } from './Bomb'
 
 import { Particle, Block } from './Explosion.js';
-import { VolumetricFire } from '../bombs/ParticleEngine.js';
-
+// import { VolumetricFire } from '../bombs/ParticleEngine.js';
 
 import Maps from './maps/maps'
 
@@ -33,7 +32,6 @@ export let players = [];
 export let playerMeshes = [];
 export let yourBombs = [];
 export let yourballMeshes = [];
-export let fire;
 
 const blocks = new Array();
 const blockCount = 25;
@@ -129,16 +127,6 @@ export function init() {
 
   //Create Fire
   clock = new THREE.Clock()
-  let fireWidth = 4
-  let fireHeight = 16
-  let fireDepth = 4
-  let sliceSpacing = 0.5
-
-  fire = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
-  fire.mesh.position.set(12,7.5,12)
-  VolumetricFire.texturePath = '../../public/assets/images';
-  fire.mesh.frustumCulled = false;
-  scene.add(fire.mesh)
 
   controls = new PointerLockControls(camera, sphereBody);
   scene.add(controls.getObject());
@@ -296,7 +284,7 @@ export function animate() {
 
     //Animate Fire w/ Bombs
     let elapsed = clock.getElapsedTime()
-    fire.update(elapsed)
+    if(fire) fire.update(elapsed)
 
     //make a new player object if there is one
     if (playerIds.length !== players.length) {

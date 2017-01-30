@@ -5,9 +5,11 @@ const THREE = require('three')
 const CANNON = require('cannon')
 const PointerLockControls = require('./PointerLockControls')
 
-import { scene, world } from './main'
+import { scene, world, animate, camera } from './main'
+import { VolumetricFire } from '../bombs/ParticleEngine';
 
 let bombBody, bombMesh;
+let fire;
 
 export default class Bomb {
   constructor(id, position) {
@@ -17,7 +19,38 @@ export default class Bomb {
     this.bombBody;
     this.bombShape;
     this.material;
+
     this.init = this.init.bind(this);
+    this.explode = this.explode.bind(this);
+  }
+
+  explode(bombMesh, bombBody) {
+    // removes from three js and cannon js
+    scene.remove(bombMesh)
+    world.remove(bombBody)
+
+    // create Fiyahhhh
+        let fireWidth = 4
+      let fireHeight = 16
+      let fireDepth = 4
+      let sliceSpacing = 0.5
+
+      fire = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
+
+      fire.mesh.position.set(bombBody.position.x, bombBody.position.y, bombBody.position.z)
+
+      VolumetricFire.texturePath = '../../public/assets/images';
+
+      fire.mesh.frustumCulled = false;
+
+      scene.add(fire.mesh)
+
+      setTimeout(() => {
+        scene.remove(fire.mesh)
+        fire = null;
+      }, 1000)
+
+
   }
 
   init() {
@@ -40,5 +73,12 @@ export default class Bomb {
     // shadow affects
     this.bombMesh.castShadow = true;
     this.bombMesh.receiveShadow = true;
+
+    setTimeout(() => {
+        console.log('INSIDE SET TIMEOUT')
+        this.explode(this.bombMesh, this.bombBody)
+    }, 2000)
   }
 }
+
+export { fire };
