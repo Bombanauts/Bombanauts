@@ -2,7 +2,7 @@ const {
   GET_PLAYERS,
   UPDATE_PLAYERS,
   REMOVE_PLAYER
-} = require('./constants')
+} = require('./constants');
 
 let initialState = {};
 
@@ -10,7 +10,7 @@ let initialState = {};
 const players = (state = initialState, action) => {
   let newState;
   switch (action.type) {
-    case GET_PLAYERS:
+    case GET_PLAYERS:  // Why does this need its own `case` if it's just returning `state`?
       return state
     case UPDATE_PLAYERS:
       newState = Object.assign({}, state);

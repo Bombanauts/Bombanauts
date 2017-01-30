@@ -1,3 +1,5 @@
+// Spacing in this file seems more inconsistent than average, particularly with line breaks
+
 'use strict'
 
 import React from 'react'
@@ -9,7 +11,7 @@ import { players } from '../../browser/players/reducer'
 import * as types from '../../browser/players/constants'
 
 describe ('Player action-creators', () => {
-	
+
 	describe('updatePlayerLocations', () => {
 
 		it('returns expected action description', () => {
@@ -73,29 +75,29 @@ describe('Player reducer', () => {
 
   describe('reducing on UPDATE_PLAYER_LOCATIONS', () => {
 
-  	it('affects state by updating player locations', () => {
-  		testingStore.dispatch({
-  			type: types.UPDATE_PLAYER_LOCATIONS,
-  			otherPlayers: {}
-  		})
-  		const newState = testingStore.getState()
+	it('affects state by updating player locations', () => {
+		testingStore.dispatch({
+			type: types.UPDATE_PLAYER_LOCATIONS,
+			otherPlayers: {}
+		})
+		const newState = testingStore.getState()
 
-  		expect(newState.otherPlayers).to.be.deep.equal({})
-  	})
+		expect(newState.otherPlayers).to.be.deep.equal({})
+	})
 
-  	it('creates a NEW state object on any dispatched action', () => {
-  		const currentState = testingStore.getState()
+	it('creates a NEW state object on any dispatched action', () => {
+		const currentState = testingStore.getState()
 
-  		testingStore.dispatch({
-  			type: types.UPDATE_PLAYER_LOCATIONS,
-  			otherPlayers: {}
-  		})
+		testingStore.dispatch({
+			type: types.UPDATE_PLAYER_LOCATIONS,
+			otherPlayers: {}
+		})
 
-  		const newState = testingStore.getState()
+		const newState = testingStore.getState()
 
-  		expect(currentState).to.not.be.equal(newState)
-  	})
-  })
+		expect(currentState).to.not.be.equal(newState)
+	})
+})
 
   describe('reducing on ADD_PLAYER', () => {
 

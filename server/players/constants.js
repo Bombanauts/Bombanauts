@@ -6,4 +6,4 @@ module.exports = {
   GET_PLAYERS,
   UPDATE_PLAYERS,
   REMOVE_PLAYER
-}
+};

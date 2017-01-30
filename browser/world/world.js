@@ -6,13 +6,13 @@ let scene;
 let camera;
 let renderer;
 let geometry;
-let materail;
+let material;  // Spelling error?
 let mesh;
 
 // CANNON JS Global Variables
 let world;
 
-// run our init function
+// run our init function  // This comment could be more informative
 init();
 
 // init THREE JS world
@@ -22,7 +22,7 @@ export const init = () => {
   scene = new THREE.Scene()
 
   // init camera
-  camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 1,2500)
+  camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 1, 2500)
 
   // add camera to scene
   scene.add(camera)

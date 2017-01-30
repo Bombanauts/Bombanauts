@@ -14,8 +14,8 @@ export default class FixedCube {
     this.z = z;
     this.fixedCubeMesh = {};
     this.fixedCubeBody = {};
-    let halfExtents = new CANNON.Vec3(2,2,2);
-    let fixedCubeShape = new CANNON.Box(halfExtents);
+    let halfExtents = new CANNON.Vec3(2,2,2);  // Are these closed-over values reassigned later somehow? (Could they be `const`s instead?)
+    let fixedCubeShape = new CANNON.Box(halfExtents);  // A bit confused by the division of these decs (e.g. `//creating fixedCube` below)
     let fixedCubeGeometry = new THREE.BoxGeometry(halfExtents.x * 1.9, halfExtents.y * 1.9, halfExtents.z * 1.9);
 
     // creating fixedCube
