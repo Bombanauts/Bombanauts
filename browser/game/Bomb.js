@@ -14,7 +14,7 @@ export default class Bomb {
     this.id = id;
     this.position = position;
 
-    // Why declare all these here? To keep track of the propertiess this class has?
+    // Why declare all these here? To keep track of the properties this class has?
     this.bombMesh;
     this.bombBody;
     this.bombShape;
