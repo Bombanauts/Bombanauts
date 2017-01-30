@@ -46,24 +46,25 @@ Particle.prototype.constructor = Particle;
 
 export const Block = function (scene, world, position) {
 
-  var MAX_SIZE = 0.5;
-  var MIN_SIZE = 0.08;
+  const MAX_SIZE = 0.5;
+  const MIN_SIZE = 0.08;
 
   //cerate randomly sized cube
-  var boxShape = new CANNON.Box(new CANNON.Vec3(0.4,0.4,0.4))
-  var boxGeometry = new THREE.BoxGeometry(0.4, 0.4, 0.4)
-  var boxBody = new CANNON.Body()
+  const boxShape = new CANNON.Box(new CANNON.Vec3(0.4,0.4,0.4))
+  const texture = new THREE.TextureLoader().load('images/crate.gif');
+  const boxGeometry = new THREE.BoxGeometry(0.4, 0.4, 0.4)
+  const boxBody = new CANNON.Body()
 
   // Vector3(x,y,z)
-  var shootDirection = new THREE.Vector3();
+  const shootDirection = new THREE.Vector3();
 
   // speed of ball (m/s maybe?)
-  var shootVelo = 15;
+  const shootVelo = 15;
 
   // var ballBody = new CANNON.Body({ mass: 1 });
   boxBody.addShape(boxShape);
-  let color = new THREE.MeshLambertMaterial({color: 0x8B4513})
-  this.particle = new THREE.Mesh(boxGeometry, color);
+  const material = new THREE.MeshLambertMaterial({ map: texture });
+  this.particle = new THREE.Mesh(boxGeometry, material);
 
   // shadow affects
   this.particle.castShadow = true;
@@ -81,8 +82,8 @@ export const Block = function (scene, world, position) {
 
 Block.prototype.reset = function(x, y, z){
 
-  var MAX_SPEED = 0.1;
-  var MAX_ROT = .1;
+  const MAX_SPEED = 0.03;
+  const MAX_ROT = .1;
 
   this.xd = Math.random()*MAX_SPEED*2 - MAX_SPEED ;
   this.yd = Math.abs(Math.random()*MAX_SPEED*2 - MAX_SPEED) ;
@@ -111,6 +112,6 @@ Block.prototype.loop = function(){
   this.particle.rotation.x += this.xrd;
   this.particle.rotation.z += this.zrd;
   this.ticks ++;
-  if (this.ticks > 100) return scene.remove(this.particle)
+  if (this.ticks > 300) return scene.remove(this.particle)
 
 }
