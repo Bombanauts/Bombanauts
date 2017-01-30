@@ -283,7 +283,6 @@ export function animate() {
     let state = store.getState();
     let allBombs = state.bombs.allBombs;
     let stateBombs = [];
-    console.log('allBombs', allBombs)
 
     for (let key in allBombs) {
       stateBombs.push(...allBombs[key])
