@@ -6,7 +6,7 @@ import store from '../store';
 import { updatePlayerLocations, removePlayer } from '../players/action-creator';
 import { updateBombLocations, removePlayerBombs } from '../bombs/action-creator'
 
-import { initCannon, init, animate,players, playerMeshes, world } from '../game/main';
+import { initCannon, init, animate, players, playerMeshes, world } from '../game/main';
 
 socket.on('connect', function() {
 
@@ -15,6 +15,20 @@ socket.on('connect', function() {
       delete initialData['undefined']
     }
     store.dispatch(updatePlayerLocations(initialData));
+  })
+
+  socket.on('update_world', (data) => {
+    delete data.players[socket.id];
+    delete data.bombs.allBombs[socket.id];
+    if (data.players['undefined']) {
+      delete data['undefined']
+    }
+    if (data.bombs.allBombs['undefined']) {
+      delete data['undefined']
+    }
+
+    store.dispatch(updatePlayerLocations(data.players))
+    store.dispatch(updateBombLocations(data.bombs.allBombs))
   })
 
   socket.on('update_player_locations', (data) => {
@@ -34,7 +48,6 @@ socket.on('connect', function() {
   })
 
   socket.on('remove_player', (data) => {
-
     store.dispatch(removePlayer(data))
     scene.remove(scene.getObjectByName(data))
     world.removeBody(world.getObjectByName(data))
