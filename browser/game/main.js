@@ -1,6 +1,6 @@
 const THREE = require('three')
 const CANNON = require('cannon')
-  // const PointerLockControls = require('./PointerLockControls');
+// const PointerLockControls = require('./PointerLockControls');
 import store from '../store';
 
 import { PointerLockControls } from './PointerLockControls';
@@ -20,7 +20,7 @@ var controls, time = Date.now();
 var SCREEN_WIDTH = window.innerWidth;
 var SCREEN_HEIGHT = window.innerHeight;
 
-export let walls = [];
+export let walls = [];  // Can all of these arrays be `const`s?
 export let bombs = [];
 export let ballMeshes = [];
 export let boxes = [];
@@ -32,7 +32,7 @@ export let playerMeshes = [];
 export let yourBombs = [];
 export let yourballMeshes = [];
 
-var blocks = new Array();
+var blocks = new Array();  // `var`s again?
 var blockCount = 25;
 
 export function initCannon() {
@@ -48,7 +48,7 @@ export function initCannon() {
   world.defaultContactMaterial.contactEquationRelaxation = 4;
   solver.iterations = 7;
   solver.tolerance = 0.1;
-  var split = true;
+  var split = true;  // If `split` is always `true`, what is the purpose of the control flow below?
   if (split)
     world.solver = new CANNON.SplitSolver(solver);
   else
@@ -56,21 +56,21 @@ export function initCannon() {
   world.gravity.set(0, -20, 0);
   world.broadphase = new CANNON.NaiveBroadphase();
 
-  //     // Create a slippery material (friction coefficient = 0.0)
+  // Create a slippery material (friction coefficient = 0.0)
   physicsMaterial = new CANNON.Material("slipperyMaterial");
   var physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
     physicsMaterial,
     0.0, // friction coefficient
     0.3 // restitution
   );
-  //     // We must add the contact materials to the world
+  // We must add the contact materials to the world
   world.addContactMaterial(physicsContactMaterial);
 
-  //     // Create a sphere
+  // Create a sphere
   var mass = 5,
     radius = 1.3;
   sphereShape = new CANNON.Sphere(radius);
-  sphereBody = new CANNON.Body({ mass: mass });
+  sphereBody = new CANNON.Body({ mass: mass });  // Can simplify to `{ mass }`
   sphereBody.addShape(sphereShape);
   sphereBody.position.set(0, 5, 0);
   sphereBody.linearDamping = 0.9;
@@ -110,7 +110,7 @@ export function init() {
   light = new THREE.SpotLight(0xffffff);
   light.position.set(10, 30, 20);
   light.target.position.set(0, 5, 0);
-  // if(true){
+  // if(true){  // -_-?
   //     light.castShadow = false;
   //     light.shadowCameraNear = 20;
   //     light.shadowCameraFar = 50;//camera.far;
@@ -144,6 +144,7 @@ export function init() {
   for (var i = 0; i < blockCount; i++) {
     var block = new Block(scene, world);
     blocks.push(block);
+    // Intention is potentially a little confusing to read? Because each block pushed is a separate instance but the `block` var has needlessly functional scope?
   }
 
 
@@ -233,7 +234,7 @@ export function init() {
 }
 
 export function createMap() {
-  let map0 = Maps[0]
+  let map0 = Maps[0]  // Is there a better way to write this? Or is the hard-coding temporary to test that one available map?
   generateMap(map0);
 }
 
@@ -273,7 +274,7 @@ export function animate() {
     world.step(dt); // function that allows walking from CANNON
 
     // Update ball positions
-    // the bombs in our game
+    // the bombs in our game  // ???
 
     // UPDATES PLAYERS HERE
 
@@ -292,7 +293,7 @@ export function animate() {
       players = [];
       playerMeshes = [];
       for (let player in others) {
-        let newPlayer;
+        let newPlayer;  // Why not declare and assign in one line?
         newPlayer = new Player(socket.id, others[player].x, others[player].y, others[player].z)
         newPlayer.init()
         players.push(newPlayer.playerBox)
@@ -359,7 +360,7 @@ export function animate() {
 // also projector is moved.
 // to adjust to use raycaster we need to adjust yawObject and pitch object
 
-TODO: // HERE
+// TODO: HERE  // Should this be a comment?
   var projector = new THREE.Projector();
 
 // get shoot direction might need to be adjusted to use ray caster instead

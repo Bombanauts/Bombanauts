@@ -48,7 +48,7 @@ Particle.prototype.constructor = Particle;
 
 export const Block = function (scene, world) {
 
-  var MAX_SIZE = 0.5;
+  var MAX_SIZE = 0.5;  // Why the sudden uses of `var`?
   var MIN_SIZE = 0.08;
 
   //cerate randomly sized cube
@@ -81,9 +81,9 @@ export const Block = function (scene, world) {
 Block.prototype.reset = function(){
 
   var MAX_SPEED = 0.1;
-  var MAX_ROT = .1;
+  var MAX_ROT = 0.1;  // Best to keep `0` in front of decimals for clarity and legibility
 
-  this.xd = Math.random()*MAX_SPEED*2 - MAX_SPEED ;
+  this.xd = Math.random()*MAX_SPEED*2 - MAX_SPEED ;  // Spacing throughout the repo seems to be quite inconsistent
   this.yd = Math.abs(Math.random()*MAX_SPEED*2 - MAX_SPEED) ;
   this.zd = Math.random()*MAX_SPEED*2 - MAX_SPEED ;
 
@@ -104,15 +104,15 @@ Block.prototype.reset = function(){
 Block.prototype.loop = function(){
 
 
-    this.particle.position.x += this.xd;
+  this.particle.position.x += this.xd;
   this.particle.position.y += this.yd;
   this.particle.position.z += this.zd;
 
   this.particle.rotation.x += this.xrd;
   this.particle.rotation.z += this.zrd;
-  this.ticks ++;
+  this.ticks++;  // a space after the `++` shortcut can potentially lead to errors!
 
-  if (this.ticks > 100){
+  if (this.ticks > 100){  // So you want to tick until 101? Just checking because it's a slightly odd number.
     this.reset();
   }
 

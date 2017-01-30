@@ -11,7 +11,7 @@ import { initCannon, init, animate,players, playerMeshes, world } from '../game/
 socket.on('connect', function() {
 
   socket.on('initial', (initialData) => {
-    if (initialData['undefined']) {
+    if (initialData['undefined']) {  // What do these initial if statements do? If necessary, can they be DRYed up?
       delete initialData['undefined']
     }
     store.dispatch(updatePlayerLocations(initialData));

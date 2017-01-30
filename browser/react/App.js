@@ -4,7 +4,7 @@ import { initCannon, init, animate, controls, light } from '../game/main';
 const THREE = require('three')
 const CANNON = require('cannon')
 
-const fontStyle = {
+const fontStyle = {  // Inline JSX CSS styles, wowza 😱
   'fontSize': '40px'
 }
 
@@ -15,6 +15,8 @@ function delay(t) {
 }
 
 export default class App extends Component {
+  // You only need to bring in `props` and call super on it if you're using `props` in the constructor function; else nothing changes in terms of your access to `props`. (NB: The React docs recommend including it possibly for future compatibility? No reason is currently given.)
+  // Also, do you need the `constructor` here? (Unsure if it's neeeded because of your lifecycle method or something)
   constructor(props) {
     super(props)
   }
@@ -38,7 +40,7 @@ export default class App extends Component {
                   (W,A,S,D = Move, SPACE = Jump, MOUSE = Look, CLICK = Shoot)
               </div>
       </div>
-    )
+    )  // ^^^ I'd add ESC to regain control of the mouse
   }
 
 }
@@ -50,7 +52,7 @@ function pointerChecker() {
 
   if ( havePointerLock ) {
       var element = document.body;
-      var pointerlockchange = function ( event ) {
+      var pointerlockchange = function ( event ) {  // Would camelCase be easier to read?
           if ( document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element ) {
               controls.enabled = true;
               blocker.style.display = 'none';
@@ -93,6 +95,6 @@ function pointerChecker() {
           }
       }, false );
   } else {
-      instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
+      instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';  // Is this meaningful to the user?
   }
 }

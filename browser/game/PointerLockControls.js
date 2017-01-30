@@ -37,7 +37,7 @@ export const PointerLockControls = function(camera, cannonBody) {
 
       // contact.bi and contact.bj are the colliding bodies, and contact.ni is the collision normal.
       // We do not yet know which one is which! Let's check.
-      if (contact.bi.id == cannonBody.id) // bi is the player body, flip the contact normal
+      if (contact.bi.id === cannonBody.id) // bi is the player body, flip the contact normal
         contact.ni.negate(contactNormal);
       else
         contactNormal.copy(contact.ni); // bi is something else. Keep the normal as it is
@@ -45,6 +45,7 @@ export const PointerLockControls = function(camera, cannonBody) {
       // If contactNormal.dot(upAxis) is between 0 and 1, we know that the contact normal is somewhat in the up direction.
       if (contactNormal.dot(upAxis) > 0.5) // Use a "good" threshold value between 0 and 1 here!
         canJump = true;
+      // When writing single-line `if` and `else` statements it's best to keep them on one-line for clarity (e.g. to avoid a later dev thinking the indented newline is contained within brackets).
     });
 
     var velocity = cannonBody.velocity;
@@ -67,7 +68,7 @@ export const PointerLockControls = function(camera, cannonBody) {
 
     var onKeyDown = function(event) {
 
-      switch (event.keyCode) {
+      switch (event.keyCode) {  // Add a comment somewhere confirming that these breakthroughs are deliberate
 
         case 38: // up
         case 87: // w
@@ -90,10 +91,10 @@ export const PointerLockControls = function(camera, cannonBody) {
           break;
 
         case 32: // space
-          if (canJump === true) {
+          if (canJump === true) {  // if (canJump)
             velocity.y = jumpVelocity;
           }
-          canJump = false;
+          canJump = false;  // Do you ALWAYS want to make `canJump` false, or only when it's `true`?
           break;
       }
 
@@ -102,6 +103,8 @@ export const PointerLockControls = function(camera, cannonBody) {
     var onKeyUp = function(event) {
 
       switch (event.keyCode) {
+
+        // If these are all false on keyup, can you just make them all false on any keyup? Or DRY up the code in some other way? Or can you move diagonally in this game?
 
         case 38: // up
         case 87: // w
@@ -147,7 +150,7 @@ export const PointerLockControls = function(camera, cannonBody) {
     var euler = new THREE.Euler();
     this.update = function(delta) {
 
-      if (scope.enabled === false) return;
+      if (scope.enabled === false) return;  // if (!scope.enabled)
 
       delta *= 0.1;
 

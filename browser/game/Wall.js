@@ -15,7 +15,7 @@ export default class Wall {
     this.wallMesh = {};
     this.wallBody = {};
     let halfExtents = new CANNON.Vec3(2,2,2);
-    let wallShape = new CANNON.Box(halfExtents);
+    let wallShape = new CANNON.Box(halfExtents);  // Again a bit of confusion regarding the comment divisions
     let wallGeometry = new THREE.BoxGeometry(halfExtents.x * 2, halfExtents.y * 3.5, halfExtents.z * 2);
 
     // creating wall

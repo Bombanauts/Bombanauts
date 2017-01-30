@@ -1,4 +1,4 @@
-'use strict'
+'use strict'  // Why suddenly here?
 
 import React from 'react'
 import { createStore } from 'redux'
@@ -9,7 +9,7 @@ import { bombs } from '../../browser/bombs/reducer'
 import * as types from '../../browser/bombs/constants'
 
 describe ('Bomb action-creators', () => {
-	
+
 	describe('updateBombLocations', () => {
 
 		it('returns expected action description', () => {
@@ -22,7 +22,7 @@ describe ('Bomb action-creators', () => {
   			allBombs
 			}
 
-			expect(updateBombLocations(allBombs)).to.be.deep.equal(expectedAction)
+			expect(updateBombLocations(allBombs)).to.deep.equal(expectedAction)  // Grammar! :}
 		})
 	})
 
@@ -37,7 +37,7 @@ describe ('Bomb action-creators', () => {
 				id
 			}
 
-			expect(removePlayerBombs(id)).to.be.deep.equal(expectedAction)
+			expect(removePlayerBombs(id)).to.deep.equal(expectedAction)
 		})
 	})
 
@@ -50,15 +50,15 @@ describe('Bomb reducer', () => {
       testingStore = createStore(bombs);
   })
 
-  it('has an initial state as described', () => {
+  it('has an initial state as described', () => {  // 'as described'?
       const currentStoreState = testingStore.getState();
-      expect(currentStoreState.allBombs).to.be.deep.equal({});
+      expect(currentStoreState.allBombs).to.deep.equal({});
   })
 
   describe('reducing on UPDATE_BOMB_LOCATIONS', () => {
 
   	it('affects state by updating bomb locations', () => {
-			
+
 			const allBombs = {
 				"UidDcC7s6X6QrYr2AAAB": [{position: {x: 1, y: 1, z: 1}}]
 			}
@@ -69,7 +69,7 @@ describe('Bomb reducer', () => {
   		})
   		const newState = testingStore.getState()
 
-  		expect(newState.allBombs).to.be.deep.equal(allBombs)
+  		expect(newState.allBombs).to.deep.equal(allBombs)
   	})
 
   	it('creates a NEW state object on any dispatched action', () => {
@@ -82,7 +82,7 @@ describe('Bomb reducer', () => {
 
   		const newState = testingStore.getState()
 
-  		expect(currentState).to.not.be.equal(newState)
+  		expect(currentState).to.not.equal(newState)  // You don't need `be`, fwiw
   	})
   })
 
@@ -91,7 +91,7 @@ describe('Bomb reducer', () => {
 
   	it('affects state by removing a players bombs', () => {
 
-			const id = "UidDcC7s6X6QrYr2AAAB"
+			const id = "UidDcC7s6X6QrYr2AAAB"  // Why have such elaborate id's in some files and simple ones in others?
 
   		const initialState = testingStore.getState();
 
@@ -101,7 +101,7 @@ describe('Bomb reducer', () => {
   		})
 
   		const newState = testingStore.getState()
-  		expect(newState.allBombs).to.be.deep.equal({})
+  		expect(newState.allBombs).to.deep.equal({})
   	})
   })
 

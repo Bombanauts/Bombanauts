@@ -1,4 +1,4 @@
-/**
+/*
  * @author yomotsu / http://yomotsu.net
  * ported from http://webgl-fire.appspot.com/html/fire.html
  *
@@ -181,10 +181,10 @@
 
     return function () {
 
-      if ( !!material ) { return material; }
+      if ( !!material ) { return material; }  // Does this not work without `!!` coercion?
 
       // TODO
-      // Canvas2D で noise 画像を作る
+      // Canvas2D で noise 画像を作る  // wow, nihongo!
       var nzw = textureLoader.load( VolumetricFire.texturePath + 'nzw.png' );
       nzw.wrapS = THREE.RepeatWrapping;
       nzw.wrapT = THREE.RepeatWrapping;
