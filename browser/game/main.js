@@ -35,7 +35,7 @@ export let yourBombs = [];
 export let yourballMeshes = [];
 export let fire;
 
-const blocks = new Array();
+const blocksArr = [];
 const blockCount = 25;
 
 export function initCannon() {
@@ -322,9 +322,11 @@ export function animate() {
       players[i].position.z = z;
     }
 
-    for (var i = 0; i < blockCount; i++) {
-      blocks[i].loop();
-    }
+    for (let k = 0; k < blocksArr.length; k++) {
+			for (var i = 0; i < blocksArr[k].length; i++) {
+					blocksArr[k][i].loop();
+			}
+		}
 
     // add new bomb if there is one
     if (stateBombs.length > bombs.length) {

@@ -25,9 +25,6 @@ socket.on('connect', function() {
     store.dispatch(updatePlayerLocations(data));
   })
 
-
-
-
   socket.on('update_bomb_positions', (data) => {
     delete data[socket.id];
     if (data['undefined']) {
@@ -35,7 +32,6 @@ socket.on('connect', function() {
     }
     store.dispatch(updateBombLocations(data))
   })
-
 
   socket.on('remove_player', (data) => {
 
