@@ -307,7 +307,6 @@ const THREE = require('three')
       geometry,
       material
     );
-
     this.mesh.updateMatrixWorld();
 
   }
