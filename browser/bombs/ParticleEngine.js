@@ -7,29 +7,32 @@
  * https://www.iusb.edu/math-compsci/_prior-thesis/YVanzine_thesis.pdf
  */
 
-( function ( root, factory ) {
+// ( function ( root, factory ) {
 
-  if ( typeof define === 'function' && define.amd ) {
+//   if ( typeof define === 'function' && define.amd ) {
 
-    // AMD. Register as an anonymous module.
-    define( [], factory );
+//     // AMD. Register as an anonymous module.
+//     define( [], factory );
 
-  } else if ( typeof module === 'object' && module.exports ) {
+//   } else if ( typeof module === 'object' && module.exports ) {
 
-    // Node. Does not work with strict CommonJS, but
-    // only CommonJS-like environments that support module.exports,
-    // like Node.
-    module.exports = factory();
+//     // Node. Does not work with strict CommonJS, but
+//     // only CommonJS-like environments that support module.exports,
+//     // like Node.
+//     module.exports = factory();
 
-  } else {
+//   } else {
 
-    // Browser globals (root is window)
-    root.VolumetricFire = factory( root );
+//     // Browser globals (root is window)
+//     root.VolumetricFire = factory( root );
 
-  }
+//   }
 
-}( this, function () {
+// }( this, function () {
 
+const THREE = require('three')
+
+// export const VolumetricFire = () => {
   'use strict';
 
   var vs = [
@@ -250,7 +253,7 @@
     [ -1, -1, -1,  5, -1,  6,  3, -1 ],
   ];
 
-  var VolumetricFire = function ( width, height, depth, sliceSpacing, camera ) {
+  export const VolumetricFire = function ( width, height, depth, sliceSpacing, camera ) {
 
     this.camera = camera;
 
@@ -571,7 +574,7 @@
 
   };
 
-  VolumetricFire.texturePath = './textures/';
+  VolumetricFire.texturePath = 'images/';
 
   ///
 
@@ -624,6 +627,6 @@
 
   };
 
-  return VolumetricFire;
+  // return VolumetricFire;
 
-} ) );
+// }
