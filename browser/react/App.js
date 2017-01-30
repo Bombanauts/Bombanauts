@@ -16,7 +16,7 @@ function delay(t) {
 
 export default class App extends Component {
   // You only need to bring in `props` and call super on it if you're using `props` in the constructor function; else nothing changes in terms of your access to `props`. (NB: The React docs recommend including it possibly for future compatibility? No reason is currently given.)
-  // Also, do you need the `constructor` here? (Unsure if it's neeeded because of your lifecycle method or something)
+  // Also, do you need the `constructor` here? (Unsure if it's needed because of your lifecycle method or something)
   constructor(props) {
     super(props)
   }
