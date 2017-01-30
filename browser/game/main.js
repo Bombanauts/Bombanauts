@@ -18,6 +18,7 @@ let sphereShape, sphereBody, world, physicsMaterial;
 let camera, scene, renderer, light;
 let geometry, material, mesh;
 let controls, time = Date.now();
+let clock;
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 
@@ -32,6 +33,7 @@ export let players = [];
 export let playerMeshes = [];
 export let yourBombs = [];
 export let yourballMeshes = [];
+export let fire;
 
 const blocks = new Array();
 const blockCount = 25;
@@ -124,7 +126,7 @@ export function init() {
   //     light.shadowCameraVisible = true;
   // }
   scene.add(light);
-  
+
   //Create Fire
   clock = new THREE.Clock()
   let fireWidth = 4
@@ -136,7 +138,6 @@ export function init() {
   fire.mesh.position.set(12,7.5,12)
   VolumetricFire.texturePath = '../../public/assets/images';
   scene.add(fire.mesh)
-  console.log('fire', fire)
 
   controls = new PointerLockControls(camera, sphereBody);
   scene.add(controls.getObject());
