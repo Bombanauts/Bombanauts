@@ -137,6 +137,7 @@ export function init() {
   fire = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
   fire.mesh.position.set(12,7.5,12)
   VolumetricFire.texturePath = '../../public/assets/images';
+  fire.mesh.frustumCulled = false;
   scene.add(fire.mesh)
 
   controls = new PointerLockControls(camera, sphereBody);
