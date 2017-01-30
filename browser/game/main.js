@@ -35,8 +35,8 @@ export let yourBombs = [];
 export let yourballMeshes = [];
 export let fire;
 
-const blocksArr = [];
-const blockCount = 25;
+export const blocksArr = [];
+export const blockCount = 25;
 
 export function initCannon() {
   //set up our world, check for other players
@@ -164,12 +164,6 @@ export function init() {
   const sky = new THREE.Mesh(skyGeo, skyMaterial);
   sky.material.side = THREE.BackSide;
   scene.add(sky);
-
-  // init map blocks
-  for (let i = 0; i < blockCount; i++) {
-    let block = new Block(scene, world);
-    blocks.push(block);
-  }
 
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
