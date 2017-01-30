@@ -1,4 +1,4 @@
-echo 'in the .profile!'
+eecho 'in the .profile!'
 
 npm install -dev
 npm run build

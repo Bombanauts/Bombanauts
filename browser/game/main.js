@@ -162,6 +162,7 @@ export function init() {
 
   let others = store.getState().players.otherPlayers.players;
   let newPlayer;
+  console.log(store.getState())
   if (socket) {
     socket.emit('update_players_position', {
       position: {
