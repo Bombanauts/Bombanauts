@@ -9,7 +9,6 @@ import { scene, world, blockCount, blocksArr} from './main';
 
 import { Particle, Block } from './Explosion.js';
 
-
 export default class DestroyableCube {
   constructor(x, y, z) {
     this.x = x;
@@ -22,17 +21,22 @@ export default class DestroyableCube {
   }
 
   init() {
+
     let particles = []
 
     let halfExtents = new CANNON.Vec3(2,2,2);
     let boxShape = new CANNON.Box(halfExtents);
     let boxGeometry = new THREE.BoxGeometry(halfExtents.x*1.9,halfExtents.y*1.9,halfExtents.z*1.9);
 
+    //importing texture
+    const texture = new THREE.TextureLoader().load('images/crate.gif');
+
+
     // creating player
-    let cubeBox = new CANNON.Body({ mass: 1 });
+    const cubeBox = new CANNON.Body({ mass: 1 });
     cubeBox.addShape(boxShape)
-    let color = new THREE.MeshLambertMaterial( { color: 0x8B4513 } );
-    let cubeMesh = new THREE.Mesh( boxGeometry, color );
+    const material = new THREE.MeshLambertMaterial({ map: texture });
+    const cubeMesh = new THREE.Mesh(boxGeometry, material);
 
     // set spawn position
     cubeMesh.position.set(this.x, this.y, this.z);

@@ -14,15 +14,22 @@ export default class Wall {
     this.z = z;
     this.wallMesh = {};
     this.wallBody = {};
-    let halfExtents = new CANNON.Vec3(2,2,2);
-    let wallShape = new CANNON.Box(halfExtents);
-    let wallGeometry = new THREE.BoxGeometry(halfExtents.x * 2, halfExtents.y * 3.5, halfExtents.z * 2);
+    this.init();
+    }
+
+    init() {
+    const halfExtents = new CANNON.Vec3(2, 2, 2);
+    const wallShape = new CANNON.Box(halfExtents);
+    const wallGeometry = new THREE.BoxGeometry(halfExtents.x * 2, halfExtents.y * 3.5, halfExtents.z * 2);
+
+    //importing texture
+    const texture = new THREE.TextureLoader().load('images/brick_wall.png');
 
     // creating wall
-    let wallBody = new CANNON.Body({ mass: 0 });
+    const wallBody = new CANNON.Body({ mass: 0 });
     wallBody.addShape(wallShape)
-    let color = new THREE.MeshLambertMaterial({ color: 0x3f7cba });
-    let wallMesh = new THREE.Mesh( wallGeometry, color );
+    const material = new THREE.MeshLambertMaterial({ map: texture });
+    const wallMesh = new THREE.Mesh( wallGeometry, material );
 
     // set spawn position
     wallMesh.position.set(this.x, this.y, this.z);
