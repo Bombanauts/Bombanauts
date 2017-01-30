@@ -19,8 +19,9 @@ export default class Bomb {
     this.material;
     this.init = this.init.bind(this);
   }
-  init() {
 
+  init() {
+    // console.log('POSITION: ', this.position)
     this.bombShape = new CANNON.Sphere(1.5);
     // three sphere(radius, numFaces per xyz) higher num means rounder sphere
     // 32 should be enough for spheres

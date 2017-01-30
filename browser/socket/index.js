@@ -33,7 +33,7 @@ socket.on('connect', function() {
     if (data['undefined']) {
       delete data['undefined']
     }
-    store.dispatch(updateBombLocations(data.allBombs))
+    store.dispatch(updateBombLocations(data))
   })
 
 
