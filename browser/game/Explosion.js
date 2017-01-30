@@ -33,12 +33,10 @@ export const Particle = function (width, height, depth) {
   f4( 4, 0, 3 );
 
   function vertices(x, y, z) {
-
     scope.vertices.push( new THREE.Vector3( x, y, z )  );
   }
 
   function f4(a, b, c) {
-
     scope.faces.push( new THREE.Face3( a, b, c) );
   }
 }
@@ -46,7 +44,7 @@ export const Particle = function (width, height, depth) {
 Particle.prototype = new THREE.Geometry();
 Particle.prototype.constructor = Particle;
 
-export const Block = function (scene, world) {
+export const Block = function (scene, world, position) {
 
   var MAX_SIZE = 0.5;
   var MIN_SIZE = 0.08;
@@ -71,14 +69,17 @@ export const Block = function (scene, world) {
   this.particle.castShadow = true;
   this.particle.receiveShadow = true;
 
-  this.reset();
+  // starting position
+  this.particle.position.x = position.x;
+  this.particle.position.y = position.y;
+  this.particle.position.z = position.z;
+
+  this.reset(this.particle.position.x, this.particle.position.y, this.particle.position.z);
   world.addBody(boxBody)
   scene.add(this.particle);
 }
 
-
-
-Block.prototype.reset = function(){
+Block.prototype.reset = function(x, y, z){
 
   var MAX_SPEED = 0.1;
   var MAX_ROT = .1;
@@ -87,12 +88,12 @@ Block.prototype.reset = function(){
   this.yd = Math.abs(Math.random()*MAX_SPEED*2 - MAX_SPEED) ;
   this.zd = Math.random()*MAX_SPEED*2 - MAX_SPEED ;
 
+  this.particle.position.x = x;
+  this.particle.position.y = y;
+  this.particle.position.z = z;
+
   this.xrd = Math.random()*MAX_ROT*2 - MAX_ROT;
   this.zrd = Math.random()*MAX_ROT*2 - MAX_ROT;
-
-  this.particle.position.x = 0;
-  this.particle.position.y = 5;
-  this.particle.position.z = 3;
 
   this.particle.rotation.x = Math.random()*360;
   this.particle.rotation.z = Math.random()*360;
@@ -103,17 +104,13 @@ Block.prototype.reset = function(){
 
 Block.prototype.loop = function(){
 
-
-    this.particle.position.x += this.xd;
+  this.particle.position.x += this.xd;
   this.particle.position.y += this.yd;
   this.particle.position.z += this.zd;
 
   this.particle.rotation.x += this.xrd;
   this.particle.rotation.z += this.zrd;
   this.ticks ++;
-
-  if (this.ticks > 100){
-    this.reset();
-  }
+  if (this.ticks > 100) return scene.remove(this.particle)
 
 }
