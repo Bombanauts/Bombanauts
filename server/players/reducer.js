@@ -11,14 +11,14 @@ const players = (state = initialState, action) => {
   let newState;
   switch (action.type) {
     case GET_PLAYERS:
-      return state.players;
+      return state
     case UPDATE_PLAYERS:
       newState = Object.assign({}, state);
       newState[action.player.id] = action.player.position;
       return newState;
     case REMOVE_PLAYER:
-      delete state[action.id]
       newState = Object.assign({}, state);
+      delete newState[action.id]
       return newState;
     default:
       return state;
