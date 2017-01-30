@@ -8,6 +8,8 @@ import Player from './Player'
 import Bomb from './Bomb'
 
 import { Particle, Block } from './Explosion.js';
+import { VolumetricFire } from '../bombs/ParticleEngine.js';
+
 
 import Maps from './maps/maps'
 
@@ -19,6 +21,7 @@ var geometry, material, mesh;
 var controls, time = Date.now();
 var SCREEN_WIDTH = window.innerWidth;
 var SCREEN_HEIGHT = window.innerHeight;
+let fire, clock;
 
 export let walls = [];
 export let bombs = [];
@@ -123,6 +126,19 @@ export function init() {
   // }
   scene.add(light);
 
+
+  //Create Fire
+  clock = new THREE.Clock()
+  let fireWidth = 4
+  let fireHeight = 16
+  let fireDepth = 4
+  let sliceSpacing = 0.5
+
+  fire = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
+  fire.mesh.position.set(12,7.5,12)
+  VolumetricFire.texturePath = '../../public/assets/images';
+  scene.add(fire.mesh)
+  console.log('fire', fire)
   // this attaches bomb to the player (maybe)
   // look at PointerLockControls function
   // sphereBody.position = (0,5,0) so the sphere should be 5+ in y direction above camera
@@ -287,6 +303,11 @@ export function animate() {
     for (let key in allBombs) {
       stateBombs.push(...allBombs[key])
     }
+
+    //Animate Fire w/ Bombs
+    let elapsed = clock.getElapsedTime()
+    fire.update(elapsed)
+    // console.log('elapsed', elapsed)
 
     if (playerIds.length !== players.length) {
       players = [];
