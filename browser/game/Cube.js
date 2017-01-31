@@ -23,13 +23,12 @@ export default class DestroyableCube {
 
   init() {
 
-    let halfExtents = new CANNON.Vec3(2,2,2);
+    let halfExtents = new CANNON.Vec3(2, 2, 2);
     let boxShape = new CANNON.Box(halfExtents);
-    let boxGeometry = new THREE.BoxGeometry(halfExtents.x*1.9,halfExtents.y*1.9,halfExtents.z*1.9);
+    let boxGeometry = new THREE.BoxGeometry(halfExtents.x * 1.9, halfExtents.y * 1.9, halfExtents.z * 1.9);
 
     //importing texture
     const texture = new THREE.TextureLoader().load('images/crate.gif');
-
 
     // creating player
     const cubeBox = new CANNON.Body({ mass: 1 });
@@ -46,6 +45,9 @@ export default class DestroyableCube {
 
     this.cubeMesh = cubeMesh;
     this.cubeBox = cubeBox;
+
+    // setTimeout(() => {this.explode()}, 10000)
+
   }
 
   explode () {

@@ -4,7 +4,7 @@ import store from '../store';
 
 import { PointerLockControls } from './PointerLockControls';
 import Player from './Player'
-import Bomb, { fire } from './Bomb'
+import Bomb, { fire, fire2, fire3, fire4, fire5 } from './Bomb'
 
 import { Particle, Block } from './Explosion.js';
 // import { VolumetricFire } from '../bombs/ParticleEngine.js';
@@ -250,20 +250,15 @@ export function animate() {
 
   setTimeout(() => {
       if (socket) {
-        socket.emit('update_players_position', {
-          position: {
+        socket.emit('update_world', {
+          playerId: socket.id,
+          playerPosition: {
             x: sphereBody.position.x,
             y: sphereBody.position.y,
             z: sphereBody.position.z
           },
-          id: socket.id
+          playerBombs: yourBombs
         });
-        if (bombs.length) {
-          socket.emit('update_bomb_positions', {
-            userId: socket.id,
-            bombs: yourBombs
-          })
-        }
       }
       requestAnimationFrame(animate);
     }, 1000 / 60) //throttled to 60 times per second
@@ -285,6 +280,12 @@ export function animate() {
     //Animate Fire w/ Bombs
     let elapsed = clock.getElapsedTime()
     if(fire) fire.update(elapsed)
+    if(fire2) fire2.update(elapsed)
+    if(fire3) fire3.update(elapsed)
+    if(fire4) fire4.update(elapsed)
+    if(fire5) fire5.update(elapsed)
+    
+
 
     //make a new player object if there is one
     if (playerIds.length !== players.length) {
@@ -309,6 +310,7 @@ export function animate() {
       players[i].position.y = y;
       players[i].position.z = z;
     }
+
 
     for (let block in blocksObj) {
       if (blocksObj[block].length) {

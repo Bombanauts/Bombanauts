@@ -34,6 +34,15 @@ io.on('connection', (socket) => {
   socket.on('get_players', () => {
     socket.emit('get_players', store.getState().players);
   })
+
+  socket.on('update_world', (data) => {
+    store.dispatch(updatePlayers({ id: data.playerId, position: data.playerPosition }));
+    store.dispatch(updateBombPositions({ userId: data.playerId, bombs: data.playerBombs }))
+
+    // console.log('state: ', store.getState().bombs.allBombs[socket.id])
+
+    io.sockets.emit('update_world', store.getState())
+  })
   //constantly send out all the player locations to everyone
   socket.on('update_players_position', (data) => {
     store.dispatch(updatePlayers(data));

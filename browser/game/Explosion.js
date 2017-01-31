@@ -93,14 +93,13 @@ Block.prototype.reset = function(x, y, z){
   this.particle.position.y = y;
   this.particle.position.z = z;
 
-  this.xrd = Math.random()*MAX_ROT*2 - MAX_ROT;
-  this.zrd = Math.random()*MAX_ROT*2 - MAX_ROT;
+  this.xrd = Math.random() * MAX_ROT * 2 - MAX_ROT;
+  this.zrd = Math.random() * MAX_ROT * 2 - MAX_ROT;
 
-  this.particle.rotation.x = Math.random()*360;
-  this.particle.rotation.z = Math.random()*360;
+  this.particle.rotation.x = Math.random() * 360;
+  this.particle.rotation.z = Math.random() * 360;
 
   this.ticks = 0;
-
 }
 
 Block.prototype.loop = function(key){
@@ -112,6 +111,7 @@ Block.prototype.loop = function(key){
   this.particle.rotation.x += this.xrd;
   this.particle.rotation.z += this.zrd;
   this.ticks ++;
+
   if (this.ticks > 100) {
     scene.remove(this.particle)
     if (this.ticks > 301) {
@@ -119,5 +119,4 @@ Block.prototype.loop = function(key){
     }
     return;
   }
-
 }
