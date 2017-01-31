@@ -33,7 +33,7 @@ export let playerMeshes = [];
 export let yourBombs = [];
 export let yourballMeshes = [];
 
-export const blocksArr = [];
+export const blocksObj = {};
 export const blockCount = 25;
 
 export function initCannon() {
@@ -54,16 +54,22 @@ export function initCannon() {
     world.solver = new CANNON.SplitSolver(solver);
   else
     world.solver = solver;
-  world.gravity.set(0, -20, 0);
+  world.solver.iterations = 20; // Increase solver iterations (default is 10)
+  world.solver.tolerance = 0;   // Force solver to use all iterations
+
+  world.gravity.set(0,-40,0);
   world.broadphase = new CANNON.NaiveBroadphase();
 
   //     // Create a slippery material (friction coefficient = 0.0)
   physicsMaterial = new CANNON.Material("slipperyMaterial");
   const physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
     physicsMaterial,
-    0.0, // friction coefficient
-    0.3 // restitution
+    0.0,
+    0.9// restitution
   );
+
+  physicsMaterial.contactEquationStiffness = 1e8;
+  physicsMaterial.contactEquationRegularizationTime = 3;
   //     // We must add the contact materials to the world
   world.addContactMaterial(physicsContactMaterial);
 
@@ -304,11 +310,15 @@ export function animate() {
       players[i].position.z = z;
     }
 
-    for (let k = 0; k < blocksArr.length; k++) {
-			for (var i = 0; i < blocksArr[k].length; i++) {
-					blocksArr[k][i].loop();
-			}
-		}
+    for (let block in blocksObj) {
+      if (blocksObj[block].length) {
+  			for (var i = 0; i < blocksObj[block].length; i++) {
+  					blocksObj[block][i].loop(block);
+  			}
+      } else {
+        delete blocksObj[block]
+      }
+    }
 
     // add new bomb if there is one
     if (stateBombs.length > bombs.length) {

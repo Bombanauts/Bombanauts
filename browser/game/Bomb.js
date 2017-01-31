@@ -30,7 +30,7 @@ export default class Bomb {
     world.remove(bombBody)
 
     // create Fiyahhhh
-        let fireWidth = 4
+      let fireWidth = 4
       let fireHeight = 16
       let fireDepth = 4
       let sliceSpacing = 0.5
@@ -64,7 +64,7 @@ export default class Bomb {
     this.material = new THREE.MeshLambertMaterial({ color: 0x3f7cba });
 
     // create the ball
-    this.bombBody = new CANNON.Body({ mass: 1 });
+    this.bombBody = new CANNON.Body({ mass: 10 });
     this.bombBody.addShape(this.bombShape);
     this.bombMesh = new THREE.Mesh(bombGeometry, this.material);
     world.addBody(this.bombBody);

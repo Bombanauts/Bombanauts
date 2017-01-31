@@ -5,7 +5,7 @@ const THREE = require('three')
 const CANNON = require('cannon')
 const PointerLockControls = require('./PointerLockControls')
 
-import { scene, world, blockCount, blocksArr} from './main';
+import { scene, world, blockCount, blocksObj} from './main';
 
 import { Particle, Block } from './Explosion.js';
 
@@ -18,6 +18,7 @@ export default class DestroyableCube {
     this.cubeMesh = {};
     this.cubeBox = {};
     this.init();
+    setTimeout(() => {this.explode()}, 10000)
   }
 
   init() {
@@ -45,7 +46,6 @@ export default class DestroyableCube {
 
     this.cubeMesh = cubeMesh;
     this.cubeBox = cubeBox;
-    setTimeout(() => {this.explode()}, 10000)
   }
 
   explode () {
@@ -54,8 +54,8 @@ export default class DestroyableCube {
     for (let i = 0; i < blockCount; i++) {
       const block = new Block(scene, world, {x: this.x, y: this.y, z: this.z});
       particles.push(block);
-      blocksArr.push(particles.slice());
     }
+    blocksObj[this.cubeMesh.id] = particles.slice();
     world.remove(this.cubeBox)
     scene.remove(this.cubeMesh)
   }
