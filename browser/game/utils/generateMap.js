@@ -3,6 +3,8 @@ import DestroyableCube from '../Cube'
 import Wall from '../Wall'
 import FixedCube from '../FixedCube'
 
+const grass = {};
+
 const generateMap = (mapArr) => {
   let mapArrWidth = mapArr.length,
     mapArrHeight = mapArr[0].length;
@@ -29,8 +31,8 @@ const generateMap = (mapArr) => {
         let destroyableBox = new DestroyableCube(x, y, z);
         destroyableBoxes.push(destroyableBox.cubeBox);
         destroyableBoxMeshes.push(destroyableBox.cubeMesh);
-      }
 
+      }
     }
   }
 }

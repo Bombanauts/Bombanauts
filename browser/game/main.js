@@ -4,7 +4,7 @@ import store from '../store';
 
 import { PointerLockControls } from './PointerLockControls';
 import Player from './Player'
-import Bomb, { fire } from './Bomb'
+import Bomb, { fire, fire2, fire3, fire4, fire5 } from './Bomb'
 
 import { Particle, Block } from './Explosion.js';
 // import { VolumetricFire } from '../bombs/ParticleEngine.js';
@@ -278,7 +278,13 @@ export function animate() {
 
     //Animate Fire w/ Bombs
     let elapsed = clock.getElapsedTime()
-    if(fire) fire.update(elapsed)
+    if(fire) {
+      fire.update(elapsed)
+      fire2.update(elapsed)
+      fire3.update(elapsed)
+      fire4.update(elapsed)
+      fire5.update(elapsed)
+    }
 
     //make a new player object if there is one
     if (playerIds.length !== players.length) {
