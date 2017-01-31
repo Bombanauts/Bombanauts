@@ -7,7 +7,7 @@ const PointerLockControls = require('./PointerLockControls')
 
 import { scene, world, animate, camera } from './main'
 import { VolumetricFire } from '../bombs/ParticleEngine';
-import { boundary, fixedBoxes } from './utils/generateMap'
+import { boundary, fixedBox, grass, roundFour } from './utils/generateMap'
 
 let bombBody, bombMesh;
 let fire, fire2, fire3, fire4, fire5;
@@ -30,9 +30,15 @@ export default class Bomb {
     scene.remove(bombMesh)
     world.remove(bombBody)
 
-    let x = bombBody.position.x
+    let x =  roundFour(bombBody.position.x)
     let y = bombBody.position.y+4
-    let z = bombBody.position.z
+    let z = roundFour(bombBody.position.z)
+
+    console.log('x',x)
+    console.log('roundx', roundFour(bombBody.position.x))
+    console.log('z',z)
+    console.log('roundz', roundFour(bombBody.position.z))
+    console.log('xtra fire', `${x+4}_${z}`)
 
     // create Fiyahhhh
     let fireWidth = 4
@@ -40,49 +46,65 @@ export default class Bomb {
     let fireDepth = 4
     let sliceSpacing = 0.5
 
-    fire = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
-    fire2 = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
-    fire3 = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
-    fire4 = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
-    fire5 = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
+    // console.log(bombBody.position)
+    console.log('grass', grass)
 
-    fire.mesh.position.set(x, y, z)
+    if (grass[`${x}_${z}`]) {
+        fire = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
+        fire.mesh.frustumCulled = false;
+        fire.mesh.position.set(x, y, z)
+        scene.add(fire.mesh)
+    }
 
-    fire2.mesh.position.set(x+4, y, z)
+    if (grass[`${x+4}_${z}`]) {
+        fire2 = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
+        fire2.mesh.frustumCulled = false;
+        fire2.mesh.position.set(x+4, y, z)
+        scene.add(fire2.mesh)
+    }
+   
+    if (grass[`${x-4}_${z}`]) {
+        fire3 = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
+        fire3.mesh.frustumCulled = false;
+        fire3.mesh.position.set(x-4, y, z)
+        scene.add(fire3.mesh)
+    }
 
-    fire3.mesh.position.set(x-4, y, z)
+    if (grass[`${x}_${z+4}`]) {
+        fire4 = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
+        fire4.mesh.frustumCulled = false;
+        fire4.mesh.position.set(x, y, z+4)
+        scene.add(fire4.mesh)
+    }
 
-    fire4.mesh.position.set(x, y, z+4)
+    if (grass[`${x}_${z-4}`]) {
+        fire5 = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
+        fire5.mesh.frustumCulled = false;
+        fire5.mesh.position.set(x, y, z-4)
+        scene.add(fire5.mesh)
+    }
+    
 
-    fire5.mesh.position.set(x, y, z-4)
+
 
 
     VolumetricFire.texturePath = '../../public/assets/images';
 
-    fire.mesh.frustumCulled = false;
-    fire2.mesh.frustumCulled = false;
-    fire3.mesh.frustumCulled = false;
-    fire4.mesh.frustumCulled = false;
-    fire5.mesh.frustumCulled = false;
 
-    scene.add(fire.mesh)
-    scene.add(fire2.mesh)
-    scene.add(fire3.mesh)
-    scene.add(fire4.mesh)
-    scene.add(fire5.mesh)
 
 
     setTimeout(() => {
-    scene.remove(fire.mesh)
-    scene.remove(fire2.mesh)
-    scene.remove(fire3.mesh)
-    scene.remove(fire4.mesh)
-    scene.remove(fire5.mesh)
-    fire = null;
-    fire2 = null;
-    fire3 = null;
-    fire4 = null;
-    fire5 = null;
+
+        scene.remove(fire.mesh)
+        scene.remove(fire2.mesh)
+        scene.remove(fire3.mesh)
+        scene.remove(fire4.mesh)
+        scene.remove(fire5.mesh)
+        fire = null;
+        fire2 = null;
+        fire3 = null;
+        fire4 = null;
+        fire5 = null;
     }, 1000)
 
 
