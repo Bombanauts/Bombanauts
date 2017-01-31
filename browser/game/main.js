@@ -273,13 +273,13 @@ export function animate() {
 
     //Animate Fire w/ Bombs
     let elapsed = clock.getElapsedTime()
-    if(fire) {
-      fire.update(elapsed)
-      fire2.update(elapsed)
-      fire3.update(elapsed)
-      fire4.update(elapsed)
-      fire5.update(elapsed)
-    }
+    if(fire) fire.update(elapsed)
+    if(fire2) fire2.update(elapsed)
+    if(fire3) fire3.update(elapsed)
+    if(fire4) fire4.update(elapsed)
+    if(fire5) fire5.update(elapsed)
+    
+
 
     //make a new player object if there is one
     if (playerIds.length !== players.length) {
