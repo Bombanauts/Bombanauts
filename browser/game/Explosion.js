@@ -8,22 +8,21 @@ const PointerLockControls = require('./PointerLockControls')
 import { scene, world, blocksObj } from './main'
 
 export const Particle = function (width, height, depth) {
-
   THREE.Geometry.call(this);
 
-  var scope = this,
-  width_half = width / 2,
-  height_half = height / 2,
-  depth_half = depth / 2;
+  const scope = this,
+  widthHalf = width / 2,
+  heightHalf = height / 2,
+  depthHalf = depth / 2;
 
-  vertices(  width_half,  height_half, -depth_half );
-  vertices(  width_half, -height_half, -depth_half );
-  vertices( -width_half, -height_half, -depth_half );
-  vertices( -width_half,  height_half, -depth_half );
-  vertices(  width_half,  height_half,  depth_half );
-  vertices(  width_half, -height_half,  depth_half );
-  vertices( -width_half, -height_half,  depth_half );
-  vertices( -width_half,  height_half,  depth_half );
+  vertices(  widthHalf,  heightHalf, -depthHalf );
+  vertices(  widthHalf, -heightHalf, -depthHalf );
+  vertices( -widthHalf, -heightHalf, -depthHalf );
+  vertices( -widthHalf,  heightHalf, -depthHalf );
+  vertices(  widthHalf,  heightHalf,  depthHalf );
+  vertices(  widthHalf, -heightHalf,  depthHalf );
+  vertices( -widthHalf, -heightHalf,  depthHalf );
+  vertices( -widthHalf,  heightHalf,  depthHalf );
 
   f4( 0, 1, 2);
   f4( 4, 7, 6);
@@ -45,30 +44,18 @@ Particle.prototype = new THREE.Geometry();
 Particle.prototype.constructor = Particle;
 
 export const Block = function (scene, world, position) {
-
   const MAX_SIZE = 0.5;
   const MIN_SIZE = 0.08;
 
-  //cerate randomly sized cube
+  //cerate particle cubes
   const boxShape = new CANNON.Box(new CANNON.Vec3(0.4,0.4,0.4))
   const texture = new THREE.TextureLoader().load('images/crate.gif');
   const boxGeometry = new THREE.BoxGeometry(0.4, 0.4, 0.4)
   const boxBody = new CANNON.Body()
 
-  // Vector3(x,y,z)
-  const shootDirection = new THREE.Vector3();
-
-  // speed of ball (m/s maybe?)
-  const shootVelo = 15;
-
-  // var ballBody = new CANNON.Body({ mass: 1 });
   boxBody.addShape(boxShape);
   const material = new THREE.MeshLambertMaterial({ map: texture });
   this.particle = new THREE.Mesh(boxGeometry, material);
-
-  // shadow affects
-  this.particle.castShadow = true;
-  this.particle.receiveShadow = true;
 
   // starting position
   this.particle.position.x = position.x;
@@ -76,14 +63,15 @@ export const Block = function (scene, world, position) {
   this.particle.position.z = position.z;
 
   this.reset(this.particle.position.x, this.particle.position.y, this.particle.position.z);
+
+  //add to world and scene
   world.addBody(boxBody)
   scene.add(this.particle);
 }
 
 Block.prototype.reset = function(x, y, z){
-
   const MAX_SPEED = 0.15;
-  const MAX_ROT = .1;
+  const MAX_ROT = 0.1;
 
   this.xd = Math.random() * MAX_SPEED * 2 - MAX_SPEED ;
   this.yd = Math.abs(Math.random() * MAX_SPEED * 2 - MAX_SPEED) ;
@@ -103,7 +91,6 @@ Block.prototype.reset = function(x, y, z){
 }
 
 Block.prototype.loop = function(key){
-
   this.particle.position.x += this.xd;
   this.particle.position.y += this.yd;
   this.particle.position.z += this.zd;
@@ -117,6 +104,5 @@ Block.prototype.loop = function(key){
     if (this.ticks > 301) {
       blocksObj[key] = [];
     }
-    return;
   }
 }

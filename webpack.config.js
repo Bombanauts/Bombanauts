@@ -1,7 +1,7 @@
 'use strict';
 
 const path = require('path');
-var webpack = require('webpack');
+const webpack = require('webpack');
 
 module.exports = {
   entry: './browser/react/index.js',

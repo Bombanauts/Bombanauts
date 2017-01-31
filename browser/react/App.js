@@ -32,25 +32,24 @@ export default class App extends Component {
   render() {
     return (
       <div id="blocker">
-              <div id="instructions">
-                  <span style={fontStyle}>Click to play</span>
-                  <br />
-                  (W,A,S,D = Move, SPACE = Jump, MOUSE = Look, CLICK = Shoot)
-              </div>
+        <div id="instructions">
+          <span style={fontStyle}>Click to play</span>
+          <br />
+          (W,A,S,D = Move, SPACE = Jump, MOUSE = Look, CLICK = Shoot)
+        </div>
       </div>
     )
   }
-
 }
 
 function pointerChecker() {
-  var blocker = document.getElementById( 'blocker' );
-  var instructions = document.getElementById( 'instructions' );
-  var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+  const blocker = document.getElementById( 'blocker' );
+  const instructions = document.getElementById( 'instructions' );
+  const havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
   if ( havePointerLock ) {
-      var element = document.body;
-      var pointerlockchange = function ( event ) {
+      const element = document.body;
+      const pointerlockchange = function ( event ) {
           if ( document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element ) {
               controls.enabled = true;
               blocker.style.display = 'none';
@@ -62,7 +61,7 @@ function pointerChecker() {
               instructions.style.display = '';
           }
       }
-      var pointerlockerror = function ( event ) {
+      const pointerlockerror = function ( event ) {
           instructions.style.display = '';
       }
       // Hook pointer lock state change events
@@ -77,7 +76,7 @@ function pointerChecker() {
           // Ask the browser to lock the pointer
           element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
           if ( /Firefox/i.test( navigator.userAgent ) ) {
-              var fullscreenchange = function ( event ) {
+              const fullscreenchange = function ( event ) {
                   if ( document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element ) {
                       document.removeEventListener( 'fullscreenchange', fullscreenchange );
                       document.removeEventListener( 'mozfullscreenchange', fullscreenchange );
