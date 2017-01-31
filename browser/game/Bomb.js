@@ -110,7 +110,6 @@ export default class Bomb {
     this.bombMesh.receiveShadow = true;
 
     setTimeout(() => {
-        console.log('INSIDE SET TIMEOUT')
         this.explode(this.bombMesh, this.bombBody)
     }, 2000)
   }

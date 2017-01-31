@@ -244,20 +244,15 @@ export function animate() {
 
   setTimeout(() => {
       if (socket) {
-        socket.emit('update_players_position', {
-          position: {
+        socket.emit('update_world', {
+          playerId: socket.id,
+          playerPosition: {
             x: sphereBody.position.x,
             y: sphereBody.position.y,
             z: sphereBody.position.z
           },
-          id: socket.id
+          playerBombs: yourBombs
         });
-        if (bombs.length) {
-          socket.emit('update_bomb_positions', {
-            userId: socket.id,
-            bombs: yourBombs
-          })
-        }
       }
       requestAnimationFrame(animate);
     }, 1000 / 60) //throttled to 60 times per second
@@ -311,10 +306,11 @@ export function animate() {
     }
 
     for (let k = 0; k < blocksArr.length; k++) {
-			for (var i = 0; i < blocksArr[k].length; i++) {
-					blocksArr[k][i].loop();
-			}
-		}
+      for (var i = 0; i < blocksArr[k].length; i++) {
+        console.log('in loops')
+        blocksArr[k][i].loop();
+      }
+    }
 
     // add new bomb if there is one
     if (stateBombs.length > bombs.length) {
