@@ -60,20 +60,20 @@ export function initCannon() {
   world.gravity.set(0,-40,0);
   world.broadphase = new CANNON.NaiveBroadphase();
 
-  //     // Create a slippery material (friction coefficient = 0.0)
+  // Create a slippery material (friction coefficient = 0.0)
   physicsMaterial = new CANNON.Material("slipperyMaterial");
   const physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
     physicsMaterial,
-    0.0,
+    0.0, //friction
     0.9// restitution
   );
 
   physicsMaterial.contactEquationStiffness = 1e8;
   physicsMaterial.contactEquationRegularizationTime = 3;
-  //     // We must add the contact materials to the world
+  //add the contact materials to the world
   world.addContactMaterial(physicsContactMaterial);
 
-  //     // Create a sphere
+// Create a sphere
   const mass = 5,
     radius = 1.3;
   sphereShape = new CANNON.Sphere(radius);
@@ -101,10 +101,10 @@ const projector = new THREE.Projector();
 
 // get shoot direction might need to be adjusted to use ray caster instead
 const getShootDir = function(targetVec) {
-  var vector = targetVec;
+  const vector = targetVec;
   targetVec.set(0, 0, 1);
   projector.unprojectVector(vector, camera);
-  var ray = new THREE.Ray(sphereBody.position, vector.sub(sphereBody.position).normalize());
+  const ray = new THREE.Ray(sphereBody.position, vector.sub(sphereBody.position).normalize());
   targetVec.copy(ray.direction);
 }
 
@@ -112,23 +112,11 @@ export function init() {
   camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1500);
   camera.position.set(0, 3, 0)
   scene = new THREE.Scene();
-  // scene.fog = new THREE.Fog(0x000000, 0, 500);
   const ambient = new THREE.AmbientLight(0xffffff);
   scene.add(ambient);
   light = new THREE.SpotLight(0xffffff);
   light.position.set(10, 30, 20);
   light.target.position.set(0, 5, 0);
-  // if(true){
-  //     light.castShadow = false;
-  //     light.shadowCameraNear = 20;
-  //     light.shadowCameraFar = 50;//camera.far;
-  //     light.shadowCameraFov = 40;
-  //     light.shadowMapBias = 0.1;
-  //     light.shadowMapDarkness = 0.7;
-  //     light.shadowMapWidth = 2*512;
-  //     light.shadowMapHeight = 2*512;
-  //     light.shadowCameraVisible = true;
-  // }
   scene.add(light);
 
   //Create Fire
@@ -243,11 +231,10 @@ export function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-var dt = 1 / 60; // change in time for walking
+const dt = 1 / 60; // change in time for walking
 
 //animation GAME LOOP
 export function animate() {
-
   setTimeout(() => {
       if (socket) {
         socket.emit('update_world', {
@@ -279,13 +266,11 @@ export function animate() {
 
     //Animate Fire w/ Bombs
     let elapsed = clock.getElapsedTime()
-    if(fire) fire.update(elapsed)
-    if(fire2) fire2.update(elapsed)
-    if(fire3) fire3.update(elapsed)
-    if(fire4) fire4.update(elapsed)
-    if(fire5) fire5.update(elapsed)
-    
-
+    if (fire) fire.update(elapsed)
+    if (fire2) fire2.update(elapsed)
+    if (fire3) fire3.update(elapsed)
+    if (fire4) fire4.update(elapsed)
+    if (fire5) fire5.update(elapsed)
 
     //make a new player object if there is one
     if (playerIds.length !== players.length) {
@@ -311,12 +296,11 @@ export function animate() {
       players[i].position.z = z;
     }
 
-
     for (let block in blocksObj) {
       if (blocksObj[block].length) {
-  			for (var i = 0; i < blocksObj[block].length; i++) {
-  					blocksObj[block][i].loop(block);
-  			}
+        for (let i = 0; i < blocksObj[block].length; i++) {
+          blocksObj[block][i].loop(block);
+        }
       } else {
         delete blocksObj[block]
       }
@@ -339,17 +323,11 @@ export function animate() {
       bombs[i].position.x = x;
       bombs[i].position.y = y;
       bombs[i].position.z = z;
-      // bombs[i].position.copy(stateBombs[i].position)
     }
 
     for (let i = 0; i < yourBombs.length; i++) {
       yourballMeshes[i].position.copy(yourBombs[i].position)
     }
-
-    // Update box positions
-    // for(let i=0; i<destroyableBoxes.length; i++){
-    //     destroyableBoxMeshes[i].position.set(destroyableBoxes[i].position);
-    // }
   }
 
   controls.update(Date.now() - time);

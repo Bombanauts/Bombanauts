@@ -23,9 +23,9 @@ export default class DestroyableCube {
 
   init() {
 
-    let halfExtents = new CANNON.Vec3(2, 2, 2);
-    let boxShape = new CANNON.Box(halfExtents);
-    let boxGeometry = new THREE.BoxGeometry(halfExtents.x * 1.9, halfExtents.y * 1.9, halfExtents.z * 1.9);
+    const halfExtents = new CANNON.Vec3(2, 2, 2);
+    const boxShape = new CANNON.Box(halfExtents);
+    const boxGeometry = new THREE.BoxGeometry(halfExtents.x * 1.9, halfExtents.y * 1.9, halfExtents.z * 1.9);
 
     //importing texture
     const texture = new THREE.TextureLoader().load('images/crate.gif');
@@ -52,7 +52,7 @@ export default class DestroyableCube {
 
   explode () {
     this.exploded = true;
-    let particles = [];
+    const particles = [];
     for (let i = 0; i < blockCount; i++) {
       const block = new Block(scene, world, {x: this.x, y: this.y, z: this.z});
       particles.push(block);
