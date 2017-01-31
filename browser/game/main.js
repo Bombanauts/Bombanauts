@@ -4,7 +4,7 @@ import store from '../store';
 
 import { PointerLockControls } from './PointerLockControls';
 import Player from './Player'
-import Bomb, { fire, fire2, fire3, fire4, fire5 } from './Bomb'
+import Bomb from './Bomb'
 
 import { Particle, Block } from './Explosion.js';
 // import { VolumetricFire } from '../bombs/ParticleEngine.js';
@@ -32,9 +32,10 @@ export let players = [];
 export let playerMeshes = [];
 export let yourBombs = [];
 export let yourballMeshes = [];
+const bombObjects = [];
 
 export const blocksObj = {};
-export const blockCount = 25;
+export const blockCount = 50;
 
 export function initCannon() {
   //set up our world, check for other players
@@ -136,8 +137,6 @@ export function init() {
   texture.repeat.x = 20;
   texture.repeat.y = 20;
   mesh = new THREE.Mesh(geometry, material);
-  mesh.castShadow = true;
-  mesh.receiveShadow = true;
   scene.add(mesh);
 
   const skyGeo = new THREE.SphereGeometry(1000, 32, 32);
@@ -198,6 +197,7 @@ export function init() {
 
         //add bomb and mesh to your bombs arrays
         yourBombs.push(bombInfo)
+        bombObjects.push(newBomb)
         yourballMeshes.push(newBomb.bombMesh);
 
         // get its direction using getShootDir function
@@ -266,11 +266,17 @@ export function animate() {
 
     //Animate Fire w/ Bombs
     let elapsed = clock.getElapsedTime()
-    if (fire) fire.update(elapsed)
-    if (fire2) fire2.update(elapsed)
-    if (fire3) fire3.update(elapsed)
-    if (fire4) fire4.update(elapsed)
-    if (fire5) fire5.update(elapsed)
+    for (let i = 0; i < bombObjects.length; i++) {
+      if (bombObjects[i].bool) {
+        if (bombObjects[i].fire) bombObjects[i].fire.update(elapsed)
+        if (bombObjects[i].fire2) bombObjects[i].fire2.update(elapsed)
+        if (bombObjects[i].fire3) bombObjects[i].fire3.update(elapsed)
+        if (bombObjects[i].fire4) bombObjects[i].fire4.update(elapsed)
+        if (bombObjects[i].fire5) bombObjects[i].fire5.update(elapsed)
+      } else {
+        console.log('test')
+      }
+    }
 
     //make a new player object if there is one
     if (playerIds.length !== players.length) {
@@ -282,8 +288,6 @@ export function animate() {
         newPlayer.init()
         players.push(newPlayer.playerBox)
         playerMeshes.push(newPlayer.playerMesh)
-        newPlayer.playerMesh.castShadow = true;
-        newPlayer.playerMesh.receiveShadow = true;
       }
     }
 
@@ -313,6 +317,7 @@ export function animate() {
       newBomb.init()
 
       bombs.push(newBomb.bombBody)
+      bombObjects.push(newBomb)
       ballMeshes.push(newBomb.bombMesh)
     }
 

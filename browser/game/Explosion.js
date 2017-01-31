@@ -43,19 +43,31 @@ export const Particle = function (width, height, depth) {
 Particle.prototype = new THREE.Geometry();
 Particle.prototype.constructor = Particle;
 
-export const Block = function (scene, world, position) {
+export const Block = function (scene, world, position, type) {
   const MAX_SIZE = 0.5;
   const MIN_SIZE = 0.08;
 
-  //cerate particle cubes
-  const boxShape = new CANNON.Box(new CANNON.Vec3(0.4,0.4,0.4))
-  const texture = new THREE.TextureLoader().load('images/crate.gif');
-  const boxGeometry = new THREE.BoxGeometry(0.4, 0.4, 0.4)
-  const boxBody = new CANNON.Body()
+  let shape;
+  let texture;
+  let geometry;
+  let body;
+  let material;
 
-  boxBody.addShape(boxShape);
-  const material = new THREE.MeshLambertMaterial({ map: texture });
-  this.particle = new THREE.Mesh(boxGeometry, material);
+  //create cube or bomb particles
+  if (type === 'cube') {
+    texture = new THREE.TextureLoader().load('images/crate.gif');
+    geometry = new THREE.BoxGeometry(0.4, 0.4, 0.4)
+
+    material = new THREE.MeshLambertMaterial({ map: texture });
+    this.particle = new THREE.Mesh(geometry, material);
+  }
+  if (type === 'bomb') {
+    texture = new THREE.MeshLambertMaterial({ color: '#000000' });
+    geometry = new THREE.SphereGeometry(0.2, 0.2, 0.2)
+
+    this.particle = new THREE.Mesh(geometry, texture);
+    position.y -= 6;
+  }
 
   // starting position
   this.particle.position.x = position.x;
@@ -64,13 +76,12 @@ export const Block = function (scene, world, position) {
 
   this.reset(this.particle.position.x, this.particle.position.y, this.particle.position.z);
 
-  //add to world and scene
-  world.addBody(boxBody)
+  //add to scene
   scene.add(this.particle);
 }
 
 Block.prototype.reset = function(x, y, z){
-  const MAX_SPEED = 0.15;
+  const MAX_SPEED = 0.75;
   const MAX_ROT = 0.1;
 
   this.xd = Math.random() * MAX_SPEED * 2 - MAX_SPEED ;
