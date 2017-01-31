@@ -18,9 +18,9 @@ export default class Wall {
     }
 
     init() {
-    const halfExtents = new CANNON.Vec3(2, 2, 2);
+    const halfExtents = new CANNON.Vec3(2, 4, 2);
     const wallShape = new CANNON.Box(halfExtents);
-    const wallGeometry = new THREE.BoxGeometry(halfExtents.x * 2, halfExtents.y * 3.5, halfExtents.z * 2);
+    const wallGeometry = new THREE.BoxGeometry(halfExtents.x * 2, halfExtents.y * 2, halfExtents.z * 2);
 
     //importing texture
     const texture = new THREE.TextureLoader().load('images/brick_wall.png');
@@ -34,7 +34,7 @@ export default class Wall {
     // set spawn position
     wallMesh.position.set(this.x, this.y, this.z);
 
-    wallBody.position.set(wallMesh.position.x, wallMesh.position.y, wallMesh.position.z);
+    wallBody.position.set(this.x, this.y, this.z);
 
     scene.add(wallMesh)
     world.add(wallBody)
