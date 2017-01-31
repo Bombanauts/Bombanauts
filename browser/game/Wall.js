@@ -33,7 +33,6 @@ export default class Wall {
 
     // set spawn position
     wallMesh.position.set(this.x, this.y, this.z);
-
     wallBody.position.set(this.x, this.y, this.z);
 
     scene.add(wallMesh)

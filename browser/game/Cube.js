@@ -5,7 +5,7 @@ const THREE = require('three')
 const CANNON = require('cannon')
 const PointerLockControls = require('./PointerLockControls')
 
-import { scene, world, blockCount, blocksObj} from './main';
+import { scene, world, blockCount, blocksObj } from './main';
 
 import { Particle, Block } from './Explosion.js';
 
@@ -54,7 +54,7 @@ export default class DestroyableCube {
     this.exploded = true;
     const particles = [];
     for (let i = 0; i < blockCount; i++) {
-      const block = new Block(scene, world, {x: this.x, y: this.y, z: this.z});
+      const block = new Block(scene, world, {x: this.x, y: this.y, z: this.z}, 'cube');
       particles.push(block);
     }
     blocksObj[this.cubeMesh.id] = particles.slice();
