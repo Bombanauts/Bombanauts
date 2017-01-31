@@ -18,11 +18,9 @@ export default class DestroyableCube {
     this.cubeMesh = {};
     this.cubeBox = {};
     this.init();
-    setTimeout(() => {this.explode()}, 10000)
   }
 
   init() {
-
     const halfExtents = new CANNON.Vec3(2, 2, 2);
     const boxShape = new CANNON.Box(halfExtents);
     const boxGeometry = new THREE.BoxGeometry(halfExtents.x * 1.9, halfExtents.y * 1.9, halfExtents.z * 1.9);
@@ -45,9 +43,6 @@ export default class DestroyableCube {
 
     this.cubeMesh = cubeMesh;
     this.cubeBox = cubeBox;
-
-    // setTimeout(() => {this.explode()}, 10000)
-
   }
 
   explode () {
