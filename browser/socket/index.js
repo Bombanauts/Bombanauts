@@ -9,7 +9,6 @@ import { updateBombLocations, removePlayerBombs } from '../bombs/action-creator'
 import { initCannon, init, animate, players, playerMeshes, world } from '../game/main';
 
 socket.on('connect', function() {
-
   socket.on('initial', (initialData) => {
     if (initialData['undefined']) {
       delete initialData['undefined']
@@ -49,8 +48,14 @@ socket.on('connect', function() {
 
   socket.on('remove_player', (data) => {
     store.dispatch(removePlayer(data))
-    scene.remove(scene.getObjectByName(data))
-    world.removeBody(world.getObjectByName(data))
+    let playerBody = world.bodies.filter( (child) => {
+      return child.name === data;
+    })[0];
+    let playerMesh = scene.children.filter( (child) => {
+      return child.name === data;
+    })[0];
+    world.remove(playerBody)
+    scene.remove(playerMesh)
     store.dispatch(removePlayerBombs(data))
   })
 

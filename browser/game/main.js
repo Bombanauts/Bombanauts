@@ -170,7 +170,7 @@ export function init() {
   }
 
   for (let player in others) {
-    newPlayer = new Player(socket.id, others[player].x, others[player].y, others[player].z)
+    newPlayer = new Player(player, others[player].x, others[player].y, others[player].z)
     newPlayer.init()
     players.push(newPlayer.playerBox)
     playerMeshes.push(newPlayer.playerMesh)
@@ -273,8 +273,6 @@ export function animate() {
         if (bombObjects[i].fire3) bombObjects[i].fire3.update(elapsed)
         if (bombObjects[i].fire4) bombObjects[i].fire4.update(elapsed)
         if (bombObjects[i].fire5) bombObjects[i].fire5.update(elapsed)
-      } else {
-        console.log('test')
       }
     }
 
@@ -284,7 +282,7 @@ export function animate() {
       playerMeshes = [];
       for (let player in others) {
         let newPlayer;
-        newPlayer = new Player(socket.id, others[player].x, others[player].y, others[player].z)
+        newPlayer = new Player(player, others[player].x, others[player].y, others[player].z)
         newPlayer.init()
         players.push(newPlayer.playerBox)
         playerMeshes.push(newPlayer.playerMesh)
