@@ -38,8 +38,6 @@ io.on('connection', (socket) => {
   socket.on('update_world', (data) => {
     store.dispatch(updatePlayers({ id: data.playerId, position: data.playerPosition }));
     store.dispatch(updateBombPositions({ userId: data.playerId, bombs: data.playerBombs }))
-
-    console.log(store.getState().bombs.allBombs)
     io.sockets.emit('update_world', store.getState())
   })
 
