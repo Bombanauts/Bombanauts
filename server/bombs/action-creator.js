@@ -10,6 +10,7 @@ const addBomb = (newBomb) => {
     newBomb
   }
 }
+
 const updateBombPositions = (bombs) => {
   return {
     type: UPDATE_BOMB_POSITIONS,
