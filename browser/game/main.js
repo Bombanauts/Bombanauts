@@ -351,7 +351,6 @@ export function animate() {
       players[i].position.x = x;
       players[i].position.y = y;
       players[i].position.z = z;
-      // console.log(players[i])
     }
 
     for (let block in blocksObj) {
@@ -373,15 +372,6 @@ export function animate() {
       bombs.push(newBomb.bombBody)
       bombObjects.push(newBomb)
       ballMeshes.push(newBomb.bombMesh)
-
-      // setTimeout(() => {
-      //   bombs = bombs.filter((bomb) => {
-      //     return bomb.id !== mostRecentBomb.id
-      //   })
-      //   ballMeshes = ballMeshes.filter(mesh => {
-      //     return newBomb.bombMesh.id !== mesh.id
-      //   })
-      // }, 2000)
     }
 
     //way to get around removing bombs from the state
