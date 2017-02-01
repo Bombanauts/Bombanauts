@@ -22,8 +22,8 @@ const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 
 export const walls = [];
-export const bombs = [];
-export const ballMeshes = [];
+export let bombs = [];
+export let ballMeshes = [];
 export const boxes = [];
 export const boxMeshes = [];
 export const destroyableBoxes = [];
@@ -33,6 +33,7 @@ export let playerMeshes = [];
 export let yourBombs = [];
 export let yourballMeshes = [];
 const bombObjects = [];
+let count = 1;
 
 export const blocksObj = {};
 export const blockCount = 50;
@@ -58,11 +59,11 @@ export function initCannon() {
   world.solver.iterations = 20; // Increase solver iterations (default is 10)
   world.solver.tolerance = 0;   // Force solver to use all iterations
 
-  world.gravity.set(0,-40,0);
+  world.gravity.set(0, -40, 0);
   world.broadphase = new CANNON.NaiveBroadphase();
 
   // Create a slippery material (friction coefficient = 0.0)
-  physicsMaterial = new CANNON.Material("slipperyMaterial");
+  physicsMaterial = new CANNON.Material('slipperyMaterial');
   const physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
     physicsMaterial,
     0.0, //friction
@@ -159,13 +160,14 @@ export function init() {
   let others = store.getState().players.otherPlayers.players;
   let newPlayer;
   if (socket) {
-    socket.emit('update_players_position', {
-      position: {
+    socket.emit('update_world', {
+      playerId: socket.id,
+      playerPosition: {
         x: sphereBody.position.x,
         y: sphereBody.position.y,
         z: sphereBody.position.z
       },
-      id: socket.id
+      playerBombs: yourBombs
     });
   }
 
@@ -184,16 +186,27 @@ export function init() {
         let y = sphereBody.position.y;
         let z = sphereBody.position.z;
 
-        const newBomb = new Bomb(Math.random(), { x: x, y: y, z: z });
+        const newBomb = new Bomb(count++, { x: x, y: y, z: z });
         newBomb.init()
 
         //take relevant bomb info and emit
-        const bombInfo = { id: newBomb.bombBody.id, position: newBomb.bombBody.position, created: Date.now() }
+        const bombInfo = { id: newBomb.id, position: newBomb.bombBody.position, created: Date.now() }
 
         socket.emit('add_bomb', {
           userId: socket.id,
+          bombId: bombInfo.id,
           position: { x: x, y: y, z: z }
         })
+
+        //remove from your front end bombs array, this will update game state on update_world on next frame
+        setTimeout(() => {
+          yourBombs = yourBombs.filter((bomb) => {
+            return bomb.id !== bombInfo.id
+          })
+          yourballMeshes = yourballMeshes.filter(mesh => {
+            return newBomb.bombMesh.id !== mesh.id
+          })
+        }, 2000)
 
         //add bomb and mesh to your bombs arrays
         yourBombs.push(bombInfo)
@@ -233,6 +246,7 @@ export function onWindowResize() {
 
 const dt = 1 / 60; // change in time for walking
 
+let prevStateLength = 0;
 //animation GAME LOOP
 export function animate() {
   setTimeout(() => {
@@ -264,6 +278,7 @@ export function animate() {
       stateBombs.push(...allBombs[key])
     }
 
+
     //Animate Fire w/ Bombs
     let elapsed = clock.getElapsedTime()
     for (let i = 0; i < bombObjects.length; i++) {
@@ -273,8 +288,6 @@ export function animate() {
         if (bombObjects[i].fire3) bombObjects[i].fire3.update(elapsed)
         if (bombObjects[i].fire4) bombObjects[i].fire4.update(elapsed)
         if (bombObjects[i].fire5) bombObjects[i].fire5.update(elapsed)
-      } else {
-        console.log('test')
       }
     }
 
@@ -311,7 +324,7 @@ export function animate() {
     }
 
     // add new bomb if there is one
-    if (stateBombs.length > bombs.length) {
+    if (stateBombs.length > prevStateLength) {
       const mostRecentBomb = stateBombs[stateBombs.length - 1]
       const newBomb = new Bomb(mostRecentBomb.id, mostRecentBomb.position)
       newBomb.init()
@@ -319,10 +332,23 @@ export function animate() {
       bombs.push(newBomb.bombBody)
       bombObjects.push(newBomb)
       ballMeshes.push(newBomb.bombMesh)
+
+      // setTimeout(() => {
+      //   bombs = bombs.filter((bomb) => {
+      //     return bomb.id !== mostRecentBomb.id
+      //   })
+      //   ballMeshes = ballMeshes.filter(mesh => {
+      //     return newBomb.bombMesh.id !== mesh.id
+      //   })
+      // }, 2000)
     }
 
+    //way to get around removing bombs from the state
+    prevStateLength = stateBombs.length
+
     //update bomb position
-    for (let i = 0; i < bombs.length; i++) {
+    let indexAdd = bombs.length - stateBombs.length;
+    for (let i = indexAdd; i < prevStateLength; i++) {
       let { x, y, z } = stateBombs[i].position
       ballMeshes[i].position.copy(bombs[i].position)
       bombs[i].position.x = x;

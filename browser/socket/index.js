@@ -9,13 +9,14 @@ import { updateBombLocations, removePlayerBombs } from '../bombs/action-creator'
 import { initCannon, init, animate, players, playerMeshes, world } from '../game/main';
 
 socket.on('connect', function() {
-
   socket.on('initial', (initialData) => {
     if (initialData['undefined']) {
       delete initialData['undefined']
     }
     store.dispatch(updatePlayerLocations(initialData));
   })
+
+  let now = Date.now()
 
   socket.on('update_world', (data) => {
     delete data.players[socket.id];
@@ -29,14 +30,6 @@ socket.on('connect', function() {
 
     store.dispatch(updatePlayerLocations(data.players))
     store.dispatch(updateBombLocations(data.bombs.allBombs))
-  })
-
-  socket.on('update_player_locations', (data) => {
-    delete data[socket.id];
-    if (data['undefined']) {
-      delete data['undefined']
-    }
-    store.dispatch(updatePlayerLocations(data));
   })
 
   socket.on('update_bomb_positions', (data) => {
