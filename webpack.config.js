@@ -15,6 +15,12 @@ module.exports = {
   resolve: {
     extensions: ['', '.js', '.jsx', '.scss']
   },
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: false,
+      mangle: false
+    })
+  ],
   // plugins: [
   //       new webpack.ProvidePlugin({
   //           $: "jquery",
@@ -35,6 +41,12 @@ module.exports = {
       {
         test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)(\?.*$|$)/,
         loader: 'file'
+      },
+      {
+            // I want to uglify with mangling only app files, not thirdparty libs
+            test: /.*\/App\/.*\.js$/,
+            exclude: /.spec.js/, // excluding .spec files
+            loader: "uglify"
       }
     ]
   }
