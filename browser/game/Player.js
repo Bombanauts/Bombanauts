@@ -1,11 +1,12 @@
 import store from '../store'
 import socket from '../socket'
 
+import { scene, world, bombObjects } from './main'
+import { destroyable, roundFour } from './utils/generateMap'
+
 const THREE = require('three')
 const CANNON = require('cannon')
 const PointerLockControls = require('./PointerLockControls')
-
-import { scene, world } from './main'
 
 let geometry, material, shape, playerMesh, controls, color, playerBox;
 
@@ -17,6 +18,7 @@ export default class Player {
     this.playerMesh = [];
     this.playerBox = [];
     this.socketId = socketId;
+
     this.init = this.init.bind(this)
   }
 
@@ -49,5 +51,7 @@ export default class Player {
 
     this.playerMesh = playerMesh;
     this.playerBox = playerBox;
+
+
   }
 }
