@@ -284,7 +284,7 @@ export function animate() {
       if (bombObjects[i].bool) {
         if (bombObjects[i].fire) {
           bombObjects[i].fire.update(elapsed)
-          if (bombObjects[i].fire.mesh.position.x === roundFour(sphereBody.position.x) && 
+          if (bombObjects[i].fire.mesh.position.x === roundFour(sphereBody.position.x) &&
               bombObjects[i].fire.mesh.position.z === roundFour(sphereBody.position.z)) {
               socket.emit('remove_player', {
                 id: socket.id
@@ -293,7 +293,7 @@ export function animate() {
         }
         if (bombObjects[i].fire2) {
           bombObjects[i].fire2.update(elapsed)
-          if (bombObjects[i].fire2.mesh.position.x === roundFour(sphereBody.position.x) && 
+          if (bombObjects[i].fire2.mesh.position.x === roundFour(sphereBody.position.x) &&
               bombObjects[i].fire2.mesh.position.z === roundFour(sphereBody.position.z)) {
               socket.emit('remove_player', {
                 id: socket.id
@@ -302,7 +302,7 @@ export function animate() {
         }
         if (bombObjects[i].fire3) {
           bombObjects[i].fire3.update(elapsed)
-          if (bombObjects[i].fire3.mesh.position.x === roundFour(sphereBody.position.x) && 
+          if (bombObjects[i].fire3.mesh.position.x === roundFour(sphereBody.position.x) &&
               bombObjects[i].fire3.mesh.position.z === roundFour(sphereBody.position.z)) {
               socket.emit('remove_player', {
                 id: socket.id
@@ -311,7 +311,7 @@ export function animate() {
         }
         if (bombObjects[i].fire4) {
           bombObjects[i].fire4.update(elapsed)
-          if (bombObjects[i].fire4.mesh.position.x === roundFour(sphereBody.position.x) && 
+          if (bombObjects[i].fire4.mesh.position.x === roundFour(sphereBody.position.x) &&
               bombObjects[i].fire4.mesh.position.z === roundFour(sphereBody.position.z)) {
               socket.emit('remove_player', {
                 id: socket.id
@@ -320,7 +320,7 @@ export function animate() {
         }
         if (bombObjects[i].fire5) {
           bombObjects[i].fire5.update(elapsed)
-          if (bombObjects[i].fire5.mesh.position.x === roundFour(sphereBody.position.x) && 
+          if (bombObjects[i].fire5.mesh.position.x === roundFour(sphereBody.position.x) &&
               bombObjects[i].fire5.mesh.position.z === roundFour(sphereBody.position.z)) {
               socket.emit('remove_player', {
                 id: socket.id
@@ -389,12 +389,12 @@ export function animate() {
 
     //update bomb position
     let indexAdd = bombs.length - stateBombs.length;
-    for (let i = indexAdd; i < prevStateLength; i++) {
+    for (let i = 0; i < prevStateLength; i++) {
       let { x, y, z } = stateBombs[i].position
-      ballMeshes[i].position.copy(bombs[i].position)
-      bombs[i].position.x = x;
-      bombs[i].position.y = y;
-      bombs[i].position.z = z;
+      ballMeshes[i + indexAdd].position.copy(bombs[i + indexAdd].position)
+      bombs[i + indexAdd].position.x = x;
+      bombs[i + indexAdd].position.y = y;
+      bombs[i + indexAdd].position.z = z;
     }
 
     for (let i = 0; i < yourBombs.length; i++) {
