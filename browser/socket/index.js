@@ -16,6 +16,8 @@ socket.on('connect', function() {
     store.dispatch(updatePlayerLocations(initialData));
   })
 
+  let now = Date.now()
+
   socket.on('update_world', (data) => {
     delete data.players[socket.id];
     delete data.bombs.allBombs[socket.id];
@@ -28,14 +30,6 @@ socket.on('connect', function() {
 
     store.dispatch(updatePlayerLocations(data.players))
     store.dispatch(updateBombLocations(data.bombs.allBombs))
-  })
-
-  socket.on('update_player_locations', (data) => {
-    delete data[socket.id];
-    if (data['undefined']) {
-      delete data['undefined']
-    }
-    store.dispatch(updatePlayerLocations(data));
   })
 
   socket.on('update_bomb_positions', (data) => {

@@ -8,7 +8,7 @@ const app = express();
 const socketio = require('socket.io');
 
 const {updatePlayers, removePlayer} = require('./players/action-creator');
-const { addBomb, updateBombPositions, removePlayerBombs } = require('./bombs/action-creator')
+const { addBomb, updateBombPositions, removePlayerBombs, removeBomb } = require('./bombs/action-creator')
 
 const store = require('./store')
 
@@ -39,25 +39,13 @@ io.on('connection', (socket) => {
     store.dispatch(updatePlayers({ id: data.playerId, position: data.playerPosition }));
     store.dispatch(updateBombPositions({ userId: data.playerId, bombs: data.playerBombs }))
 
-    // console.log('state: ', store.getState().bombs.allBombs[socket.id])
-
+    console.log(store.getState().bombs.allBombs)
     io.sockets.emit('update_world', store.getState())
-  })
-  //constantly send out all the player locations to everyone
-  socket.on('update_players_position', (data) => {
-    store.dispatch(updatePlayers(data));
-    io.sockets.emit('update_player_locations', store.getState().players)
   })
 
   //add new bomb to the state when a player clicks
   socket.on('add_bomb', (data) => {
     store.dispatch(addBomb(data))
-    io.sockets.emit('update_bomb_positions', store.getState().bombs.allBombs)
-  })
-
-  //constantly receive and update all bomb positions coming from each user
-  socket.on('update_bomb_positions', (data) => {
-    store.dispatch(updateBombPositions(data))
     io.sockets.emit('update_bomb_positions', store.getState().bombs.allBombs)
   })
 
@@ -69,7 +57,6 @@ io.on('connection', (socket) => {
     io.sockets.emit('remove_player', socket.id)
     console.log('socket id ' + socket.id + ' has disconnected. : (');
   })
-
 })
 
 
