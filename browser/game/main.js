@@ -32,7 +32,7 @@ export let players = [];
 export let playerMeshes = [];
 export let yourBombs = [];
 export let yourballMeshes = [];
-const bombObjects = [];
+export const bombObjects = [];
 
 export const blocksObj = {};
 export const blockCount = 50;
@@ -298,6 +298,7 @@ export function animate() {
       players[i].position.x = x;
       players[i].position.y = y;
       players[i].position.z = z;
+      // console.log(players[i])
     }
 
     for (let block in blocksObj) {

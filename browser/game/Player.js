@@ -1,11 +1,11 @@
 import store from '../store'
 import socket from '../socket'
 
+import { scene, world, bombObjects } from './main'
+
 const THREE = require('three')
 const CANNON = require('cannon')
 const PointerLockControls = require('./PointerLockControls')
-
-import { scene, world } from './main'
 
 let geometry, material, shape, playerMesh, controls, color, playerBox;
 
@@ -18,6 +18,27 @@ export default class Player {
     this.playerBox = [];
     this.socketId = socketId;
     this.init = this.init.bind(this)
+  }
+
+  checkFire() {
+    console.log('checking fire')
+      let roundedX = roundFour(this.x)
+      let roundedZ = roundFour(this.z)
+    bombObjects.forEach(bomb => {
+      let roundBombX = roundFour(bomb.fire.x)
+      let roundBombZ = roundFour(bomb.fire.z)
+      if( (roundBombX === roundedX && roundBombZ === roundedZ) ||
+          (roundBombX === roundedX && roundBombZ === roundedZ) ||
+          (roundBombX === roundedX && roundBombZ === roundedZ) ||
+          (roundBombX === roundedX && roundBombZ === roundedZ) ||
+          (roundBombX === roundedX && roundBombZ === roundedZ)
+        ) {
+        console.log('hi i on fire')
+        socket.emit('remove_player', {
+          id: this.socketId
+        })
+      }
+    })
   }
 
   init() {
