@@ -7,7 +7,7 @@ const PointerLockControls = require('./PointerLockControls')
 
 import { scene, world, animate, camera, blockCount, blocksObj } from './main'
 import { VolumetricFire } from '../bombs/ParticleEngine';
-import { boundary, fixedBox, grass, roundFour } from './utils/generateMap'
+import { boundary, fixedBox, destroyable, roundFour } from './utils/generateMap'
 import { Particle, Block } from './Explosion.js'
 
 
@@ -72,35 +72,35 @@ export default class Bomb {
     const fireDepth = 4
     const sliceSpacing = 0.5
 
-    if (grass[`${x}_${z}`]) {
+    if (destroyable[`${x}_${z}`]) {
       this.fire = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
       this.fire.mesh.frustumCulled = false;
       this.fire.mesh.position.set(x, y, z)
       scene.add(this.fire.mesh)
     }
 
-    if (grass[`${x + 4}_${z}`]) {
+    if (destroyable[`${x + 4}_${z}`]) {
       this.fire2 = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
       this.fire2.mesh.frustumCulled = false;
       this.fire2.mesh.position.set(x + 4, y, z)
       scene.add(this.fire2.mesh)
     }
 
-    if (grass[`${x - 4}_${z}`]) {
+    if (destroyable[`${x - 4}_${z}`]) {
       this.fire3 = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
       this.fire3.mesh.frustumCulled = false;
       this.fire3.mesh.position.set(x - 4, y, z)
       scene.add(this.fire3.mesh)
     }
 
-    if (grass[`${x}_${z + 4}`]) {
+    if (destroyable[`${x}_${z + 4}`]) {
       this.fire4 = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
       this.fire4.mesh.frustumCulled = false;
       this.fire4.mesh.position.set(x, y, z + 4)
       scene.add(this.fire4.mesh)
     }
 
-    if (grass[`${x}_${z - 4}`]) {
+    if (destroyable[`${x}_${z - 4}`]) {
       this.fire5 = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
       this.fire5.mesh.frustumCulled = false;
       this.fire5.mesh.position.set(x, y, z - 4)

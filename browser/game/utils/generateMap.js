@@ -5,7 +5,7 @@ import FixedCube from '../FixedCube'
 
 const boundary = {},
   fixedBox = {},
-  grass = {};
+  destroyable = {};
 
 const generateMap = (mapArr) => {
   const mapArrWidth = mapArr.length,
@@ -17,12 +17,12 @@ const generateMap = (mapArr) => {
       const y = 2
       const z = -(k + mapArrWidth) * 4 + 100;
 
-      if (mapArr[j][k] === 2) { // create box
+      if (mapArr[j][k] === 2) { // Create Box
         const fixedCube = new FixedCube(x, y, z);
         boxes.push(fixedCube.fixedCubeBody);
         boxMeshes.push(fixedCube.fixedCubeMesh);
       }
-      else if (mapArr[j][k] === 1) { // create wall
+      else if (mapArr[j][k] === 1) { // Create Wall
         const wall = new Wall(x, y, z);
         boxes.push(wall.wallBody);
         boxMeshes.push(wall.wallMesh);
@@ -31,9 +31,10 @@ const generateMap = (mapArr) => {
         let destroyableBox = new DestroyableCube(x, y, z);
         destroyableBoxes.push(destroyableBox.cubeBox);
         destroyableBoxMeshes.push(destroyableBox.cubeMesh);
+        destroyable[`${x}_${z}`] = true
       }
-      else {
-        grass[`${x}_${z}`] = true
+      else if (mapArr[j][k] === 0) { // Grass
+        destroyable[`${x}_${z}`] = true
       }
     }
   }
@@ -44,4 +45,4 @@ const roundFour = (num) => {
 }
 
 export default generateMap;
-export { boundary, fixedBox, grass, roundFour }
+export { boundary, fixedBox, destroyable, roundFour }

@@ -11,7 +11,7 @@ import { Particle, Block } from './Explosion.js';
 
 import Maps from './maps/maps'
 
-import generateMap from './utils/generateMap';
+import generateMap, { roundFour } from './utils/generateMap';
 
 let sphereShape, sphereBody, world, physicsMaterial;
 let camera, scene, renderer, light;
@@ -264,17 +264,57 @@ export function animate() {
       stateBombs.push(...allBombs[key])
     }
 
+    // console.log('player position', sphereBody.position)
+
     //Animate Fire w/ Bombs
     let elapsed = clock.getElapsedTime()
     for (let i = 0; i < bombObjects.length; i++) {
       if (bombObjects[i].bool) {
-        if (bombObjects[i].fire) bombObjects[i].fire.update(elapsed)
-        if (bombObjects[i].fire2) bombObjects[i].fire2.update(elapsed)
-        if (bombObjects[i].fire3) bombObjects[i].fire3.update(elapsed)
-        if (bombObjects[i].fire4) bombObjects[i].fire4.update(elapsed)
-        if (bombObjects[i].fire5) bombObjects[i].fire5.update(elapsed)
-      } else {
-        console.log('test')
+        if (bombObjects[i].fire) {
+          bombObjects[i].fire.update(elapsed)
+          if (bombObjects[i].fire.mesh.position.x === roundFour(sphereBody.position.x) && 
+              bombObjects[i].fire.mesh.position.z === roundFour(sphereBody.position.z)) {
+              socket.emit('remove_player', {
+                id: socket.id
+              })
+          }
+        }
+        if (bombObjects[i].fire2) {
+          bombObjects[i].fire2.update(elapsed)
+          if (bombObjects[i].fire2.mesh.position.x === roundFour(sphereBody.position.x) && 
+              bombObjects[i].fire2.mesh.position.z === roundFour(sphereBody.position.z)) {
+              socket.emit('remove_player', {
+                id: socket.id
+              })
+          }
+        }
+        if (bombObjects[i].fire3) {
+          bombObjects[i].fire3.update(elapsed)
+          if (bombObjects[i].fire3.mesh.position.x === roundFour(sphereBody.position.x) && 
+              bombObjects[i].fire3.mesh.position.z === roundFour(sphereBody.position.z)) {
+              socket.emit('remove_player', {
+                id: socket.id
+              })
+          }
+        }
+        if (bombObjects[i].fire4) {
+          bombObjects[i].fire4.update(elapsed)
+          if (bombObjects[i].fire4.mesh.position.x === roundFour(sphereBody.position.x) && 
+              bombObjects[i].fire4.mesh.position.z === roundFour(sphereBody.position.z)) {
+              socket.emit('remove_player', {
+                id: socket.id
+              })
+          }
+        }
+        if (bombObjects[i].fire5) {
+          bombObjects[i].fire5.update(elapsed)
+          if (bombObjects[i].fire5.mesh.position.x === roundFour(sphereBody.position.x) && 
+              bombObjects[i].fire5.mesh.position.z === roundFour(sphereBody.position.z)) {
+              socket.emit('remove_player', {
+                id: socket.id
+              })
+          }
+        }
       }
     }
 
@@ -286,6 +326,7 @@ export function animate() {
         let newPlayer;
         newPlayer = new Player(socket.id, others[player].x, others[player].y, others[player].z)
         newPlayer.init()
+
         players.push(newPlayer.playerBox)
         playerMeshes.push(newPlayer.playerMesh)
       }
