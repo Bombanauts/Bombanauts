@@ -7,10 +7,12 @@ import { scene, world, blockCount, blocksObj } from './main';
 import { Block } from './Explosion.js';
 
 export default class DestroyableCube {
-  constructor(material, texture, fixedCubeShape, fixedCubeGeometry, x, y, z) {
+  constructor(material, texture, fixedCubeShape, fixedCubeGeometry, x, y, z, j, k) {
     this.x = x;
     this.y = y;
     this.z = z;
+    this.j = j;
+    this.k = k;
     this.exploded = false;
     this.cubeMesh = {};
     this.cubeBox = {};
@@ -49,6 +51,7 @@ export default class DestroyableCube {
       world.remove(this.cubeBox)
       scene.remove(this.cubeMesh)
       this.exploded = true;
+      return true; //returning for knowing if socket should emit on explosion call
     }
   }
 }

@@ -143,8 +143,8 @@ export function init() {
   scene.add(mesh);
 
   const skyGeo = new THREE.SphereGeometry(1000, 32, 32);
-  const skyTexture = new THREE.TextureLoader().load('images/sky.jpg');
-  const skyMaterial = new THREE.MeshBasicMaterial({ map: skyTexture });
+  // const skyTexture = new THREE.TextureLoader().load('images/sky.jpg');
+  const skyMaterial = new THREE.MeshBasicMaterial({ color: '#7EC0EE' });
   const sky = new THREE.Mesh(skyGeo, skyMaterial);
   sky.material.side = THREE.BackSide;
   scene.add(sky);
@@ -260,7 +260,7 @@ export function animate() {
         });
       }
       requestAnimationFrame(animate);
-    }, 1000 / 30) //throttled to 60 times per second
+    }, 1000 / 60) //throttled to 60 times per second
 
   if (controls.enabled) {
     world.step(dt); // function that allows walking from CANNON

@@ -15,7 +15,7 @@ const generateMap = (mapArr) => {
     mapArrHeight = mapArr[0].length;
 
   // CRATE
-  const crateTexture = new THREE.TextureLoader().load('images/crate.gif');
+  const crateTexture = new THREE.TextureLoader().load('images/crate.png');
   const crateMaterial = new THREE.MeshLambertMaterial({ map: crateTexture });
 
   // WALL
@@ -31,6 +31,8 @@ const generateMap = (mapArr) => {
   const fixedCubeShape = new CANNON.Box(halfExtents);
   const fixedCubeGeometry = new THREE.BoxGeometry(halfExtents.x * 1.9, halfExtents.y * 1.9, halfExtents.z * 1.9);
 
+  const wallGeometry = new THREE.BoxGeometry(halfExtents.x * 2, halfExtents.y * 3.5, halfExtents.z * 2);
+
   for (let j = 0; j < mapArrWidth; j++) {
     for (let k = 0; k < mapArrHeight; k++) {
       const x = (j + mapArrWidth) * 4 - 100;
@@ -44,13 +46,13 @@ const generateMap = (mapArr) => {
         boxMeshes.push(fixedCube.fixedCubeMesh);
       }
       else if (mapArr[j][k] === 1) { // Create Wall
-        const wall = new Wall(wallMaterial, wallTexture, fixedCubeShape, fixedCubeGeometry, x, y, z);
+        const wall = new Wall(wallMaterial, wallTexture, fixedCubeShape, wallGeometry, x, y, z);
         wall.init();
         boxes.push(wall.wallBody);
         boxMeshes.push(wall.wallMesh);
       }
       else if (mapArr[j][k] === 3) { //DESTROYABLE BOX
-        const destroyableBox = new DestroyableCube(crateMaterial, crateTexture, fixedCubeShape, fixedCubeGeometry, x, y, z);
+        const destroyableBox = new DestroyableCube(crateMaterial, crateTexture, fixedCubeShape, fixedCubeGeometry, x, y, z, j, k);
         destroyableBox.init();
         destroyableBoxes.push(destroyableBox.cubeBox);
         destroyableBoxMeshes.push(destroyableBox.cubeMesh);

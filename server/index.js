@@ -9,6 +9,7 @@ const socketio = require('socket.io');
 
 const {updatePlayers, removePlayer, killPlayer} = require('./players/action-creator');
 const { addBomb, updateBombPositions, removePlayerBombs, removeBomb } = require('./bombs/action-creator')
+const { updateMap } = require('./maps/action-creator')
 
 const store = require('./store')
 
@@ -47,6 +48,10 @@ io.on('connection', (socket) => {
     store.dispatch(killPlayer(data.id))
     io.sockets.emit('kill_player', data.id)
     io.sockets.emit('update_world', store.getState())
+  })
+
+  socket.on('destroy_cube', (data) => {
+    store.dispatch(updateMap(data))
   })
 
   //remove the player from the state on socket disconnect
