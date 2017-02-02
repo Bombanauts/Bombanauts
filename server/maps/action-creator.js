@@ -1,4 +1,4 @@
-const { GENERATE_MAP } = require('./constants');
+const { GENERATE_MAP, EXPLODE_BOX } = require('./constants');
 
 const loadMap = (map) => {
   return {
@@ -7,4 +7,14 @@ const loadMap = (map) => {
   }
 }
 
-module.exports = loadMap;
+const updateMap = (coordinates) => {
+  return {
+    type: EXPLODE_BOX,
+    coordinates
+  }
+}
+
+module.exports = {
+  loadMap,
+  updateMap
+}

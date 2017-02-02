@@ -1,5 +1,5 @@
 import store from '../store'
-import socket from '../socket'
+// import socket from '../socket'
 
 const THREE = require('three')
 const CANNON = require('cannon')
@@ -89,35 +89,60 @@ export default class Bomb {
     if (destroyable[middle]) {
       this.fire = createFire(x, y, z)
       if (destroyable[middle].length) {
-        destroyable[middle][1].explode()
+        if (destroyable[middle][1].explode()) {
+          socket.emit('destroy_cube', {
+            j: destroyable[middle][1].j,
+            k: destroyable[middle][1].k
+          })
+        }
       }
     }
 
     if (destroyable[right]) {
       this.fire2 = createFire(x + 4, y, z)
       if (destroyable[right].length) {
-        destroyable[right][1].explode()
+        if (destroyable[right][1].explode()) {
+          socket.emit('destroy_cube', {
+            j: destroyable[right][1].j,
+            k: destroyable[right][1].k
+          })
+        }
       }
     }
 
     if (destroyable[left]) {
       this.fire3 = createFire(x - 4, y, z)
       if (destroyable[left].length) {
-        destroyable[left][1].explode()
+        if (destroyable[left][1].explode()) {
+          socket.emit('destroy_cube', {
+            j: destroyable[left][1].j,
+            k: destroyable[left][1].k
+          })
+        }
       }
     }
 
     if (destroyable[top]) {
       this.fire4 = createFire(x, y, z + 4)
       if (destroyable[top].length) {
-        destroyable[top][1].explode()
+       if (destroyable[top][1].explode()) {
+        socket.emit('destroy_cube', {
+          j: destroyable[top][1].j,
+          k: destroyable[top][1].k
+        })
+       }
       }
     }
 
     if (destroyable[bottom]) {
       this.fire5 = createFire(x, y, z - 4)
       if (destroyable[bottom].length) {
-        destroyable[bottom][1].explode()
+        if (destroyable[bottom][1].explode()) {
+          socket.emit('destroy_cube', {
+            j: destroyable[bottom][1].j,
+            k: destroyable[bottom][1].k
+          })
+        }
       }
     }
 
