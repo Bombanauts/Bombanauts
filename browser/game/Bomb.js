@@ -72,51 +72,50 @@ export default class Bomb {
     const fireDepth = 4
     const sliceSpacing = 0.5
 
-    if (destroyable[`${x}_${z}`]) {
-      this.fire = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
-      this.fire.mesh.frustumCulled = false;
-      this.fire.mesh.position.set(x, y, z)
-      scene.add(this.fire.mesh)
-      if (destroyable[`${x}_${z}`].length) destroyable[`${x}_${z}`][1].explode()
+    function createFire(x, y, z) {
+      const fire = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
+      fire.mesh.frustumCulled = false;
+      fire.mesh.position.set(x, y, z)
+      scene.add(fire.mesh)
+      return fire
     }
 
-    if (destroyable[`${x + 4}_${z}`]) {
-      this.fire2 = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
-      this.fire2.mesh.frustumCulled = false;
-      this.fire2.mesh.position.set(x + 4, y, z)
-      scene.add(this.fire2.mesh)
-      if (destroyable[`${x + 4}_${z}`].length) {
-        destroyable[`${x + 4}_${z}`][1].explode()
+    const middle = `${x}_${z}`;
+    const right = `${x + 4}_${z}`;
+    const left = `${x - 4}_${z}`;
+    const top = `${x}_${z + 4}`;
+    const bottom = `${x}_${z - 4}`;
+
+    if (destroyable[middle]) {
+      this.fire = createFire(x, y, z)
+      if (destroyable[middle].length) destroyable[middle][1].explode()
+    }
+
+    if (destroyable[right]) {
+      this.fire2 = createFire(x + 4, y, z)
+      if (destroyable[right].length) {
+        destroyable[right][1].explode()
       }
     }
 
-    if (destroyable[`${x - 4}_${z}`]) {
-      this.fire3 = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
-      this.fire3.mesh.frustumCulled = false;
-      this.fire3.mesh.position.set(x - 4, y, z)
-      scene.add(this.fire3.mesh)
-      if (destroyable[`${x - 4}_${z}`].length) {
-        destroyable[`${x - 4}_${z}`][1].explode()
+    if (destroyable[left]) {
+      this.fire3 = createFire(x - 4, y, z)
+      if (destroyable[left].length) {
+        destroyable[left][1].explode()
       }
     }
 
-    if (destroyable[`${x}_${z + 4}`]) {
-      this.fire4 = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
-      this.fire4.mesh.frustumCulled = false;
-      this.fire4.mesh.position.set(x, y, z + 4)
-      scene.add(this.fire4.mesh)
-      if (destroyable[`${x}_${z + 4}`].length) {
-        destroyable[`${x}_${z + 4}`][1].explode()
+    if (destroyable[top]) {
+      this.fire4 = createFire(x, y, z + 4)
+      if (destroyable[top].length) {
+        destroyable[top][1].explode()
       }
     }
 
-    if (destroyable[`${x}_${z - 4}`]) {
-      this.fire5 = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
-      this.fire5.mesh.frustumCulled = false;
-      this.fire5.mesh.position.set(x, y, z - 4)
-      scene.add(this.fire5.mesh)
-      if (destroyable[`${x}_${z - 4}`].length) {
-        destroyable[`${x}_${z - 4}`][1].explode()
+    if (destroyable[bottom]) {
+      this.fire5 = createFire(x, y, z - 4)
+      if (destroyable[bottom].length) {
+        destroyable[bottom][1].explode()
       }
     }
 
