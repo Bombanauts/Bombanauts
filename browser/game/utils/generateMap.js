@@ -4,6 +4,7 @@ import Wall from '../Wall'
 import FixedCube from '../FixedCube'
 
 const THREE = require('three');
+const CANNON = require('cannon');
 
 const boundary = {},
   fixedBox = {},
@@ -13,12 +14,22 @@ const generateMap = (mapArr) => {
   const mapArrWidth = mapArr.length,
     mapArrHeight = mapArr[0].length;
 
+  // CRATE
   const crateTexture = new THREE.TextureLoader().load('images/crate.gif');
   const crateMaterial = new THREE.MeshLambertMaterial({ map: crateTexture });
+
+  // WALL
   const wallTexture = new THREE.TextureLoader().load('images/brick_wall.png');
   const wallMaterial = new THREE.MeshLambertMaterial({ map: wallTexture });
+
+  // FIXED CUBE
   const fixedCubeTexture = new THREE.TextureLoader().load('images/stone.png' );
   const fixedCubeMaterial = new THREE.MeshLambertMaterial({ map: fixedCubeTexture });
+
+  // PHYSICS BODY AND SHAPE FOR CRATE, WALL, FIXED CUBE
+  const halfExtents = new CANNON.Vec3(2, 2, 2);
+  const fixedCubeShape = new CANNON.Box(halfExtents);
+  const fixedCubeGeometry = new THREE.BoxGeometry(halfExtents.x * 1.9, halfExtents.y * 1.9, halfExtents.z * 1.9);
 
   for (let j = 0; j < mapArrWidth; j++) {
     for (let k = 0; k < mapArrHeight; k++) {
@@ -27,19 +38,19 @@ const generateMap = (mapArr) => {
       const z = -(k + mapArrWidth) * 4 + 100;
 
       if (mapArr[j][k] === 2) { // Create Box
-        const fixedCube = new FixedCube(fixedCubeMaterial, fixedCubeTexture, x, y, z);
+        const fixedCube = new FixedCube(fixedCubeMaterial, fixedCubeTexture, fixedCubeShape, fixedCubeGeometry, x, y, z);
         fixedCube.init()
         boxes.push(fixedCube.fixedCubeBody);
         boxMeshes.push(fixedCube.fixedCubeMesh);
       }
       else if (mapArr[j][k] === 1) { // Create Wall
-        const wall = new Wall(wallMaterial, wallTexture, x, y, z);
+        const wall = new Wall(wallMaterial, wallTexture, fixedCubeShape, fixedCubeGeometry, x, y, z);
         wall.init();
         boxes.push(wall.wallBody);
         boxMeshes.push(wall.wallMesh);
       }
       else if (mapArr[j][k] === 3) { //DESTROYABLE BOX
-        const destroyableBox = new DestroyableCube(crateMaterial, crateTexture, x, y, z);
+        const destroyableBox = new DestroyableCube(crateMaterial, crateTexture, fixedCubeShape, fixedCubeGeometry, x, y, z);
         destroyableBox.init();
         destroyableBoxes.push(destroyableBox.cubeBox);
         destroyableBoxMeshes.push(destroyableBox.cubeMesh);

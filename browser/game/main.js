@@ -260,7 +260,7 @@ export function animate() {
         });
       }
       requestAnimationFrame(animate);
-    }, 1000 / 60) //throttled to 60 times per second
+    }, 1000 / 30) //throttled to 60 times per second
 
   if (controls.enabled) {
     world.step(dt); // function that allows walking from CANNON

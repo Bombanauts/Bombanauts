@@ -5,7 +5,7 @@ const CANNON = require('cannon')
 import { scene, world } from './main';
 
 export default class FixedCube {
-  constructor(material, texture, x, y, z) {
+  constructor(material, texture, fixedCubeShape, fixedCubeGeometry, x, y, z) {
     this.x = x;
     this.y = y;
     this.z = z;
@@ -13,17 +13,16 @@ export default class FixedCube {
     this.fixedCubeBody = {};
     this.material = material;
     this.texture = texture;
+    this.fixedCubeShape = fixedCubeShape;
+    this.fixedCubeGeometry = fixedCubeGeometry
     }
 
     init() {
-    const halfExtents = new CANNON.Vec3(2,2,2);
-    const fixedCubeShape = new CANNON.Box(halfExtents);
-    const fixedCubeGeometry = new THREE.BoxGeometry(halfExtents.x * 1.9, halfExtents.y * 1.9, halfExtents.z * 1.9);
 
     // creating fixedCube
     const fixedCubeBody = new CANNON.Body({ mass: 0 });
-    fixedCubeBody.addShape(fixedCubeShape)
-    const fixedCubeMesh = new THREE.Mesh( fixedCubeGeometry, this.material );
+    fixedCubeBody.addShape(this.fixedCubeShape)
+    const fixedCubeMesh = new THREE.Mesh(this.fixedCubeGeometry, this.material );
 
     // set spawn position
     fixedCubeMesh.position.set(this.x, this.y, this.z);

@@ -7,7 +7,7 @@ import { scene, world, blockCount, blocksObj } from './main';
 import { Block } from './Explosion.js';
 
 export default class DestroyableCube {
-  constructor(material, texture, x, y, z) {
+  constructor(material, texture, fixedCubeShape, fixedCubeGeometry, x, y, z) {
     this.x = x;
     this.y = y;
     this.z = z;
@@ -16,17 +16,15 @@ export default class DestroyableCube {
     this.cubeBox = {};
     this.material = material;
     this.texture = texture;
+    this.fixedCubeShape = fixedCubeShape;
+    this.fixedCubeGeometry = fixedCubeGeometry
   }
 
   init() {
-    const halfExtents = new CANNON.Vec3(2, 2, 2);
-    const boxShape = new CANNON.Box(halfExtents);
-    const boxGeometry = new THREE.BoxGeometry(halfExtents.x * 1.9, halfExtents.y * 1.9, halfExtents.z * 1.9);
-
     // creating player
     const cubeBox = new CANNON.Body({ mass: 1 });
-    cubeBox.addShape(boxShape)
-    const cubeMesh = new THREE.Mesh(boxGeometry, this.material);
+    cubeBox.addShape(this.fixedCubeShape)
+    const cubeMesh = new THREE.Mesh(this.fixedCubeGeometry, this.material);
 
     // set spawn position
     cubeMesh.position.set(this.x, this.y, this.z);
