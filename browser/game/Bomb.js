@@ -88,7 +88,9 @@ export default class Bomb {
 
     if (destroyable[middle]) {
       this.fire = createFire(x, y, z)
-      if (destroyable[middle].length) destroyable[middle][1].explode()
+      if (destroyable[middle].length) {
+        destroyable[middle][1].explode()
+      }
     }
 
     if (destroyable[right]) {

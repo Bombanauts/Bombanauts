@@ -1,11 +1,7 @@
-import store from '../store'
-import socket from '../socket'
 
 const THREE = require('three')
-const CANNON = require('cannon')
-const PointerLockControls = require('./PointerLockControls')
 
-import { scene, world, blocksObj } from './main'
+import { scene, blocksObj } from './main'
 
 export const Particle = function (width, height, depth) {
   THREE.Geometry.call(this);
