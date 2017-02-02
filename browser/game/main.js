@@ -35,6 +35,8 @@ let prevPlayerStateLength = 0;
 let dead = false;
 let allowBomb = true;
 
+const bombMaterial = new THREE.MeshLambertMaterial({ color: '#000000' })
+
 export const blocksObj = {};
 export const blockCount = 50;
 
@@ -153,6 +155,7 @@ export function init() {
   window.addEventListener('resize', onWindowResize, false);
 
   createMap();
+
   sphereBody.position.x = 0;
   sphereBody.position.y = 10 + (Math.random() * 3);
   sphereBody.position.z = 0;
@@ -176,7 +179,7 @@ export function init() {
         let y = sphereBody.position.y;
         let z = sphereBody.position.z;
 
-        const newBomb = new Bomb(count++, { x: x, y: y, z: z });
+        const newBomb = new Bomb(count++, { x: x, y: y, z: z }, bombMaterial);
         newBomb.init()
         allowBomb = false;
         setTimeout( () => {
@@ -257,7 +260,7 @@ export function animate() {
         });
       }
       requestAnimationFrame(animate);
-    }, 1000 / 60) //throttled to 60 times per second
+    }, 1000 / 30) //throttled to 60 times per second
 
   if (controls.enabled) {
     world.step(dt); // function that allows walking from CANNON
@@ -374,7 +377,7 @@ export function animate() {
     // add new bomb if there is one
     if (stateBombs.length > prevStateLength) {
       const mostRecentBomb = stateBombs[stateBombs.length - 1]
-      const newBomb = new Bomb(mostRecentBomb.id, mostRecentBomb.position)
+      const newBomb = new Bomb(mostRecentBomb.id, mostRecentBomb.position, bombMaterial)
       newBomb.init()
 
       bombs.push(newBomb.bombBody)
