@@ -18,7 +18,6 @@ export default class FixedCube {
     }
 
     init() {
-
     // creating fixedCube
     const fixedCubeBody = new CANNON.Body({ mass: 0 });
     fixedCubeBody.addShape(this.fixedCubeShape)
