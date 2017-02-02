@@ -20,6 +20,7 @@ server.on('request', app);
 // it into our HTTP server
 const io = socketio(server)
 
+
 const roomName = (connectedSocket, roomsList) => {
   let roomsNames = Object.keys(roomsList).filter( room => {
     return room.length < 12
@@ -32,18 +33,15 @@ const roomName = (connectedSocket, roomsList) => {
   for (let i = 0; i < roomsNames.length; i++) {
     if (roomsList[roomsNames[i]].length < 4) {
       currentRoomName = roomsNames[i];
-      console.log('joinde to existent')
       break;
     } else if (i === roomsNames.length - 1) {
       connectedSocket.join(worldNames[i + 1]);
       currentRoomName = worldNames[i + 1];
       createdRoom = true;
-      console.log('joinde to created')
     }
   }
   return {currentRoomName, createdRoom};
 }
-
 
 //  use socket server as an event emitter in order to listen for new connctions
 io.on('connection', (socket) => {
