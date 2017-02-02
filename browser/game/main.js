@@ -35,6 +35,14 @@ let prevPlayerStateLength = 0;
 let dead = false;
 let allowBomb = true;
 
+import { playerArr } from '../socket'
+const spawnPositions = [
+  {x:11.5, y: 1.5, z: -4},
+  {x:12.1, y: 1.5, z: 36.4},
+  {x:-36, y: 1.5, z: 36},
+  {x:-36.4, y: 1.5, z: -4},
+]
+
 const bombMaterial = new THREE.MeshLambertMaterial({ color: '#000000' })
 
 export const blocksObj = {};
@@ -156,9 +164,9 @@ export function init() {
 
   createMap();
 
-  sphereBody.position.x = 0;
-  sphereBody.position.y = 10 + (Math.random() * 3);
-  sphereBody.position.z = 0;
+  sphereBody.position.x = 100;
+  sphereBody.position.y = 100;
+  sphereBody.position.z = 100;
 
   let others = store.getState().players.otherPlayers;
     let newPlayer;
@@ -244,8 +252,12 @@ export function onWindowResize() {
 const dt = 1 / 60; // change in time for walking
 
 let prevStateLength = 0;
+
+let counter = 0;
+
 //animation GAME LOOP
 export function animate() {
+  counter++;
   setTimeout(() => {
       if (socket) {
         socket.emit('update_world', {
@@ -261,6 +273,14 @@ export function animate() {
       }
       requestAnimationFrame(animate);
     }, 1000 / 60) //throttled to 60 times per second
+
+  // console.log('COUNTER', counter)
+  if(counter === 50) {
+    console.log('INSIDE COUNTER')
+    sphereBody.position.x = spawnPositions[playerArr.indexOf(socket.id)].x;
+    sphereBody.position.y = 5
+    sphereBody.position.z = spawnPositions[playerArr.indexOf(socket.id)].z;
+  }
 
   if (controls.enabled) {
     world.step(dt); // function that allows walking from CANNON

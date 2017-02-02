@@ -19,7 +19,6 @@ server.on('request', app);
 // it into our HTTP server
 const io = socketio(server)
 
-
 //  use socket server as an event emitter in order to listen for new connctions
 io.on('connection', (socket) => {
   io.sockets.emit('initial', store.getState());
@@ -31,6 +30,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('update_world', (data) => {
+
     store.dispatch(updatePlayers({ id: data.playerId, position: data.playerPosition, dead: data.dead }));
     store.dispatch(updateBombPositions({ userId: data.playerId, bombs: data.playerBombs }))
 

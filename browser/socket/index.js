@@ -8,11 +8,11 @@ import { loadMap } from '../maps/action-creator';
 
 import { initCannon, init, animate, players, playerMeshes, world, scene } from '../game/main';
 
-socket.on('connect', function() {
+export let playerArr = [];
+
+// export const initializeSockets = () => {
+  socket.on('connect', function() {
   socket.on('initial', (initialData) => {
-    // if (initialData.players['undefined']) {
-    //   delete initialData.players['undefined']
-    // }
     store.dispatch(updatePlayerLocations(initialData.players));
     store.dispatch(updateBombLocations(initialData.bombs.allBombs))
     store.dispatch(loadMap(initialData.mapState.mapState[0]))
@@ -21,6 +21,7 @@ socket.on('connect', function() {
   let now = Date.now()
 
   socket.on('update_world', (data) => {
+    playerArr = Object.keys(data.players);
     delete data.players[socket.id];
     delete data.bombs.allBombs[socket.id];
 
@@ -61,3 +62,6 @@ socket.on('connect', function() {
   })
 
 })
+
+// }
+

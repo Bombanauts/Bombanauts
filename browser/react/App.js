@@ -20,7 +20,7 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    delay(500)
+    delay(300)
     .then(() => {
       pointerChecker()
       initCannon()
