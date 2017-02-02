@@ -4,24 +4,27 @@ const {
   REMOVE_PLAYER_BOMBS
 } = require('./constants')
 
-const addBomb = (newBomb) => {
+const addBomb = (newBomb, roomId) => {
   return {
     type: ADD_BOMB,
-    newBomb
+    newBomb,
+    roomId
   }
 }
 
-const updateBombPositions = (bombs) => {
+const updateBombPositions = (bombs, roomId) => {
   return {
     type: UPDATE_BOMB_POSITIONS,
-    bombs
+    bombs,
+    roomId
   }
 }
 
-const removePlayerBombs = (id) => {
+const removePlayerBombs = (id, roomId) => {
   return {
     type: REMOVE_PLAYER_BOMBS,
-    id
+    id,
+    roomId
   }
 }
 

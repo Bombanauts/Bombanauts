@@ -6,60 +6,120 @@ const port = process.env.PORT || 1337;
 const express = require('express');
 const app = express();
 const socketio = require('socket.io');
-
+const _ = require('lodash');
+const Maps = require('./maps/map');
 const {updatePlayers, removePlayer, killPlayer} = require('./players/action-creator');
 const { addBomb, updateBombPositions, removePlayerBombs, removeBomb } = require('./bombs/action-creator')
 const { updateMap } = require('./maps/action-creator')
 
 const store = require('./store')
-
+const worldNames = require('./world-names')
 server.on('request', app);
 
 // creates a new connection server for web sockets and integrates
 // it into our HTTP server
 const io = socketio(server)
 
+const roomName = (connectedSocket, roomsList) => {
+  let roomsNames = Object.keys(roomsList).filter( room => {
+    return room.length < 12
+  });
+  let currentRoomName;
+  let createdRoom = false;
+  if (!roomsNames.length) {
+    return {currentRoomName:worldNames[0], createdRoom: true};
+  }
+  for (let i = 0; i < roomsNames.length; i++) {
+    if (roomsList[roomsNames[i]].length < 4) {
+      currentRoomName = roomsNames[i];
+      console.log('joinde to existent')
+      break;
+    } else if (i === roomsNames.length - 1) {
+      connectedSocket.join(worldNames[i + 1]);
+      currentRoomName = worldNames[i + 1];
+      createdRoom = true;
+      console.log('joinde to created')
+    }
+  }
+  return {currentRoomName, createdRoom};
+}
+
 
 //  use socket server as an event emitter in order to listen for new connctions
 io.on('connection', (socket) => {
-  io.sockets.emit('initial', store.getState());
-  console.log(chalk.blue('A new client has connected'));
-  console.log(chalk.yellow('socket id: ', socket.id));
+  delete socket.adapter.rooms[socket.id]
+  let rooms = io.sockets.adapter.rooms;
+  let {currentRoomName, createdRoom} = roomName(socket, rooms)
+
+  socket.join(currentRoomName);
+  socket.currentRoom = currentRoomName;
+  if (createdRoom) {
+    io.sockets.emit('initial', {
+      players: [],
+      bombs: {
+        allBombs: []
+      },
+      mapState: {
+        mapState: Maps
+      }
+    });
+  } else {
+    let currState = store.getState();
+    let newState = {
+      players: currState.players[socket.currentRoom],
+      bombs: currState.bombs[socket.currentRoom],
+      mapState: currState.mapState[socket.currentRoom]
+    };
+    io.sockets.emit('initial', newState);
+    console.log(chalk.blue('A new client has connected'));
+    console.log(chalk.yellow('socket id: ', socket.id));
+  }
 
   socket.on('get_players', () => {
-    socket.emit('get_players', store.getState().players);
+    socket.emit('get_players', store.getState().players[socket.currentRoom]);
   })
 
   socket.on('update_world', (data) => {
-    store.dispatch(updatePlayers({ id: data.playerId, position: data.playerPosition, dead: data.dead }));
-    store.dispatch(updateBombPositions({ userId: data.playerId, bombs: data.playerBombs }))
-
-    io.sockets.emit('update_world', store.getState())
+    store.dispatch(updatePlayers({ id: data.playerId, position: data.playerPosition, dead: data.dead }, socket.currentRoom));
+    store.dispatch(updateBombPositions({ userId: data.playerId, bombs: data.playerBombs }, socket.currentRoom))
+    let currState = store.getState();
+    let newState = {
+      players: currState.players[socket.currentRoom],
+      bombs: currState.bombs[socket.currentRoom],
+      mapState: currState.mapState[socket.currentRoom]
+    };
+    io.in(socket.currentRoom).emit('update_world', newState)
   })
 
   //add new bomb to the state when a player clicks
   socket.on('add_bomb', (data) => {
-    store.dispatch(addBomb(data))
-    io.sockets.emit('update_bomb_positions', store.getState().bombs.allBombs)
+    store.dispatch(addBomb(data, socket.currentRoom))
+    io.in(socket.currentRoom).emit('update_bomb_positions', store.getState().bombs[socket.currentRoom].allBombs)
   })
 
   //kill player on bomb collision
   socket.on('kill_player', (data) => {
-    store.dispatch(killPlayer(data.id))
-    io.sockets.emit('kill_player', data.id)
-    io.sockets.emit('update_world', store.getState())
+    store.dispatch(killPlayer(data.id, socket.currentRoom))
+    io.in(socket.currentRoom).emit('kill_player', data.id)
+    let currState = store.getState();
+    let newState = {
+      players: currState.players[socket.currentRoom],
+      bombs: currState.bombs[socket.currentRoom],
+      mapState: currState.mapState[socket.currentRoom]
+    };
+    io.in(socket.currentRoom).emit('update_world', newState)
   })
 
   socket.on('destroy_cube', (data) => {
-    store.dispatch(updateMap(data))
+    store.dispatch(updateMap(data, socket.currentRoom))
   })
 
   //remove the player from the state on socket disconnect
   socket.on('disconnect', () => {
-    store.dispatch(removePlayer(socket.id))
-    store.dispatch(removePlayerBombs(socket.id))
+    store.dispatch(removePlayer(socket.id, socket.currentRoom))
+    store.dispatch(removePlayerBombs(socket.id, socket.currentRoom))
 
-    io.sockets.emit('remove_player', socket.id)
+    io.in(socket.currentRoom).emit('remove_player', socket.id)
     console.log('socket id ' + socket.id + ' has disconnected. : (');
   })
 })
