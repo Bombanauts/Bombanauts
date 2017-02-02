@@ -35,6 +35,14 @@ let prevPlayerStateLength = 0;
 let dead = false;
 let allowBomb = true;
 
+import { playerArr } from '../socket'
+const spawnPositions = [
+  {x:11.5, y: 1.5, z: -4},
+  {x:12.1, y: 1.5, z: 36.4},
+  {x:-36, y: 1.5, z: 36},
+  {x:-36.4, y: 1.5, z: -4},
+]
+
 const bombMaterial = new THREE.MeshLambertMaterial({ color: '#000000' })
 
 export const blocksObj = {};
@@ -156,9 +164,9 @@ export function init() {
 
   createMap();
 
-  sphereBody.position.x = 0;
-  sphereBody.position.y = 10 + (Math.random() * 3);
-  sphereBody.position.z = 0;
+  sphereBody.position.x = 100;
+  sphereBody.position.y = 100;
+  sphereBody.position.z = 100;
 
   let others = store.getState().players.otherPlayers;
     let newPlayer;
@@ -244,8 +252,12 @@ export function onWindowResize() {
 const dt = 1 / 60; // change in time for walking
 
 let prevStateLength = 0;
+
+let counter = 0;
+
 //animation GAME LOOP
 export function animate() {
+  counter++;
   setTimeout(() => {
       if (socket) {
         socket.emit('update_world', {
@@ -262,145 +274,151 @@ export function animate() {
       requestAnimationFrame(animate);
     }, 1000 / 60) //throttled to 60 times per second
 
-  if (controls.enabled) {
-    world.step(dt); // function that allows walking from CANNON
+  // console.log('COUNTER', counter)
+  if(counter === 50) {
+    console.log('INSIDE COUNTER')
+    sphereBody.position.x = spawnPositions[playerArr.indexOf(socket.id)].x;
+    sphereBody.position.y = 5
+    sphereBody.position.z = spawnPositions[playerArr.indexOf(socket.id)].z;
+  }
 
-    const others = store.getState().players.otherPlayers;
-    const playerIds = Object.keys(others)
+  world.step(dt); // function that allows walking from CANNON
 
-    const state = store.getState();
-    const allBombs = state.bombs.allBombs;
-    const stateBombs = [];
+  const others = store.getState().players.otherPlayers;
+  const playerIds = Object.keys(others)
 
-    for (let key in allBombs) {
-      stateBombs.push(...allBombs[key])
-    }
+  const state = store.getState();
+  const allBombs = state.bombs.allBombs;
+  const stateBombs = [];
 
-    //Animate Fire w/ Bombs
-    let elapsed = clock.getElapsedTime()
-    for (let i = 0; i < bombObjects.length; i++) {
-      if (bombObjects[i].bool) {
-        if (bombObjects[i].fire) {
-          bombObjects[i].fire.update(elapsed)
-          if (bombObjects[i].fire.mesh.position.x === roundFour(sphereBody.position.x) &&
-              bombObjects[i].fire.mesh.position.z === roundFour(sphereBody.position.z)) {
-              dead = true;
-              socket.emit('kill_player', {
-                id: socket.id
-              })
-          }
+  for (let key in allBombs) {
+    stateBombs.push(...allBombs[key])
+  }
+
+  //Animate Fire w/ Bombs
+  let elapsed = clock.getElapsedTime()
+  for (let i = 0; i < bombObjects.length; i++) {
+    if (bombObjects[i].bool) {
+      if (bombObjects[i].fire) {
+        bombObjects[i].fire.update(elapsed)
+        if (bombObjects[i].fire.mesh.position.x === roundFour(sphereBody.position.x) &&
+            bombObjects[i].fire.mesh.position.z === roundFour(sphereBody.position.z)) {
+            dead = true;
+            socket.emit('kill_player', {
+              id: socket.id
+            })
         }
-        if (bombObjects[i].fire2) {
-          bombObjects[i].fire2.update(elapsed)
-          if (bombObjects[i].fire2.mesh.position.x === roundFour(sphereBody.position.x) &&
-              bombObjects[i].fire2.mesh.position.z === roundFour(sphereBody.position.z)) {
-              dead = true;
-              socket.emit('kill_player', {
-                id: socket.id
-              })
-          }
+      }
+      if (bombObjects[i].fire2) {
+        bombObjects[i].fire2.update(elapsed)
+        if (bombObjects[i].fire2.mesh.position.x === roundFour(sphereBody.position.x) &&
+            bombObjects[i].fire2.mesh.position.z === roundFour(sphereBody.position.z)) {
+            dead = true;
+            socket.emit('kill_player', {
+              id: socket.id
+            })
         }
-        if (bombObjects[i].fire3) {
-          bombObjects[i].fire3.update(elapsed)
-          if (bombObjects[i].fire3.mesh.position.x === roundFour(sphereBody.position.x) &&
-              bombObjects[i].fire3.mesh.position.z === roundFour(sphereBody.position.z)) {
-              dead = true;
-              socket.emit('kill_player', {
-                id: socket.id
-              })
-          }
+      }
+      if (bombObjects[i].fire3) {
+        bombObjects[i].fire3.update(elapsed)
+        if (bombObjects[i].fire3.mesh.position.x === roundFour(sphereBody.position.x) &&
+            bombObjects[i].fire3.mesh.position.z === roundFour(sphereBody.position.z)) {
+            dead = true;
+            socket.emit('kill_player', {
+              id: socket.id
+            })
         }
-        if (bombObjects[i].fire4) {
-          bombObjects[i].fire4.update(elapsed)
-          if (bombObjects[i].fire4.mesh.position.x === roundFour(sphereBody.position.x) &&
-              bombObjects[i].fire4.mesh.position.z === roundFour(sphereBody.position.z)) {
-              dead = true;
-              socket.emit('kill_player', {
-                id: socket.id
-              })
-          }
+      }
+      if (bombObjects[i].fire4) {
+        bombObjects[i].fire4.update(elapsed)
+        if (bombObjects[i].fire4.mesh.position.x === roundFour(sphereBody.position.x) &&
+            bombObjects[i].fire4.mesh.position.z === roundFour(sphereBody.position.z)) {
+            dead = true;
+            socket.emit('kill_player', {
+              id: socket.id
+            })
         }
-        if (bombObjects[i].fire5) {
-          bombObjects[i].fire5.update(elapsed)
-          if (bombObjects[i].fire5.mesh.position.x === roundFour(sphereBody.position.x) &&
-              bombObjects[i].fire5.mesh.position.z === roundFour(sphereBody.position.z)) {
-              dead = true;
-              socket.emit('kill_player', {
-                id: socket.id
-              })
-          }
+      }
+      if (bombObjects[i].fire5) {
+        bombObjects[i].fire5.update(elapsed)
+        if (bombObjects[i].fire5.mesh.position.x === roundFour(sphereBody.position.x) &&
+            bombObjects[i].fire5.mesh.position.z === roundFour(sphereBody.position.z)) {
+            dead = true;
+            socket.emit('kill_player', {
+              id: socket.id
+            })
         }
       }
     }
+  }
 
-    //make a new player object if there is one
-    if (playerIds.length !== players.length) {
-      players.forEach(body => {
-        world.remove(body)
-      })
-      playerMeshes.forEach(playermesh => {
-        scene.remove(playermesh)
-      })
-      players = [];
-      playerMeshes = [];
-      for (let player in others) {
-        let newPlayer;
-        newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead)
-        newPlayer.init()
+  //make a new player object if there is one
+  if (playerIds.length !== players.length) {
+    players.forEach(body => {
+      world.remove(body)
+    })
+    playerMeshes.forEach(playermesh => {
+      scene.remove(playermesh)
+    })
+    players = [];
+    playerMeshes = [];
+    for (let player in others) {
+      let newPlayer;
+      newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead)
+      newPlayer.init()
 
-        players.push(newPlayer.playerBox)
-        playerMeshes.push(newPlayer.playerMesh)
+      players.push(newPlayer.playerBox)
+      playerMeshes.push(newPlayer.playerMesh)
+    }
+  }
+
+  //updating player positions
+  for (let i = 0; i < players.length; i++) {
+    if (others[playerIds[i]] && !others[playerIds[i]].dead) {
+      let { x, y, z } = others[playerIds[i]]
+      playerMeshes[i].position.set(x, y, z);
+      players[i].position.x = x;
+      players[i].position.y = y;
+      players[i].position.z = z;
+    }
+  }
+
+  for (let block in blocksObj) {
+    if (blocksObj[block].length) {
+      for (let i = 0; i < blocksObj[block].length; i++) {
+        blocksObj[block][i].loop(block);
       }
+    } else {
+      delete blocksObj[block]
     }
+  }
 
-    //updating player positions
-    for (let i = 0; i < players.length; i++) {
-      if (others[playerIds[i]] && !others[playerIds[i]].dead) {
-        let { x, y, z } = others[playerIds[i]]
-        playerMeshes[i].position.set(x, y, z);
-        players[i].position.x = x;
-        players[i].position.y = y;
-        players[i].position.z = z;
-      }
-    }
+  // add new bomb if there is one
+  if (stateBombs.length > prevStateLength) {
+    const mostRecentBomb = stateBombs[stateBombs.length - 1]
+    const newBomb = new Bomb(mostRecentBomb.id, mostRecentBomb.position, bombMaterial)
+    newBomb.init()
 
-    for (let block in blocksObj) {
-      if (blocksObj[block].length) {
-        for (let i = 0; i < blocksObj[block].length; i++) {
-          blocksObj[block][i].loop(block);
-        }
-      } else {
-        delete blocksObj[block]
-      }
-    }
+    bombs.push(newBomb.bombBody)
+    bombObjects.push(newBomb)
+    ballMeshes.push(newBomb.bombMesh)
+  }
 
-    // add new bomb if there is one
-    if (stateBombs.length > prevStateLength) {
-      const mostRecentBomb = stateBombs[stateBombs.length - 1]
-      const newBomb = new Bomb(mostRecentBomb.id, mostRecentBomb.position, bombMaterial)
-      newBomb.init()
+  //way to get around removing bombs from the state
+  prevStateLength = stateBombs.length
 
-      bombs.push(newBomb.bombBody)
-      bombObjects.push(newBomb)
-      ballMeshes.push(newBomb.bombMesh)
-    }
+  //update bomb position
+  let indexAdd = bombs.length - stateBombs.length;
+  for (let i = 0; i < prevStateLength; i++) {
+    let { x, y, z } = stateBombs[i].position
+    bombs[i + indexAdd].position.x = x;
+    bombs[i + indexAdd].position.y = y;
+    bombs[i + indexAdd].position.z = z;
+    ballMeshes[i + indexAdd].position.copy(bombs[i + indexAdd].position)
+  }
 
-    //way to get around removing bombs from the state
-    prevStateLength = stateBombs.length
-
-    //update bomb position
-    let indexAdd = bombs.length - stateBombs.length;
-    for (let i = 0; i < prevStateLength; i++) {
-      let { x, y, z } = stateBombs[i].position
-      bombs[i + indexAdd].position.x = x;
-      bombs[i + indexAdd].position.y = y;
-      bombs[i + indexAdd].position.z = z;
-      ballMeshes[i + indexAdd].position.copy(bombs[i + indexAdd].position)
-    }
-
-    for (let i = 0; i < yourBombs.length; i++) {
-      yourballMeshes[i].position.copy(yourBombs[i].position)
-    }
+  for (let i = 0; i < yourBombs.length; i++) {
+    yourballMeshes[i].position.copy(yourBombs[i].position)
   }
 
   controls.update(Date.now() - time);
