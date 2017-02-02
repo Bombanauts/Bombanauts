@@ -41,9 +41,10 @@ export default class DestroyableCube {
 
   explode () {
     if (!this.exploded) {
+      const boxParticleGeometry = new THREE.BoxGeometry(0.4, 0.4, 0.4)
       const particles = [];
       for (let i = 0; i < blockCount; i++) {
-        const block = new Block(scene, world, {x: this.x, y: this.y, z: this.z}, 'cube');
+        const block = new Block(scene, world, {x: this.x, y: this.y, z: this.z}, 'cube', boxParticleGeometry, this.material);
         particles.push(block);
       }
       blocksObj[this.cubeMesh.id] = particles.slice();

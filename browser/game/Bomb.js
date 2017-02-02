@@ -12,27 +12,26 @@ import { Particle, Block } from './Explosion.js'
 
 
 export default class Bomb {
-  constructor(id, position) {
+  constructor(id, position, material) {
     this.id = id;
     this.position = position;
     this.bombMesh;
     this.bombBody;
     this.bombShape;
-    this.material;
     this.bool = true;
     this.fire;
     this.fire2;
     this.fire3;
     this.fire4;
     this.fire5;
-
+    this.material = material;
     this.init = this.init.bind(this);
     this.explode = this.explode.bind(this);
   }
 
   init() {
     this.bombShape = new CANNON.Sphere(1.5);
-    this.material = new THREE.MeshLambertMaterial({ color: '#000000' });
+    // this.material = new THREE.MeshLambertMaterial({ color: '#000000' });
 
     let bombGeometry = new THREE.SphereGeometry(this.bombShape.radius, 32, 32);
 
@@ -55,9 +54,11 @@ export default class Bomb {
     const y = this.bombBody.position.y + 4
     const z = roundFour(this.bombBody.position.z)
 
+    const bombParticleGeometry = new THREE.SphereGeometry(0.2, 0.2, 0.2)
+
     const particles = [];
     for (let i = 0; i < blockCount; i++) {
-      const bomb = new Block(scene, world, { x: x, y: y, z: z }, 'bomb')
+      const bomb = new Block(scene, world, { x: x, y: y, z: z }, 'bomb', bombParticleGeometry, this.material)
       particles.push(bomb);
     }
     blocksObj[this.bombMesh.id] = particles.slice()

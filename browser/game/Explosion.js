@@ -39,29 +39,18 @@ export const Particle = function (width, height, depth) {
 Particle.prototype = new THREE.Geometry();
 Particle.prototype.constructor = Particle;
 
-export const Block = function (scene, world, position, type) {
+export const Block = function (scene, world, position, type, geometry, material) {
   const MAX_SIZE = 0.5;
   const MIN_SIZE = 0.08;
 
-  let shape;
-  let texture;
-  let geometry;
-  let body;
-  let material;
-
   //create cube or bomb particles
   if (type === 'cube') {
-    texture = new THREE.TextureLoader().load('images/crate.gif');
-    geometry = new THREE.BoxGeometry(0.4, 0.4, 0.4)
-
-    material = new THREE.MeshLambertMaterial({ map: texture });
+    // geometry = new THREE.BoxGeometry(0.4, 0.4, 0.4)
     this.particle = new THREE.Mesh(geometry, material);
   }
   if (type === 'bomb') {
-    texture = new THREE.MeshLambertMaterial({ color: '#000000' });
-    geometry = new THREE.SphereGeometry(0.2, 0.2, 0.2)
-
-    this.particle = new THREE.Mesh(geometry, texture);
+    // geometry = new THREE.SphereGeometry(0.2, 0.2, 0.2)
+    this.particle = new THREE.Mesh(geometry, material);
     position.y -= 6;
   }
 
