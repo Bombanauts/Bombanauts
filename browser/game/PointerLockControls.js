@@ -73,12 +73,12 @@ export const PointerLockControls = function(camera, cannonBody) {
         moveRight = true;
         break;
 
-      case 32: // space
-        if (canJump === true) {
-          velocity.y = jumpVelocity;
-        }
-        canJump = false;
-        break;
+      // case 32: // space
+      //   if (canJump === true) {
+      //     velocity.y = jumpVelocity;
+      //   }
+      //   canJump = false;
+      //   break;
     }
   };
 

@@ -34,6 +34,8 @@ export let yourBombs = [];
 export let yourballMeshes = [];
 const bombObjects = [];
 let count = 1;
+let prevPlayerStateLength = 0;
+let dead = false;
 
 export const blocksObj = {};
 export const blockCount = 50;
@@ -154,29 +156,20 @@ export function init() {
 
   createMap();
   sphereBody.position.x = 0;
-  sphereBody.position.y = 10;
+  sphereBody.position.y = 10 + (Math.random() * 3);
   sphereBody.position.z = 0;
 
-  let others = store.getState().players.otherPlayers.players;
-  let newPlayer;
-  if (socket) {
-    socket.emit('update_world', {
-      playerId: socket.id,
-      playerPosition: {
-        x: sphereBody.position.x,
-        y: sphereBody.position.y,
-        z: sphereBody.position.z
-      },
-      playerBombs: yourBombs
-    });
-  }
+  let others = store.getState().players.otherPlayers;
+    let newPlayer;
 
-  for (let player in others) {
-    newPlayer = new Player(player, others[player].x, others[player].y, others[player].z)
-    newPlayer.init()
-    players.push(newPlayer.playerBox)
-    playerMeshes.push(newPlayer.playerMesh)
-  }
+    for (let player in others) {
+      console.log('PLAYER', others[player])
+      newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead)
+      newPlayer.init()
+      players.push(newPlayer.playerBox)
+      playerMeshes.push(newPlayer.playerMesh)
+    }
+    prevPlayerStateLength = players.length;
 
   if (controls) {
     window.addEventListener("click", function(e) {
@@ -258,7 +251,8 @@ export function animate() {
             y: sphereBody.position.y,
             z: sphereBody.position.z
           },
-          playerBombs: yourBombs
+          dead: dead,
+          playerBombs: yourBombs,
         });
       }
       requestAnimationFrame(animate);
@@ -286,7 +280,8 @@ export function animate() {
           bombObjects[i].fire.update(elapsed)
           if (bombObjects[i].fire.mesh.position.x === roundFour(sphereBody.position.x) &&
               bombObjects[i].fire.mesh.position.z === roundFour(sphereBody.position.z)) {
-              socket.emit('remove_player', {
+              dead = true;
+              socket.emit('kill_player', {
                 id: socket.id
               })
           }
@@ -295,7 +290,8 @@ export function animate() {
           bombObjects[i].fire2.update(elapsed)
           if (bombObjects[i].fire2.mesh.position.x === roundFour(sphereBody.position.x) &&
               bombObjects[i].fire2.mesh.position.z === roundFour(sphereBody.position.z)) {
-              socket.emit('remove_player', {
+              dead = true;
+              socket.emit('kill_player', {
                 id: socket.id
               })
           }
@@ -304,7 +300,8 @@ export function animate() {
           bombObjects[i].fire3.update(elapsed)
           if (bombObjects[i].fire3.mesh.position.x === roundFour(sphereBody.position.x) &&
               bombObjects[i].fire3.mesh.position.z === roundFour(sphereBody.position.z)) {
-              socket.emit('remove_player', {
+              dead = true;
+              socket.emit('kill_player', {
                 id: socket.id
               })
           }
@@ -313,7 +310,8 @@ export function animate() {
           bombObjects[i].fire4.update(elapsed)
           if (bombObjects[i].fire4.mesh.position.x === roundFour(sphereBody.position.x) &&
               bombObjects[i].fire4.mesh.position.z === roundFour(sphereBody.position.z)) {
-              socket.emit('remove_player', {
+              dead = true;
+              socket.emit('kill_player', {
                 id: socket.id
               })
           }
@@ -322,7 +320,8 @@ export function animate() {
           bombObjects[i].fire5.update(elapsed)
           if (bombObjects[i].fire5.mesh.position.x === roundFour(sphereBody.position.x) &&
               bombObjects[i].fire5.mesh.position.z === roundFour(sphereBody.position.z)) {
-              socket.emit('remove_player', {
+              dead = true;
+              socket.emit('kill_player', {
                 id: socket.id
               })
           }
@@ -332,11 +331,17 @@ export function animate() {
 
     //make a new player object if there is one
     if (playerIds.length !== players.length) {
+      players.forEach(body => {
+        world.remove(body)
+      })
+      playerMeshes.forEach(playermesh => {
+        scene.remove(playermesh)
+      })
       players = [];
       playerMeshes = [];
       for (let player in others) {
         let newPlayer;
-        newPlayer = new Player(player, others[player].x, others[player].y, others[player].z)
+        newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead)
         newPlayer.init()
 
         players.push(newPlayer.playerBox)
@@ -346,11 +351,13 @@ export function animate() {
 
     //updating player positions
     for (let i = 0; i < players.length; i++) {
-      let { x, y, z } = others[playerIds[i]]
-      playerMeshes[i].position.set(x, y, z);
-      players[i].position.x = x;
-      players[i].position.y = y;
-      players[i].position.z = z;
+      if (others[playerIds[i]] && !others[playerIds[i]].dead) {
+        let { x, y, z } = others[playerIds[i]]
+        playerMeshes[i].position.set(x, y, z);
+        players[i].position.x = x;
+        players[i].position.y = y;
+        players[i].position.z = z;
+      }
     }
 
     for (let block in blocksObj) {
@@ -381,10 +388,10 @@ export function animate() {
     let indexAdd = bombs.length - stateBombs.length;
     for (let i = 0; i < prevStateLength; i++) {
       let { x, y, z } = stateBombs[i].position
-      ballMeshes[i + indexAdd].position.copy(bombs[i + indexAdd].position)
       bombs[i + indexAdd].position.x = x;
       bombs[i + indexAdd].position.y = y;
       bombs[i + indexAdd].position.z = z;
+      ballMeshes[i + indexAdd].position.copy(bombs[i + indexAdd].position)
     }
 
     for (let i = 0; i < yourBombs.length; i++) {

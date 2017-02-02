@@ -7,14 +7,12 @@ const express = require('express');
 const app = express();
 const socketio = require('socket.io');
 
-const {updatePlayers, removePlayer} = require('./players/action-creator');
+const {updatePlayers, removePlayer, killPlayer} = require('./players/action-creator');
 const { addBomb, updateBombPositions, removePlayerBombs, removeBomb } = require('./bombs/action-creator')
 
 const store = require('./store')
 
-
 server.on('request', app);
-
 
 // creates a new connection server for web sockets and integrates
 // it into our HTTP server
@@ -27,17 +25,14 @@ io.on('connection', (socket) => {
   console.log(chalk.blue('A new client has connected'));
   console.log(chalk.yellow('socket id: ', socket.id));
 
-  //on connection add this new player to our store
-  store.dispatch(updatePlayers({id: socket.id,
-                                position: {x: 0, y: 0, z: 0}
-                              }));
   socket.on('get_players', () => {
     socket.emit('get_players', store.getState().players);
   })
 
   socket.on('update_world', (data) => {
-    store.dispatch(updatePlayers({ id: data.playerId, position: data.playerPosition }));
+    store.dispatch(updatePlayers({ id: data.playerId, position: data.playerPosition, dead: data.dead }));
     store.dispatch(updateBombPositions({ userId: data.playerId, bombs: data.playerBombs }))
+
     io.sockets.emit('update_world', store.getState())
   })
 
@@ -45,6 +40,13 @@ io.on('connection', (socket) => {
   socket.on('add_bomb', (data) => {
     store.dispatch(addBomb(data))
     io.sockets.emit('update_bomb_positions', store.getState().bombs.allBombs)
+  })
+
+  //kill player on bomb collision
+  socket.on('kill_player', (data) => {
+    store.dispatch(killPlayer(data.id))
+    io.sockets.emit('kill_player', data.id)
+    io.sockets.emit('update_world', store.getState())
   })
 
   //remove the player from the state on socket disconnect
@@ -56,7 +58,6 @@ io.on('connection', (socket) => {
     console.log('socket id ' + socket.id + ' has disconnected. : (');
   })
 })
-
 
 app.use(express.static(path.join(__dirname, '..', 'public', 'assets')));
 
