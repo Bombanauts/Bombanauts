@@ -11,13 +11,14 @@ const PointerLockControls = require('./PointerLockControls')
 let geometry, material, shape, playerMesh, controls, color, playerBox;
 
 export default class Player {
-  constructor(socketId, x, y, z) {
+  constructor(socketId, x, y, z, dead) {
     this.x = x;
     this.y = y;
     this.z = z;
     this.playerMesh = [];
     this.playerBox = [];
     this.socketId = socketId;
+    this.dead = dead;
 
     this.init = this.init.bind(this)
   }
@@ -39,19 +40,17 @@ export default class Player {
     playerMesh.name = this.socketId;
     playerBox.name = this.socketId;
 
-    world.addBody(playerBox);
-    scene.add(playerMesh);
     // set spawn position
     playerMesh.position.set(this.x, this.y, this.z);
 
     playerBox.position.set(playerMesh.position.x, playerMesh.position.y, playerMesh.position.z);
 
-    scene.add(playerMesh)
-    world.add(playerBox)
+    if (!this.dead) {
+      scene.add(playerMesh)
+      world.add(playerBox)
+    }
 
     this.playerMesh = playerMesh;
     this.playerBox = playerBox;
-
-
   }
 }

@@ -1,7 +1,8 @@
 const {
   GET_PLAYERS,
   UPDATE_PLAYERS,
-  REMOVE_PLAYER
+  REMOVE_PLAYER,
+  KILL_PLAYER
 } = require('./constants');
 
 const getPlayers = () => ({
@@ -18,8 +19,14 @@ const removePlayer = (id) => ({
   id
 })
 
+const killPlayer = (id) => ({
+  type: KILL_PLAYER,
+  id
+})
+
 module.exports = {
   getPlayers,
   updatePlayers,
-  removePlayer
+  removePlayer,
+  killPlayer
 }

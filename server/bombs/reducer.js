@@ -21,6 +21,7 @@ const bombs = (state = initialState, action) => {
         id: newBomb.bombId,
         position: newBomb.position
       })
+      if (newState.allBombs[undefined]) delete newState.allBombs[undefined]
       return newState;
     case UPDATE_BOMB_POSITIONS:
       newState = Object.assign({}, state)
