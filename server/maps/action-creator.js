@@ -1,16 +1,18 @@
 const { GENERATE_MAP, EXPLODE_BOX } = require('./constants');
 
-const loadMap = (map) => {
+const loadMap = (map, roomId) => {
   return {
     type: GENERATE_MAP,
-    map
+    map,
+    roomId
   }
 }
 
-const updateMap = (coordinates) => {
+const updateMap = (coordinates, roomId) => {
   return {
     type: EXPLODE_BOX,
-    coordinates
+    coordinates,
+    roomId
   }
 }
 

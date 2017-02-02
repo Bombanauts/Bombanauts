@@ -12,6 +12,7 @@ export let playerArr = [];
 
 socket.on('connect', function() {
   socket.on('initial', (initialData) => {
+
     store.dispatch(updatePlayerLocations(initialData.players));
     store.dispatch(updateBombLocations(initialData.bombs.allBombs))
     store.dispatch(loadMap(initialData.mapState.mapState[0]))
@@ -23,7 +24,7 @@ socket.on('connect', function() {
     playerArr = Object.keys(data.players);
     delete data.players[socket.id];
     delete data.bombs.allBombs[socket.id];
-
+    console.log('THIS WILL BE DATA', data)
     store.dispatch(updatePlayerLocations(data.players))
     store.dispatch(updateBombLocations(data.bombs.allBombs))
   })

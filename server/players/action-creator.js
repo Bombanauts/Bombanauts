@@ -5,23 +5,27 @@ const {
   KILL_PLAYER
 } = require('./constants');
 
-const getPlayers = () => ({
-  type: GET_PLAYERS
+const getPlayers = (roomId) => ({
+  type: GET_PLAYERS,
+  roomId
 });
 
-const updatePlayers = (player) => ({
+const updatePlayers = (player, roomId) => ({
   type: UPDATE_PLAYERS,
-  player
+  player,
+  roomId
 });
 
-const removePlayer = (id) => ({
+const removePlayer = (id, roomId) => ({
   type: REMOVE_PLAYER,
-  id
+  id,
+  roomId
 })
 
-const killPlayer = (id) => ({
+const killPlayer = (id, roomId) => ({
   type: KILL_PLAYER,
-  id
+  id,
+  roomId
 })
 
 module.exports = {
