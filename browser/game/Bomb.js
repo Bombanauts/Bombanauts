@@ -77,6 +77,7 @@ export default class Bomb {
       this.fire.mesh.frustumCulled = false;
       this.fire.mesh.position.set(x, y, z)
       scene.add(this.fire.mesh)
+      if (destroyable[`${x}_${z}`].length) destroyable[`${x}_${z}`][1].explode()
     }
 
     if (destroyable[`${x + 4}_${z}`]) {
@@ -84,6 +85,9 @@ export default class Bomb {
       this.fire2.mesh.frustumCulled = false;
       this.fire2.mesh.position.set(x + 4, y, z)
       scene.add(this.fire2.mesh)
+      if (destroyable[`${x + 4}_${z}`].length) {
+        destroyable[`${x + 4}_${z}`][1].explode()
+      }
     }
 
     if (destroyable[`${x - 4}_${z}`]) {
@@ -91,6 +95,9 @@ export default class Bomb {
       this.fire3.mesh.frustumCulled = false;
       this.fire3.mesh.position.set(x - 4, y, z)
       scene.add(this.fire3.mesh)
+      if (destroyable[`${x - 4}_${z}`].length) {
+        destroyable[`${x - 4}_${z}`][1].explode()
+      }
     }
 
     if (destroyable[`${x}_${z + 4}`]) {
@@ -98,6 +105,9 @@ export default class Bomb {
       this.fire4.mesh.frustumCulled = false;
       this.fire4.mesh.position.set(x, y, z + 4)
       scene.add(this.fire4.mesh)
+      if (destroyable[`${x}_${z + 4}`].length) {
+        destroyable[`${x}_${z + 4}`][1].explode()
+      }
     }
 
     if (destroyable[`${x}_${z - 4}`]) {
@@ -105,6 +115,9 @@ export default class Bomb {
       this.fire5.mesh.frustumCulled = false;
       this.fire5.mesh.position.set(x, y, z - 4)
       scene.add(this.fire5.mesh)
+      if (destroyable[`${x}_${z - 4}`].length) {
+        destroyable[`${x}_${z - 4}`][1].explode()
+      }
     }
 
     VolumetricFire.texturePath = '../../public/assets/images';

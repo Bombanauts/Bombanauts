@@ -4,6 +4,7 @@ window.socket = io(window.location.origin)
 import store from '../store';
 import { updatePlayerLocations, removePlayer } from '../players/action-creator';
 import { updateBombLocations, removePlayerBombs } from '../bombs/action-creator'
+import { loadMap } from '../maps/action-creator';
 
 import { initCannon, init, animate, players, playerMeshes, world, scene } from '../game/main';
 
@@ -14,6 +15,7 @@ socket.on('connect', function() {
     // }
     store.dispatch(updatePlayerLocations(initialData.players));
     store.dispatch(updateBombLocations(initialData.bombs.allBombs))
+    store.dispatch(loadMap(initialData.mapState.mapState[0]))
   })
 
   let now = Date.now()
