@@ -10,8 +10,7 @@ import { initCannon, init, animate, players, playerMeshes, world, scene } from '
 
 export let playerArr = [];
 
-// export const initializeSockets = () => {
-  socket.on('connect', function() {
+socket.on('connect', function() {
   socket.on('initial', (initialData) => {
     store.dispatch(updatePlayerLocations(initialData.players));
     store.dispatch(updateBombLocations(initialData.bombs.allBombs))
@@ -62,6 +61,3 @@ export let playerArr = [];
   })
 
 })
-
-// }
-
