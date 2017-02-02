@@ -31,7 +31,6 @@ export default class Bomb {
 
   init() {
     this.bombShape = new CANNON.Sphere(1.5);
-    // this.material = new THREE.MeshLambertMaterial({ color: '#000000' });
 
     let bombGeometry = new THREE.SphereGeometry(this.bombShape.radius, 32, 32);
 
