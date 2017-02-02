@@ -7,9 +7,6 @@ import Player from './Player'
 import Bomb from './Bomb'
 
 import { Particle, Block } from './Explosion.js';
-// import { VolumetricFire } from '../bombs/ParticleEngine.js';
-
-import Maps from './maps/maps'
 
 import generateMap, { roundFour } from './utils/generateMap';
 
@@ -36,6 +33,7 @@ const bombObjects = [];
 let count = 1;
 let prevPlayerStateLength = 0;
 let dead = false;
+let allowBomb = true;
 
 export const blocksObj = {};
 export const blockCount = 50;
@@ -163,7 +161,6 @@ export function init() {
     let newPlayer;
 
     for (let player in others) {
-      console.log('PLAYER', others[player])
       newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead)
       newPlayer.init()
       players.push(newPlayer.playerBox)
@@ -173,7 +170,7 @@ export function init() {
 
   if (controls) {
     window.addEventListener("click", function(e) {
-      if (controls.enabled == true) {
+      if (controls.enabled == true && !dead && allowBomb) {
         // get current self position to shoot
         let x = sphereBody.position.x;
         let y = sphereBody.position.y;
@@ -181,6 +178,10 @@ export function init() {
 
         const newBomb = new Bomb(count++, { x: x, y: y, z: z });
         newBomb.init()
+        allowBomb = false;
+        setTimeout( () => {
+          allowBomb = true;
+        }, 3000)
 
         //take relevant bomb info and emit
         const bombInfo = { id: newBomb.id, position: newBomb.bombBody.position, created: Date.now() }
@@ -227,8 +228,8 @@ export function init() {
 }
 
 export function createMap() {
-  let map0 = Maps[0]
-  generateMap(map0);
+  let map = store.getState().mapState.mapState
+  generateMap(map);
 }
 
 export function onWindowResize() {

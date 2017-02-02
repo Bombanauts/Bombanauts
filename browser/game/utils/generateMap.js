@@ -28,11 +28,11 @@ const generateMap = (mapArr) => {
         boxMeshes.push(wall.wallMesh);
       }
       else if (mapArr[j][k] === 3) { //DESTROYABLE BOX
-        let destroyableBox = new DestroyableCube(x, y, z);
-        destroyableBoxes.push(destroyableBox.cubeBox);
-        destroyableBoxMeshes.push(destroyableBox.cubeMesh);
-        destroyable[`${x}_${z}`] = true
-      }
+          let destroyableBox = new DestroyableCube(x, y, z);
+          destroyableBoxes.push(destroyableBox.cubeBox);
+          destroyableBoxMeshes.push(destroyableBox.cubeMesh);
+          destroyable[`${x}_${z}`] = [true, destroyableBox]
+        }
       else if (mapArr[j][k] === 0) { // Grass
         destroyable[`${x}_${z}`] = true
       }

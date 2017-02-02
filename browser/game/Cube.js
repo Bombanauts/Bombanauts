@@ -46,14 +46,16 @@ export default class DestroyableCube {
   }
 
   explode () {
-    this.exploded = true;
-    const particles = [];
-    for (let i = 0; i < blockCount; i++) {
-      const block = new Block(scene, world, {x: this.x, y: this.y, z: this.z}, 'cube');
-      particles.push(block);
+    if (!this.exploded) {
+      const particles = [];
+      for (let i = 0; i < blockCount; i++) {
+        const block = new Block(scene, world, {x: this.x, y: this.y, z: this.z}, 'cube');
+        particles.push(block);
+      }
+      blocksObj[this.cubeMesh.id] = particles.slice();
+      world.remove(this.cubeBox)
+      scene.remove(this.cubeMesh)
+      this.exploded = true;
     }
-    blocksObj[this.cubeMesh.id] = particles.slice();
-    world.remove(this.cubeBox)
-    scene.remove(this.cubeMesh)
   }
 }
