@@ -29,6 +29,7 @@ export let players = [];
 export let playerMeshes = [];
 export let yourBombs = [];
 export let yourballMeshes = [];
+export let playerInstances = [];
 const bombObjects = [];
 let count = 1;
 let prevPlayerStateLength = 0;
@@ -37,10 +38,10 @@ let allowBomb = true;
 
 import { playerArr } from '../socket'
 const spawnPositions = [
-  {x:11.5, y: 1.5, z: -4},
-  {x:12.1, y: 1.5, z: 36.4},
-  {x:-36, y: 1.5, z: 36},
-  {x:-36.4, y: 1.5, z: -4},
+  { x: 11.5, y: 1.5, z: -4 },
+  { x: 12.1, y: 1.5, z: 36.4 },
+  { x: -36, y: 1.5, z: 36 },
+  { x: -36.4, y: 1.5, z: -4 },
 ]
 
 const bombMaterial = new THREE.MeshLambertMaterial({ color: '#000000' })
@@ -67,29 +68,40 @@ export function initCannon() {
   else
     world.solver = solver;
   world.solver.iterations = 20; // Increase solver iterations (default is 10)
-  world.solver.tolerance = 0;   // Force solver to use all iterations
+  world.solver.tolerance = 0; // Force solver to use all iterations
 
   world.gravity.set(0, -40, 0);
   world.broadphase = new CANNON.NaiveBroadphase();
 
   // Create a slippery material (friction coefficient = 0.0)
-  physicsMaterial = new CANNON.Material('slipperyMaterial');
-  const physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
-    physicsMaterial,
-    0.0, //friction
-    0.9// restitution
-  );
+  // physicsMaterial = new CANNON.Material('groundMaterial');
+  // const physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
+  //   physicsMaterial,
+  //     0.0, //friction
+  //     0.9// restitution
+  // );
+
+  physicsMaterial = new CANNON.Material('groundMaterial');
+  // Adjust constraint equation parameters for ground/ground contact
+  const physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial, physicsMaterial, {
+    friction: 0.7,
+    restitution: 0.3,
+    contactEquationStiffness: 1e8,
+    contactEquationRelaxation: 3,
+    frictionEquationStiffness: 1e8,
+    frictionEquationRegularizationTime: 3,
+  });
 
   physicsMaterial.contactEquationStiffness = 1e8;
   physicsMaterial.contactEquationRegularizationTime = 3;
   //add the contact materials to the world
   world.addContactMaterial(physicsContactMaterial);
 
-// Create a sphere
-  const mass = 5,
+  // Create a sphere
+  const mass = 100,
     radius = 1.3;
   sphereShape = new CANNON.Sphere(radius);
-  sphereBody = new CANNON.Body({ mass: mass });
+  sphereBody = new CANNON.Body({ mass: mass, material: physicsContactMaterial });
   sphereBody.addShape(sphereShape);
   sphereBody.position.set(0, 5, 0);
   sphereBody.linearDamping = 0.9;
@@ -169,15 +181,16 @@ export function init() {
   sphereBody.position.z = 100;
 
   let others = store.getState().players.otherPlayers;
-    let newPlayer;
+  let newPlayer;
 
-    for (let player in others) {
-      newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead)
-      newPlayer.init()
-      players.push(newPlayer.playerBox)
-      playerMeshes.push(newPlayer.playerMesh)
-    }
-    prevPlayerStateLength = players.length;
+  for (let player in others) {
+    newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead)
+    newPlayer.init()
+    players.push(newPlayer.playerBox)
+    playerMeshes.push(newPlayer.playerMesh)
+    playerInstances.push(newPlayer)
+  }
+  prevPlayerStateLength = players.length;
 
   if (controls) {
     window.addEventListener("click", function(e) {
@@ -190,7 +203,7 @@ export function init() {
         const newBomb = new Bomb(count++, { x: x, y: y, z: z }, bombMaterial);
         newBomb.init()
         allowBomb = false;
-        setTimeout( () => {
+        setTimeout(() => {
           allowBomb = true;
         }, 3000)
 
@@ -275,8 +288,7 @@ export function animate() {
     }, 1000 / 60) //throttled to 60 times per second
 
   // console.log('COUNTER', counter)
-  if(counter === 50) {
-    console.log('INSIDE COUNTER')
+  if (counter === 50) {
     sphereBody.position.x = spawnPositions[playerArr.indexOf(socket.id)].x;
     sphereBody.position.y = 5
     sphereBody.position.z = spawnPositions[playerArr.indexOf(socket.id)].z;
@@ -302,51 +314,51 @@ export function animate() {
       if (bombObjects[i].fire) {
         bombObjects[i].fire.update(elapsed)
         if (bombObjects[i].fire.mesh.position.x === roundFour(sphereBody.position.x) &&
-            bombObjects[i].fire.mesh.position.z === roundFour(sphereBody.position.z)) {
-            dead = true;
-            socket.emit('kill_player', {
-              id: socket.id
-            })
+          bombObjects[i].fire.mesh.position.z === roundFour(sphereBody.position.z)) {
+          dead = true;
+          socket.emit('kill_player', {
+            id: socket.id
+          })
         }
       }
       if (bombObjects[i].fire2) {
         bombObjects[i].fire2.update(elapsed)
         if (bombObjects[i].fire2.mesh.position.x === roundFour(sphereBody.position.x) &&
-            bombObjects[i].fire2.mesh.position.z === roundFour(sphereBody.position.z)) {
-            dead = true;
-            socket.emit('kill_player', {
-              id: socket.id
-            })
+          bombObjects[i].fire2.mesh.position.z === roundFour(sphereBody.position.z)) {
+          dead = true;
+          socket.emit('kill_player', {
+            id: socket.id
+          })
         }
       }
       if (bombObjects[i].fire3) {
         bombObjects[i].fire3.update(elapsed)
         if (bombObjects[i].fire3.mesh.position.x === roundFour(sphereBody.position.x) &&
-            bombObjects[i].fire3.mesh.position.z === roundFour(sphereBody.position.z)) {
-            dead = true;
-            socket.emit('kill_player', {
-              id: socket.id
-            })
+          bombObjects[i].fire3.mesh.position.z === roundFour(sphereBody.position.z)) {
+          dead = true;
+          socket.emit('kill_player', {
+            id: socket.id
+          })
         }
       }
       if (bombObjects[i].fire4) {
         bombObjects[i].fire4.update(elapsed)
         if (bombObjects[i].fire4.mesh.position.x === roundFour(sphereBody.position.x) &&
-            bombObjects[i].fire4.mesh.position.z === roundFour(sphereBody.position.z)) {
-            dead = true;
-            socket.emit('kill_player', {
-              id: socket.id
-            })
+          bombObjects[i].fire4.mesh.position.z === roundFour(sphereBody.position.z)) {
+          dead = true;
+          socket.emit('kill_player', {
+            id: socket.id
+          })
         }
       }
       if (bombObjects[i].fire5) {
         bombObjects[i].fire5.update(elapsed)
         if (bombObjects[i].fire5.mesh.position.x === roundFour(sphereBody.position.x) &&
-            bombObjects[i].fire5.mesh.position.z === roundFour(sphereBody.position.z)) {
-            dead = true;
-            socket.emit('kill_player', {
-              id: socket.id
-            })
+          bombObjects[i].fire5.mesh.position.z === roundFour(sphereBody.position.z)) {
+          dead = true;
+          socket.emit('kill_player', {
+            id: socket.id
+          })
         }
       }
     }
@@ -362,6 +374,7 @@ export function animate() {
     })
     players = [];
     playerMeshes = [];
+    playerInstances = [];
     for (let player in others) {
       let newPlayer;
       newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead)
@@ -369,6 +382,7 @@ export function animate() {
 
       players.push(newPlayer.playerBox)
       playerMeshes.push(newPlayer.playerMesh)
+      playerInstances.push(newPlayer)
     }
   }
 

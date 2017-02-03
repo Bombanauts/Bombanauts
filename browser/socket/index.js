@@ -6,7 +6,7 @@ import { updatePlayerLocations, removePlayer } from '../players/action-creator';
 import { updateBombLocations, removePlayerBombs } from '../bombs/action-creator'
 import { loadMap } from '../maps/action-creator';
 
-import { initCannon, init, animate, players, playerMeshes, world, scene } from '../game/main';
+import { initCannon, init, animate, players, playerMeshes, world, scene, playerInstances } from '../game/main';
 
 export let playerArr = [];
 
@@ -16,8 +16,6 @@ socket.on('connect', function() {
     store.dispatch(updateBombLocations(initialData.bombs.allBombs))
     store.dispatch(loadMap(initialData.mapState.mapState[0]))
   })
-
-  let now = Date.now()
 
   socket.on('update_world', (data) => {
     playerArr = Object.keys(data.players);
@@ -37,10 +35,10 @@ socket.on('connect', function() {
   socket.on('remove_player', (id) => {
     store.dispatch(removePlayer(id))
 
-    let playerBody = world.bodies.filter( (child) => {
+    let playerBody = world.bodies.filter((child) => {
       return child.name === id;
     })[0];
-    let playerMesh = scene.children.filter( (child) => {
+    let playerMesh = scene.children.filter((child) => {
       return child.name === id;
     })[0];
 
@@ -49,15 +47,20 @@ socket.on('connect', function() {
   })
 
   socket.on('kill_player', (data) => {
-    let playerBody = world.bodies.filter( (child) => {
-      return child.name === data;
-    })[0];
-    let playerMesh = scene.children.filter( (child) => {
-      return child.name === data;
-    })[0];
+    let playerToKill = playerInstances.filter(player => {
+      return player.socketId === data;
+    })[0]
 
-    if (playerBody) world.remove(playerBody)
-    if (playerMesh) scene.remove(playerMesh)
+    if (playerToKill) {
+      playerToKill.explode()
+    }
+
+    // let playerBody = world.bodies.filter( (child) => {
+    //   return child.name === data;
+    // })[0];
+    // let playerMesh = scene.children.filter( (child) => {
+    //   return child.name === data;
+    // })[0];
   })
 
 })
