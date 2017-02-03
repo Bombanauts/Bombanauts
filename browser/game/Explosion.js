@@ -45,11 +45,14 @@ export const Block = function (scene, world, position, type, geometry, material)
 
   //create cube or bomb particles
   if (type === 'cube') {
-    // geometry = new THREE.BoxGeometry(0.4, 0.4, 0.4)
     this.particle = new THREE.Mesh(geometry, material);
   }
   if (type === 'bomb') {
-    // geometry = new THREE.SphereGeometry(0.2, 0.2, 0.2)
+    this.particle = new THREE.Mesh(geometry, material);
+    position.y -= 6;
+  }
+  if (type === 'player') {
+    console.log('in block player type conditional')
     this.particle = new THREE.Mesh(geometry, material);
     position.y -= 6;
   }

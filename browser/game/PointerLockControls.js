@@ -4,7 +4,7 @@ const CANNON = require('cannon')
 export const PointerLockControls = function(camera, cannonBody) {
 
   const eyeYPos = 2; // eyes are 2 meters above the ground
-  const velocityFactor = 0.4;
+  const velocityFactor = 0.3;
   const jumpVelocity = 20;
   const scope = this;
 
@@ -73,12 +73,6 @@ export const PointerLockControls = function(camera, cannonBody) {
         moveRight = true;
         break;
 
-      // case 32: // space
-      //   if (canJump === true) {
-      //     velocity.y = jumpVelocity;
-      //   }
-      //   canJump = false;
-      //   break;
     }
   };
 
@@ -137,6 +131,7 @@ export const PointerLockControls = function(camera, cannonBody) {
     if (moveForward) {
       inputVelocity.z = -velocityFactor * delta;
     }
+
     if (moveBackward) {
       inputVelocity.z = velocityFactor * delta;
     }
