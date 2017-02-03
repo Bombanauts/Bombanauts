@@ -24,7 +24,6 @@ socket.on('connect', function() {
     playerArr = Object.keys(data.players);
     delete data.players[socket.id];
     delete data.bombs.allBombs[socket.id];
-    console.log('THIS WILL BE DATA', data)
     store.dispatch(updatePlayerLocations(data.players))
     store.dispatch(updateBombLocations(data.bombs.allBombs))
   })
