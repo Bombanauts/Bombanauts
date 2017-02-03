@@ -20,6 +20,7 @@ server.on('request', app);
 // it into our HTTP server
 const io = socketio(server)
 
+let countdown = 180;
 
 const roomName = (connectedSocket, roomsList) => {
   let roomsNames = Object.keys(roomsList).filter( room => {
@@ -69,6 +70,16 @@ io.on('connection', (socket) => {
       mapState: currState.mapState[socket.currentRoom]
     };
     io.sockets.emit('initial', newState);
+
+    setInterval(() => {
+        countdown--
+        io.in(socket.currentRoom).emit('timer', { countdown: countdown})
+      }, 1000)
+
+    socket.on('reset', data => {
+      countdown = 180
+      io.in(socket.currentRoom).emit('timer', { countdown: countdown })
+    })
     console.log(chalk.blue('A new client has connected'));
     console.log(chalk.yellow('socket id: ', socket.id));
   }
