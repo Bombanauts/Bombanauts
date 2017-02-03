@@ -34,11 +34,23 @@ export default class Player {
     const boxShape = new CANNON.Box(halfExtents);
     const boxGeometry = new THREE.BoxGeometry(halfExtents.x * 1.5, halfExtents.y * 1.5, halfExtents.z * 1.5);
 
-     let texture = new THREE.TextureLoader().load('images/creeperface.jpg' );
+    let face = new THREE.TextureLoader().load('images/creeperface.jpg');
+    let body = new THREE.TextureLoader().load('images/creeperbody.jpg');
+    let textureFace = new THREE.MeshLambertMaterial({ map: face });
+    let textureBody = new THREE.MeshLambertMaterial({ map: body });
+    const materials = [
+      textureFace,
+      textureFace,
+      textureBody,
+      textureBody,
+      textureFace,
+      textureFace
+    ]
+
     // creating player
     playerBox = new CANNON.Body({ mass: 0 });
     playerBox.addShape(boxShape)
-    this.material = new THREE.MeshLambertMaterial({ map: texture });
+    this.material = new THREE.MultiMaterial(materials)
     playerMesh = new THREE.Mesh(boxGeometry, this.material);
     playerMesh.name = this.socketId;
     playerBox.name = this.socketId;
@@ -57,15 +69,14 @@ export default class Player {
     this.playerBox = playerBox;
   }
 
-  explode () {
+  explode() {
     if (!this.dead) {
       const boxParticleGeometry = new THREE.BoxGeometry(0.4, 0.4, 0.4)
       const particles = [];
       for (let i = 0; i < blockCount; i++) {
-        const player = new Block(scene, world, {x: this.x, y: this.y, z: this.z}, 'player', boxParticleGeometry, this.material);
+        const player = new Block(scene, world, { x: this.x, y: this.y, z: this.z }, 'player', boxParticleGeometry, this.material);
         particles.push(player);
       }
-      console.log('PLAYER MESH ID', this.playerMesh.id)
       blocksObj[this.playerMesh.id] = particles.slice();
       world.remove(this.playerBox)
       scene.remove(this.playerMesh)

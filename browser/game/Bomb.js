@@ -43,8 +43,20 @@ export default class Bomb {
     world.addBody(this.bombBody);
     scene.add(this.bombMesh);
 
+    let colorBool = false;
+
+    let clear;
+    setTimeout(() => {
+      clear = setInterval(() => {
+      if (!colorBool) this.bombMesh.material.color.setHex(0x510000)
+      else if (colorBool) this.bombMesh.material.color.setHex(0x000000)
+      colorBool = !colorBool;
+    }, 100)}, 800)
+
     setTimeout(() => {
       this.explode()
+      clearInterval(clear)
+      this.bombMesh.material.color.setHex(0x000000)
     }, 2000)
   }
 
