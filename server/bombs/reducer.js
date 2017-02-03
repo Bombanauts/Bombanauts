@@ -4,32 +4,27 @@ const {
   REMOVE_BOMB,
   REMOVE_PLAYER_BOMBS
 } = require('./constants')
-
-let initialState = {
-  allBombs: {}
-}
+const rooms = require('./init-state')
+let initialState = rooms;
 
 //the bombs are stored in an 'allBombs' object within the state, that has keys of the user's socket ID, each with a property of an array of that user's bomb objects
 const bombs = (state = initialState, action) => {
-  let newState;
+  let newState = Object.assign({}, state)
   switch (action.type) {
     case ADD_BOMB:
       const newBomb = action.newBomb
-      newState = Object.assign({}, state)
-      if (!newState.allBombs[newBomb.userId]) newState.allBombs[newBomb.userId] = [];
-      newState.allBombs[newBomb.userId].push({
+      if (!newState[action.roomId].allBombs[newBomb.userId]) newState[action.roomId].allBombs[newBomb.userId] = [];
+      newState[action.roomId].allBombs[newBomb.userId].push({
         id: newBomb.bombId,
         position: newBomb.position
       })
-      if (newState.allBombs[undefined]) delete newState.allBombs[undefined]
+      if (newState[action.roomId].allBombs[undefined]) delete newState[action.roomId].allBombs[undefined]
       return newState;
     case UPDATE_BOMB_POSITIONS:
-      newState = Object.assign({}, state)
-      newState.allBombs[action.bombs.userId] = action.bombs.bombs
+      newState[action.roomId].allBombs[action.bombs.userId] = action.bombs.bombs
       return newState;
     case REMOVE_PLAYER_BOMBS:
-      newState = Object.assign({}, state)
-      delete newState.allBombs[action.id]
+      delete newState[action.roomId].allBombs[action.id]
       return newState;
     default:
       return state;

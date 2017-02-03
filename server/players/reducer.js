@@ -5,18 +5,17 @@ const {
   KILL_PLAYER
 } = require('./constants')
 
-let initialState = {};
+const initialState = require('./init-state');
 
 //the players are stored in the state each with a key of their socket id, with a property of an object containing their x, y, z coordinates
 const players = (state = initialState, action) => {
-  let newState;
+  let newState = Object.assign({}, state);
   switch (action.type) {
     case GET_PLAYERS:
-      return state;
+      return newState[action.roomId];
     case UPDATE_PLAYERS:
-      newState = Object.assign({}, state);
       if (action.player.id) {
-        newState[action.player.id] = {
+        newState[action.roomId][action.player.id] = {
           x: action.player.position.x,
           y: action.player.position.y,
           z: action.player.position.z,
@@ -25,15 +24,13 @@ const players = (state = initialState, action) => {
       }
       return newState;
     case REMOVE_PLAYER:
-      newState = Object.assign({}, state);
-      delete newState[action.id]
+      delete newState[action.roomId][action.id]
       return newState;
     case KILL_PLAYER:
-      newState = Object.assign({}, state)
-      if (newState[action.id]) newState[action.id].dead = true;
+      if (newState[action.roomId][action.id]) newState[action.roomId][action.id].dead = true;
       return newState;
     default:
-      return state;
+      return newState;
   }
 }
 
