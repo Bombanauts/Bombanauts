@@ -52,7 +52,6 @@ export const Block = function (scene, world, position, type, geometry, material)
     position.y -= 6;
   }
   if (type === 'player') {
-    console.log('in block player type conditional')
     this.particle = new THREE.Mesh(geometry, material);
     position.y -= 6;
   }
