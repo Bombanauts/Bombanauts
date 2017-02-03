@@ -36,7 +36,7 @@ export default class Player {
 
      let texture = new THREE.TextureLoader().load('images/creeperface.jpg' );
     // creating player
-    playerBox = new CANNON.Body({ mass: 1 });
+    playerBox = new CANNON.Body({ mass: 0 });
     playerBox.addShape(boxShape)
     this.material = new THREE.MeshLambertMaterial({ map: texture });
     playerMesh = new THREE.Mesh(boxGeometry, this.material);

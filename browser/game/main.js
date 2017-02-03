@@ -101,7 +101,7 @@ export function initCannon() {
   const mass = 100,
     radius = 1.3;
   sphereShape = new CANNON.Sphere(radius);
-  sphereBody = new CANNON.Body({ mass: mass, material: physicsContactMaterial });
+  sphereBody = new CANNON.Body({ mass: mass, material: physicsMaterial });
   sphereBody.addShape(sphereShape);
   sphereBody.position.set(0, 5, 0);
   sphereBody.linearDamping = 0.9;
