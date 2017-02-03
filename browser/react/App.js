@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import { initCannon, init, animate, controls, light } from '../game/main';
+import ReactCountdownClock from 'react-countdown-clock';
+
 
 const THREE = require('three')
 const CANNON = require('cannon')
@@ -31,15 +33,28 @@ export default class App extends Component {
 
   render() {
     return (
-      <div id="blocker">
-        <div id="instructions">
-          <span style={fontStyle}>Click to play</span>
-          <br />
-          (W,A,S,D = Move, SPACE = Jump, MOUSE = Look, CLICK = Shoot)
+      <div>
+        <div id="blocker">
+          <div id="instructions">
+            <span style={fontStyle}>Click to play</span>
+            <br />
+            (W,A,S,D = Move, SPACE = Jump, MOUSE = Look, CLICK = Shoot)
+          </div>
         </div>
+            <div style={{position: "absolute", right: 0}}>
+            <ReactCountdownClock 
+
+            seconds={180}
+            color="#ddd"
+            alpha={0.5}
+            size={100}
+            timeFormat="hms"
+            // onComplete={} 
+            />
+            </div>
       </div>
     )
-  }
+  } 
 }
 
 function pointerChecker() {

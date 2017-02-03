@@ -20,7 +20,6 @@ server.on('request', app);
 // it into our HTTP server
 const io = socketio(server)
 
-
 const roomName = (connectedSocket, roomsList) => {
   let roomsNames = Object.keys(roomsList).filter( room => {
     return room.length < 12
@@ -69,6 +68,7 @@ io.on('connection', (socket) => {
       mapState: currState.mapState[socket.currentRoom]
     };
     io.sockets.emit('initial', newState);
+
     console.log(chalk.blue('A new client has connected'));
     console.log(chalk.yellow('socket id: ', socket.id));
   }
