@@ -24,7 +24,7 @@ export default class DestroyableCube {
 
   init() {
     // creating player
-    const cubeBox = new CANNON.Body({ mass: 1 });
+    const cubeBox = new CANNON.Body({ mass: 0 });
     cubeBox.addShape(this.fixedCubeShape)
     const cubeMesh = new THREE.Mesh(this.fixedCubeGeometry, this.material);
 
