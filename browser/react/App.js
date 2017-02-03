@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { initCannon, init, animate, controls, light } from '../game/main';
 import ReactCountdownClock from 'react-countdown-clock';
-
+import store from '../store';
 
 const THREE = require('three')
 const CANNON = require('cannon')
@@ -19,6 +19,9 @@ function delay(t) {
 export default class App extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      time: 0
+    }
   }
 
   componentDidMount() {
@@ -28,10 +31,16 @@ export default class App extends Component {
       initCannon()
       init()
       animate()
+      let timer = store.getState().timer;
+      let now = Date.now();
+      this.setState({
+        time: (timer.endTime - now) / 1000
+      })
     })
   }
 
   render() {
+    console.log(this.state.time)
     return (
       <div>
         <div id="blocker">
@@ -42,19 +51,20 @@ export default class App extends Component {
           </div>
         </div>
             <div style={{position: "absolute", right: 0}}>
-            <ReactCountdownClock 
-
-            seconds={180}
+            { this.state.time !== 0 &&
+              <ReactCountdownClock
+            seconds={+this.state.time}
             color="#ddd"
             alpha={0.5}
             size={100}
             timeFormat="hms"
-            // onComplete={} 
+            // onComplete={}
             />
+            }
             </div>
       </div>
     )
-  } 
+  }
 }
 
 function pointerChecker() {
