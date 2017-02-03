@@ -6,16 +6,19 @@ import { updatePlayerLocations, removePlayer } from '../players/action-creator';
 import { updateBombLocations, removePlayerBombs } from '../bombs/action-creator'
 import { loadMap } from '../maps/action-creator';
 
-import { initCannon, init, animate, players, playerMeshes, world, scene, playerInstances } from '../game/main';
+import { initCannon, init, animate, players, playerMeshes, world, scene, playerInstances, resetCount, createMap, restartWorld } from '../game/main';
+import { pointerChecker } from '../react/App';
 
 export let playerArr = [];
 
 socket.on('connect', function() {
   socket.on('initial', (initialData) => {
-
+    console.log('INITIAL DATA MAPSTATE:', initialData.mapState)
     store.dispatch(updatePlayerLocations(initialData.players));
     store.dispatch(updateBombLocations(initialData.bombs.allBombs))
-    store.dispatch(loadMap(initialData.mapState.mapState[0]))
+    store.dispatch(loadMap(initialData.mapState.mapState))
+
+    console.log(store.getState().mapState.mapState)
   })
 
   socket.on('update_world', (data) => {
@@ -54,13 +57,16 @@ socket.on('connect', function() {
     if (playerToKill) {
       playerToKill.explode()
     }
+  })
 
-    // let playerBody = world.bodies.filter( (child) => {
-    //   return child.name === data;
-    // })[0];
-    // let playerMesh = scene.children.filter( (child) => {
-    //   return child.name === data;
-    // })[0];
+  socket.on('reset_world', (data) => {
+    // console.log('RECEIVED DATA FROM BACKEND', data)
+    console.log(data.mapState.mapState)
+    store.dispatch(loadMap(data.mapState.mapState));
+    store.dispatch(updatePlayerLocations(data.players));
+    store.dispatch(updateBombLocations(data.bombs.allBombs));
+    resetCount();
+    restartWorld();
   })
 
 })

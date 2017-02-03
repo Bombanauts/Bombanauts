@@ -6,11 +6,11 @@ import FixedCube from '../FixedCube'
 const THREE = require('three');
 const CANNON = require('cannon');
 
-const boundary = {},
-  fixedBox = {},
+let  fixedBox = {},
   destroyable = {};
 
 const generateMap = (mapArr) => {
+  console.log('MAPARR INSIDE GENERATE MAP: ', mapArr)
   const mapArrWidth = mapArr.length,
     mapArrHeight = mapArr[0].length;
 
@@ -70,4 +70,4 @@ const roundFour = (num) => {
 }
 
 export default generateMap;
-export { boundary, fixedBox, destroyable, roundFour }
+export { fixedBox, destroyable, roundFour }

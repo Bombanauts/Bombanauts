@@ -7,10 +7,10 @@ const express = require('express');
 const app = express();
 const socketio = require('socket.io');
 const _ = require('lodash');
-const Maps = require('./maps/map');
+const { Maps, randomGeneration } = require('./maps/map');
 const {updatePlayers, removePlayer, killPlayer} = require('./players/action-creator');
 const { addBomb, updateBombPositions, removePlayerBombs, removeBomb } = require('./bombs/action-creator')
-const { updateMap } = require('./maps/action-creator')
+const { updateMap, loadMap } = require('./maps/action-creator')
 
 const store = require('./store')
 const worldNames = require('./world-names')
@@ -48,9 +48,11 @@ io.on('connection', (socket) => {
   delete socket.adapter.rooms[socket.id]
   let rooms = io.sockets.adapter.rooms;
   let {currentRoomName, createdRoom} = roomName(socket, rooms)
-
   socket.join(currentRoomName);
   socket.currentRoom = currentRoomName;
+
+  let currState = store.getState();
+
   if (createdRoom) {
     io.sockets.emit('initial', {
       players: [],
@@ -58,11 +60,10 @@ io.on('connection', (socket) => {
         allBombs: []
       },
       mapState: {
-        mapState: Maps
+        mapState: Maps[0]
       }
     });
   } else {
-    let currState = store.getState();
     let newState = {
       players: currState.players[socket.currentRoom],
       bombs: currState.bombs[socket.currentRoom],
@@ -110,6 +111,25 @@ io.on('connection', (socket) => {
 
   socket.on('destroy_cube', (data) => {
     store.dispatch(updateMap(data, socket.currentRoom))
+  })
+
+
+  // FIX THIS
+  socket.on('reset_world', (data) => {
+    let newMap = randomGeneration(Maps[0])
+    console.log(newMap)
+
+    store.dispatch(loadMap(newMap, socket.currentRoom))
+
+    io.in(socket.currentRoom).emit('reset_world', {
+      players: store.getState().players[socket.currentRoom],
+      bombs: {
+        allBombs: []
+      },
+      mapState: {
+        mapState: newMap
+      }
+    })
   })
 
   //remove the player from the state on socket disconnect

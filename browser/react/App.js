@@ -42,7 +42,7 @@ export default class App extends Component {
   }
 }
 
-function pointerChecker() {
+export function pointerChecker() {
   const blocker = document.getElementById( 'blocker' );
   const instructions = document.getElementById( 'instructions' );
   const havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;

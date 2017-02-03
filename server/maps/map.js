@@ -33,4 +33,7 @@ const randomGeneration = (arr) => {
 
 Maps[0] = randomGeneration(Maps[0]);
 
-module.exports = Maps;
+module.exports = {
+  Maps,
+  randomGeneration
+}

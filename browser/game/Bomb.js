@@ -27,6 +27,7 @@ export default class Bomb {
     this.material = material;
     this.init = this.init.bind(this);
     this.explode = this.explode.bind(this);
+    this.clearTimeout = null;
   }
 
   init() {
@@ -43,7 +44,7 @@ export default class Bomb {
     world.addBody(this.bombBody);
     scene.add(this.bombMesh);
 
-    setTimeout(() => {
+    this.clearTimeout = setTimeout(() => {
       this.explode()
     }, 2000)
   }

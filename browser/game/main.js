@@ -21,8 +21,8 @@ const SCREEN_HEIGHT = window.innerHeight;
 export const walls = [];
 export let bombs = [];
 export let ballMeshes = [];
-export const boxes = [];
-export const boxMeshes = [];
+export let boxes = [];
+export let boxMeshes = [];
 export const destroyableBoxes = [];
 export const destroyableBoxMeshes = [];
 export let players = [];
@@ -30,7 +30,7 @@ export let playerMeshes = [];
 export let yourBombs = [];
 export let yourballMeshes = [];
 export let playerInstances = [];
-const bombObjects = [];
+let bombObjects = [];
 let count = 1;
 let prevPlayerStateLength = 0;
 let dead = false;
@@ -115,9 +115,6 @@ export function initCannon() {
   world.addBody(groundBody);
 }
 
-// cannon sphere(radius)
-const ballShape = new CANNON.Sphere(1.5);
-const ballGeometry = new THREE.SphereGeometry(ballShape.radius, 32, 32);
 const shootDirection = new THREE.Vector3();
 const shootVelo = 8;
 
@@ -268,6 +265,10 @@ let prevStateLength = 0;
 
 let counter = 0;
 
+export function resetCount() {
+  counter = 0;
+}
+
 //animation GAME LOOP
 export function animate() {
   counter++;
@@ -309,6 +310,9 @@ export function animate() {
 
   //Animate Fire w/ Bombs
   let elapsed = clock.getElapsedTime()
+
+  console.log(Math.round(elapsed))
+
   for (let i = 0; i < bombObjects.length; i++) {
     if (bombObjects[i].bool) {
       if (bombObjects[i].fire) {
@@ -443,5 +447,59 @@ export function animate() {
 // this is outdated should use raycaster instead since it gives more info anyway
 // also projector is moved.
 // to adjust to use raycaster we need to adjust yawObject and pitch object
+// setTimeout(() => {
+//   socket.emit('reset_world', {})
+// }, 30000)
+
+export function restartWorld() {
+  for( let i = 0; i < boxMeshes.length; i++){
+     scene.remove(boxMeshes[i]);
+  }
+
+  boxMeshes = []
+
+  for(let i = 0; i < boxes.length; i++){
+     world.remove(boxes[i]);
+  }
+
+  boxes = []
+
+  for(let i = 0; i < bombs.length; i++) {
+    world.remove(bombs[i])
+  }
+
+  bombs = []
+
+  for(let i = 0; i < ballMeshes.length; i++) {
+    scene.remove(ballMeshes[i])
+  }
+
+  ballMeshes = []
+
+  for (let i = 0; i < yourBombs.length; i++) {
+    world.remove(yourBombs[i])
+  }
+
+  yourBombs = []
+
+  for (let i = 0; i < bombObjects.length; i++) {
+    if (bombObjects[i].clearTimeout) clearTimeout(bombObjects[i].clearTimeout)
+  }
+
+
+  for (let i = 0; i < yourballMeshes.length; i++) {
+    scene.remove(yourballMeshes[i])
+  }
+
+  yourballMeshes = [];
+
+  createMap();
+
+  sphereBody.position.x = spawnPositions[playerArr.indexOf(socket.id)].x;
+    sphereBody.position.y = 5
+    sphereBody.position.z = spawnPositions[playerArr.indexOf(socket.id)].z;
+
+
+}
 
 export { scene, camera, renderer, controls, light, getShootDir, world }
