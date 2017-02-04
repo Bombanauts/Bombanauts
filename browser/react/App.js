@@ -2,6 +2,10 @@ import React, {Component} from 'react'
 import { controls } from '../game/main';
 import ReactCountdownClock from 'react-countdown-clock';
 import { connect } from 'react-redux';
+import store from '../store';
+
+const THREE = require('three')
+const CANNON = require('cannon')
 
 const fontStyle = {
   'fontSize': '40px'
@@ -10,6 +14,18 @@ const fontStyle = {
 class App extends Component {
   constructor(props) {
     super(props)
+    
+    this.state = {
+      time: 0
+    }
+  }
+
+  componentDidMount() {
+      let timer = store.getState().timer;
+      let now = Date.now();
+      this.setState({
+        time: (timer.endTime - now) / 1000
+      })
   }
 
   render() {
@@ -24,14 +40,16 @@ class App extends Component {
         </div>
             {this.props.dead && <h1  style={{position: "absolute", right: 300}}> YOU ARE FUCKING DEAD</h1>}
             <div style={{position: "absolute", right: 0}}>
-            <ReactCountdownClock
-            seconds={180}
+            { this.state.time !== 0 &&
+              <ReactCountdownClock
+            seconds={+this.state.time}
             color="#ddd"
             alpha={0.5}
             size={100}
             timeFormat="hms"
             // onComplete={}
             />
+            }
             </div>
       </div>
     )

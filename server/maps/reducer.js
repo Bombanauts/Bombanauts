@@ -1,5 +1,5 @@
 const { GENERATE_MAP, EXPLODE_BOX } = require('./constants');
-const initialState = require('./init-state');
+const initialState = require('../init-state');
 
 const reducer = (state = initialState, action) => {
   let newState = Object.assign({}, state)

@@ -6,11 +6,11 @@ const port = process.env.PORT || 1337;
 const express = require('express');
 const app = express();
 const socketio = require('socket.io');
-const _ = require('lodash');
 const Maps = require('./maps/map');
 const {updatePlayers, removePlayer, killPlayer} = require('./players/action-creator');
 const { addBomb, updateBombPositions, removePlayerBombs, removeBomb } = require('./bombs/action-creator')
 const { updateMap } = require('./maps/action-creator')
+const { setTime } = require('./timer/action-creator')
 
 const store = require('./store')
 const worldNames = require('./world-names')
@@ -42,6 +42,19 @@ const roomName = (connectedSocket, roomsList) => {
   return {currentRoomName, createdRoom};
 }
 
+const convertStateForFrontEnd = (state, room) => {
+  return {
+      players: state.players[room],
+      bombs: {
+       allBombs: state.bombs[room].allBombs
+      },
+      mapState: {
+        mapState: state.mapState[room].mapState
+      },
+      timer: state.timer[room].timer
+    }
+}
+
 //  use socket server as an event emitter in order to listen for new connctions
 io.on('connection', (socket) => {
   delete socket.adapter.rooms[socket.id]
@@ -50,24 +63,17 @@ io.on('connection', (socket) => {
 
   socket.join(currentRoomName);
   socket.currentRoom = currentRoomName;
+
+
+
+  let currState = store.getState();
+  let convertedState = convertStateForFrontEnd(currState, socket.currentRoom);
   if (createdRoom) {
-    io.sockets.emit('initial', {
-      players: [],
-      bombs: {
-        allBombs: []
-      },
-      mapState: {
-        mapState: Maps
-      }
-    });
+    let currentTime = Date.now();
+    store.dispatch(setTime(currentTime, 180, socket.currentRoom))
+    io.sockets.emit('initial', convertedState);
   } else {
-    let currState = store.getState();
-    let newState = {
-      players: currState.players[socket.currentRoom],
-      bombs: currState.bombs[socket.currentRoom],
-      mapState: currState.mapState[socket.currentRoom]
-    };
-    io.sockets.emit('initial', newState);
+    io.sockets.emit('initial', convertedState);
 
     console.log(chalk.blue('A new client has connected'));
     console.log(chalk.yellow('socket id: ', socket.id));
@@ -80,12 +86,8 @@ io.on('connection', (socket) => {
   socket.on('update_world', (data) => {
     store.dispatch(updatePlayers({ id: data.playerId, position: data.playerPosition, dead: data.dead }, socket.currentRoom));
     store.dispatch(updateBombPositions({ userId: data.playerId, bombs: data.playerBombs }, socket.currentRoom))
-    let currState = store.getState();
-    let newState = {
-      players: currState.players[socket.currentRoom],
-      bombs: currState.bombs[socket.currentRoom],
-      mapState: currState.mapState[socket.currentRoom]
-    };
+    let currentState = store.getState();
+    let newState = convertStateForFrontEnd(currentState, socket.currentRoom)
     io.in(socket.currentRoom).emit('update_world', newState)
   })
 
@@ -99,12 +101,8 @@ io.on('connection', (socket) => {
   socket.on('kill_player', (data) => {
     store.dispatch(killPlayer(data.id, socket.currentRoom))
     io.in(socket.currentRoom).emit('kill_player', data.id)
-    let currState = store.getState();
-    let newState = {
-      players: currState.players[socket.currentRoom],
-      bombs: currState.bombs[socket.currentRoom],
-      mapState: currState.mapState[socket.currentRoom]
-    };
+    let currentState = store.getState();
+    let newState = convertStateForFrontEnd(currentState, socket.currentRoom)
     io.in(socket.currentRoom).emit('update_world', newState)
   })
 
