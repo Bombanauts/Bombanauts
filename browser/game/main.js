@@ -1,6 +1,7 @@
 const THREE = require('three')
 const CANNON = require('cannon')
 import store from '../store';
+import socket from '../socket';
 
 import { PointerLockControls } from './PointerLockControls';
 import Player from './Player'

@@ -1,5 +1,5 @@
 import store from '../store'
-// import socket from '../socket'
+import socket from '../socket'
 
 const THREE = require('three')
 const CANNON = require('cannon')
@@ -9,7 +9,6 @@ import { scene, world, animate, camera, blockCount, blocksObj } from './main'
 import { VolumetricFire } from '../bombs/ParticleEngine';
 import { boundary, fixedBox, destroyable, roundFour } from './utils/generateMap'
 import { Particle, Block } from './Explosion.js'
-
 
 export default class Bomb {
   constructor(id, position, material) {

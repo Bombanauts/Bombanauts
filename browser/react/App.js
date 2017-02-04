@@ -1,20 +1,9 @@
 import React, {Component} from 'react'
-import { initCannon, init, animate, controls, light } from '../game/main';
 import ReactCountdownClock from 'react-countdown-clock';
-import store from '../store'
 import { connect } from 'react-redux';
-
-const THREE = require('three')
-const CANNON = require('cannon')
 
 const fontStyle = {
   'fontSize': '40px'
-}
-
-function delay(t) {
-  return new Promise(resolve => {
-    setTimeout(resolve, t)
-  })
 }
 
 class App extends Component {
@@ -22,25 +11,7 @@ class App extends Component {
     super(props)
   }
 
-  componentDidMount() {
-    delay(300)
-    .then(() => {
-      pointerChecker()
-      initCannon()
-      init()
-      animate()
-    })
-    // .then(() => {
-    //   setInterval(() => {
-    //     let dead = store.getState().dead.dead
-    //     if (dead) this.setState({ dead: true})
-    //   }, 100)
-    // })
-  }
-
   render() {
-    // console.log('DEAD STATUS', store.getState().dead.dead)
-    console.log('APP DEAD', this.props)
     return (
       <div>
         <div id="blocker">
@@ -50,7 +21,7 @@ class App extends Component {
             (W,A,S,D = Move, SPACE = Jump, MOUSE = Look, CLICK = Shoot)
           </div>
         </div>
-            {this.props.dead.dead && <h1  style={{position: "absolute", right: 300}}> YOU ARE FUCKING DEAD</h1>}
+            {this.props.dead && <h1  style={{position: "absolute", right: 300}}> YOU ARE FUCKING DEAD</h1>}
             <div style={{position: "absolute", right: 0}}>
             <ReactCountdownClock
             seconds={180}
@@ -66,12 +37,11 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state) => state
+const mapStateToProps = (state) => state.dead
 
 export default connect(mapStateToProps)(App);
 
-
-function pointerChecker() {
+export function pointerChecker() {
   const blocker = document.getElementById( 'blocker' );
   const instructions = document.getElementById( 'instructions' );
   const havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
