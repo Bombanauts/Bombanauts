@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import { controls } from '../game/main';
 import ReactCountdownClock from 'react-countdown-clock';
 import { connect } from 'react-redux';
 

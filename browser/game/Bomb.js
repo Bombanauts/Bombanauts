@@ -1,14 +1,12 @@
-import store from '../store'
 import socket from '../socket'
 
 const THREE = require('three')
 const CANNON = require('cannon')
-const PointerLockControls = require('./PointerLockControls')
 
-import { scene, world, animate, camera, blockCount, blocksObj } from './main'
+import { scene, world, camera, blockCount, blocksObj } from './main'
 import { VolumetricFire } from '../bombs/ParticleEngine';
-import { boundary, fixedBox, destroyable, roundFour } from './utils/generateMap'
-import { Particle, Block } from './Explosion.js'
+import { destroyable, roundFour } from './utils/generateMap'
+import { Block } from './Explosion.js'
 
 export default class Bomb {
   constructor(id, position, material) {
