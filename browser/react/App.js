@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
-import { initCannon, init, animate, controls, light } from '../game/main';
+import { controls } from '../game/main';
 import ReactCountdownClock from 'react-countdown-clock';
+import { connect } from 'react-redux';
 import store from '../store';
 
 const THREE = require('three')
@@ -10,37 +11,24 @@ const fontStyle = {
   'fontSize': '40px'
 }
 
-function delay(t) {
-  return new Promise(resolve => {
-    setTimeout(resolve, t)
-  })
-}
-
-export default class App extends Component {
+class App extends Component {
   constructor(props) {
     super(props)
+    
     this.state = {
       time: 0
     }
   }
 
   componentDidMount() {
-    delay(300)
-    .then(() => {
-      pointerChecker()
-      initCannon()
-      init()
-      animate()
       let timer = store.getState().timer;
       let now = Date.now();
       this.setState({
         time: (timer.endTime - now) / 1000
       })
-    })
   }
 
   render() {
-    console.log(this.state.time)
     return (
       <div>
         <div id="blocker">
@@ -50,6 +38,7 @@ export default class App extends Component {
             (W,A,S,D = Move, SPACE = Jump, MOUSE = Look, CLICK = Shoot)
           </div>
         </div>
+            {this.props.dead && <h1  style={{position: "absolute", right: 300}}> YOU ARE FUCKING DEAD</h1>}
             <div style={{position: "absolute", right: 0}}>
             { this.state.time !== 0 &&
               <ReactCountdownClock
@@ -67,7 +56,11 @@ export default class App extends Component {
   }
 }
 
-function pointerChecker() {
+const mapStateToProps = (state) => state.dead
+
+export default connect(mapStateToProps)(App);
+
+export function pointerChecker() {
   const blocker = document.getElementById( 'blocker' );
   const instructions = document.getElementById( 'instructions' );
   const havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
