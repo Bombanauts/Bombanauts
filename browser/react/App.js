@@ -1,31 +1,40 @@
 import React, {Component} from 'react'
-import { controls } from '../game/main';
 import ReactCountdownClock from 'react-countdown-clock';
 import { connect } from 'react-redux';
 import store from '../store';
-
-const THREE = require('three')
-const CANNON = require('cannon')
+import { initCannon, init, animate, controls } from '../game/main';
 
 const fontStyle = {
   'fontSize': '40px'
 }
 
+function delay(t) {
+  return new Promise(resolve => {
+    setTimeout(resolve, t)
+  })
+}
+
 class App extends Component {
   constructor(props) {
     super(props)
-    
     this.state = {
       time: 0
     }
   }
 
   componentDidMount() {
+    delay(300)
+    .then(() => {
+      pointerChecker()
+      initCannon()
+      init()
+      animate()
       let timer = store.getState().timer;
       let now = Date.now();
       this.setState({
         time: (timer.endTime - now) / 1000
       })
+    })
   }
 
   render() {
@@ -40,7 +49,7 @@ class App extends Component {
         </div>
             {this.props.dead && <h1  style={{position: "absolute", right: 300}}> YOU ARE FUCKING DEAD</h1>}
             <div style={{position: "absolute", right: 0}}>
-            { this.state.time !== 0 &&
+             { this.state.time !== 0 &&
               <ReactCountdownClock
             seconds={+this.state.time}
             color="#ddd"

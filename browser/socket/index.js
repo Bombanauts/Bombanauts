@@ -20,10 +20,6 @@ export const initializeSocket = () => {
       store.dispatch(updateBombLocations(initialData.bombs.allBombs))
       store.dispatch(loadMap(initialData.mapState.mapState[0]))
       store.dispatch(setTime(initialData.timer.startTime, initialData.timer.endTime))
-      pointerChecker()
-      initCannon()
-      init()
-      animate()
     })
 
   socket.on('update_world', (data) => {
