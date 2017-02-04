@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import { initCannon, init, animate, controls, light } from '../game/main';
 import ReactCountdownClock from 'react-countdown-clock';
-
+import store from '../store'
+import { connect } from 'react-redux';
 
 const THREE = require('three')
 const CANNON = require('cannon')
@@ -16,7 +17,7 @@ function delay(t) {
   })
 }
 
-export default class App extends Component {
+class App extends Component {
   constructor(props) {
     super(props)
   }
@@ -29,9 +30,17 @@ export default class App extends Component {
       init()
       animate()
     })
+    // .then(() => {
+    //   setInterval(() => {
+    //     let dead = store.getState().dead.dead
+    //     if (dead) this.setState({ dead: true})
+    //   }, 100)
+    // })
   }
 
   render() {
+    // console.log('DEAD STATUS', store.getState().dead.dead)
+    console.log('APP DEAD', this.props)
     return (
       <div>
         <div id="blocker">
@@ -41,21 +50,26 @@ export default class App extends Component {
             (W,A,S,D = Move, SPACE = Jump, MOUSE = Look, CLICK = Shoot)
           </div>
         </div>
+            {this.props.dead.dead && <h1  style={{position: "absolute", right: 300}}> YOU ARE FUCKING DEAD</h1>}
             <div style={{position: "absolute", right: 0}}>
-            <ReactCountdownClock 
-
+            <ReactCountdownClock
             seconds={180}
             color="#ddd"
             alpha={0.5}
             size={100}
             timeFormat="hms"
-            // onComplete={} 
+            // onComplete={}
             />
             </div>
       </div>
     )
-  } 
+  }
 }
+
+const mapStateToProps = (state) => state
+
+export default connect(mapStateToProps)(App);
+
 
 function pointerChecker() {
   const blocker = document.getElementById( 'blocker' );

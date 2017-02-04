@@ -35,7 +35,7 @@ export default class Bomb {
     let bombGeometry = new THREE.SphereGeometry(this.bombShape.radius, 32, 32);
 
     // create the bomb
-    this.bombBody = new CANNON.Body({ mass: 10 });
+    this.bombBody = new CANNON.Body({ mass: 10});
     this.bombBody.addShape(this.bombShape);
     this.bombMesh = new THREE.Mesh(bombGeometry, this.material);
 

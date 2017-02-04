@@ -5,6 +5,7 @@ import store from '../store';
 import { PointerLockControls } from './PointerLockControls';
 import Player from './Player'
 import Bomb from './Bomb'
+import { killPlayer } from './action-creator'
 
 import { Particle, Block } from './Explosion.js';
 
@@ -92,8 +93,8 @@ export function initCannon() {
     frictionEquationRegularizationTime: 3,
   });
 
-  physicsMaterial.contactEquationStiffness = 1e8;
-  physicsMaterial.contactEquationRegularizationTime = 3;
+  // physicsMaterial.contactEquationStiffness = 1e8;
+  // physicsMaterial.contactEquationRegularizationTime = 3;
   //add the contact materials to the world
   world.addContactMaterial(physicsContactMaterial);
 
@@ -319,6 +320,7 @@ export function animate() {
           socket.emit('kill_player', {
             id: socket.id
           })
+          store.dispatch(killPlayer())
         }
       }
       if (bombObjects[i].fire2) {
@@ -329,6 +331,7 @@ export function animate() {
           socket.emit('kill_player', {
             id: socket.id
           })
+          store.dispatch(killPlayer())
         }
       }
       if (bombObjects[i].fire3) {
@@ -339,6 +342,7 @@ export function animate() {
           socket.emit('kill_player', {
             id: socket.id
           })
+          store.dispatch(killPlayer())
         }
       }
       if (bombObjects[i].fire4) {
@@ -349,6 +353,7 @@ export function animate() {
           socket.emit('kill_player', {
             id: socket.id
           })
+          store.dispatch(killPlayer())
         }
       }
       if (bombObjects[i].fire5) {
@@ -359,6 +364,7 @@ export function animate() {
           socket.emit('kill_player', {
             id: socket.id
           })
+          store.dispatch(killPlayer())
         }
       }
     }
