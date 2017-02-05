@@ -2,18 +2,16 @@ import { GENERATE_MAP } from './constants';
 
 
 const initialState = {
-  mapState: []
 }
 
-export const mapState = (state = initialState, action) => {
+export const map = (state = initialState, action) => {
   let newState = Object.assign({}, state)
   switch (action.type) {
     case GENERATE_MAP:
-      newState.mapState = action.map
+      newState = action.map
       break;
     default:
       return state;
   }
-
   return newState;
 }

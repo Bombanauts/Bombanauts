@@ -5,7 +5,7 @@ const {
   KILL_PLAYER
 } = require('./constants')
 
-const initialState = require('./init-state');
+const initialState = require('../init-state');
 
 //the players are stored in the state each with a key of their socket id, with a property of an object containing their x, y, z coordinates
 const players = (state = initialState, action) => {

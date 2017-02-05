@@ -1,464 +1,96 @@
 const { Maps } = require('./maps/map');
 
 module.exports = {
-  'Wolf 1061b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Wolf 1061c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Wolf 1061d': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Proxima Cen': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'KOI-1843.03': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'KOI-1843.01': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'KOI-1843.02': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-9b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-9c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-9d': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'GJ 160.2 b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'HD 240210 b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'OGLE-2005-BL': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'WASP-82 b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-153b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-153c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'HD 4203 b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'HD 4203 c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'HD 179079 b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'HD 187123 b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'HD 187123 c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-431b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-431c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-431d': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-131b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-131c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'HD 114729 Ab': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'CoRoT-24b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'CoRoT-24c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-211c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-211b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-294c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-294b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'HD 164595 b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-257c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-257b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-257d': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-214c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-214b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-130c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-130b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-130d': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'WASP-108b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-189c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-189b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-327b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-327d': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-327c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-101b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-101c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-156c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-156b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'HIP 11952 b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'HIP 11952 c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'HD 122430 b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-344b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-344c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-227b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-227c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-404b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-404c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Gliese 86 b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'HD 145377 b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'HD 75289 Ab': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'HD 5608 b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'HD 68988 b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'HD 183263 b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'HD 183263 c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'HD 154672 b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-196b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-196c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-225c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-225b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-409b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'OGLE-TR-10b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-128b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-128c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'WASP-11b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'WASP-62b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-150c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-150d': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-150e': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-150b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'WASP-14b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'HD 2952 b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-173c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-173b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-432b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-432c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-34b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-260b': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  },
-  'Kepler-260c': {
-    allBombs: {},
-    mapState: Maps,
-    timer: {}
-  }
+  'Wolf 1061b': {},
+  'Wolf 1061c': {},
+  'Wolf 1061d': {},
+  'Proxima Cen': {},
+  'KOI-1843.03': {},
+  'KOI-1843.01': {},
+  'KOI-1843.02': {},
+  'Kepler-9b': {},
+  'Kepler-9c': {},
+  'Kepler-9d': {},
+  'GJ 160.2 b': {},
+  'HD 240210 b': {},
+  'OGLE-2005-BL': {},
+  'WASP-82 b': {},
+  'Kepler-153b': {},
+  'Kepler-153c': {},
+  'HD 4203 b': {},
+  'HD 4203 c': {},
+  'HD 179079 b': {},
+  'HD 187123 b': {},
+  'HD 187123 c': {},
+  'Kepler-431b': {},
+  'Kepler-431c': {},
+  'Kepler-431d': {},
+  'Kepler-131b': {},
+  'Kepler-131c': {},
+  'HD 114729 Ab': {},
+  'CoRoT-24b': {},
+  'CoRoT-24c': {},
+  'Kepler-211c': {},
+  'Kepler-211b': {},
+  'Kepler-294c': {},
+  'Kepler-294b': {},
+  'HD 164595 b': {},
+  'Kepler-257c': {},
+  'Kepler-257b': {},
+  'Kepler-257d': {},
+  'Kepler-214c': {},
+  'Kepler-214b': {},
+  'Kepler-130c': {},
+  'Kepler-130b': {},
+  'Kepler-130d': {},
+  'WASP-108b': {},
+  'Kepler-189c': {},
+  'Kepler-189b': {},
+  'Kepler-327b': {},
+  'Kepler-327d': {},
+  'Kepler-327c': {},
+  'Kepler-101b': {},
+  'Kepler-101c': {},
+  'Kepler-156c': {},
+  'Kepler-156b': {},
+  'HIP 11952 b': {},
+  'HIP 11952 c': {},
+  'HD 122430 b': {},
+  'Kepler-344b': {},
+  'Kepler-344c': {},
+  'Kepler-227b': {},
+  'Kepler-227c': {},
+  'Kepler-404b': {},
+  'Kepler-404c': {},
+  'Gliese 86 b': {},
+  'HD 145377 b': {},
+  'HD 75289 Ab': {},
+  'HD 5608 b': {},
+  'HD 68988 b': {},
+  'HD 183263 b': {},
+  'HD 183263 c': {},
+  'HD 154672 b': {},
+  'Kepler-196b': {},
+  'Kepler-196c': {},
+  'Kepler-225c': {},
+  'Kepler-225b': {},
+  'Kepler-409b': {},
+  'OGLE-TR-10b': {},
+  'Kepler-128b': {},
+  'Kepler-128c': {},
+  'WASP-11b': {},
+  'WASP-62b': {},
+  'Kepler-150c': {},
+  'Kepler-150d': {},
+  'Kepler-150e': {},
+  'Kepler-150b': {},
+  'WASP-14b': {},
+  'HD 2952 b': {},
+  'Kepler-173c': {},
+  'Kepler-173b': {},
+  'Kepler-432b': {},
+  'Kepler-432c': {},
+  'Kepler-34b': {},
+  'Kepler-260b': {},
+  'Kepler-260c': {}
 };

@@ -3,13 +3,12 @@ const initialState = require('../init-state');
 
 const reducer = (state = initialState, action) => {
   let newState = Object.assign({}, state)
-
   switch (action.type) {
     case GENERATE_MAP:
-      newState[action.roomId].mapState = action.map
+      newState[action.roomId] = action.map
       break;
     case EXPLODE_BOX:
-      newState[action.roomId].mapState[action.coordinates.j][action.coordinates.k] = 0;
+      newState[action.roomId][action.coordinates.j][action.coordinates.k] = 0;
       break;
     default:
       return state;

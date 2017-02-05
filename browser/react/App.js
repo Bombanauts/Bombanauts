@@ -65,7 +65,11 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state) => state.dead
+const mapStateToProps = (state) => {
+  return {
+    dead: state.dead
+  }
+}
 
 export default connect(mapStateToProps)(App);
 

@@ -200,7 +200,7 @@ export const deleteWorld = (scene, world, boxMeshes, boxes, bombs, bombMeshes, y
 }
 
 export const createMap = () => {
-  let map = store.getState().mapState.mapState
+  let map = store.getState().map
   generateMap(map);
 }
 

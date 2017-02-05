@@ -45,13 +45,9 @@ const roomName = (connectedSocket, roomsList) => {
 const convertStateForFrontEnd = (state, room) => {
   return {
     players: state.players[room],
-    bombs: {
-      allBombs: state.bombs[room].allBombs
-    },
-    mapState: {
-      mapState: state.mapState[room].mapState
-    },
-    timer: state.timer[room].timer
+    bombs: state.bombs[room],
+    map: state.map[room],
+    timer: state.timer[room]
   }
 }
 
@@ -67,19 +63,18 @@ io.on('connection', (socket) => {
   let currState;
 
   if (createdRoom) {
-    console.log('new room')
     let randomMap = randomGeneration(Maps)
     store.dispatch(loadMap(randomMap, socket.currentRoom))
 
     let currentTime = Date.now();
+
     store.dispatch(setTime(currentTime, 180, socket.currentRoom))
 
     currState = convertStateForFrontEnd(store.getState(), socket.currentRoom);
-
+    console.log(store.getState())
     socket.emit('initial', currState);
   } else {
     currState = convertStateForFrontEnd(store.getState(), socket.currentRoom);
-    console.log('joining a room')
     socket.emit('initial', currState);
   }
 
@@ -101,7 +96,7 @@ io.on('connection', (socket) => {
   //add new bomb to the state when a player clicks
   socket.on('add_bomb', (data) => {
     store.dispatch(addBomb(data, socket.currentRoom))
-    io.in(socket.currentRoom).emit('update_bomb_positions', store.getState().bombs[socket.currentRoom].allBombs)
+    io.in(socket.currentRoom).emit('update_bomb_positions', store.getState().bombs[socket.currentRoom])
   })
 
   //kill player on bomb collision
@@ -119,18 +114,14 @@ io.on('connection', (socket) => {
 
   socket.on('reset_world', (data) => {
     let newMap = randomGeneration(Maps)
-
     store.dispatch(loadMap(newMap, socket.currentRoom))
+    let state = store.getState()
 
     io.in(socket.currentRoom).emit('reset_world', {
-      players: store.getState().players[socket.currentRoom],
-      bombs: {
-        allBombs: []
-      },
-      mapState: {
-        mapState: store.getState().mapState[socket.currentRoom].mapState
-      },
-      timer: store.getState().timer[socket.currentRoom].timer
+      players: state.players[socket.currentRoom],
+      bombs:  [],
+      map: state.map[socket.currentRoom],
+      timer: state.timer[socket.currentRoom]
     })
   })
 

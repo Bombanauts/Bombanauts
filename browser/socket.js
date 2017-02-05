@@ -17,18 +17,19 @@ let playerToKillName = '';
 
 socket.on('connect', function() {
   socket.on('initial', (initialData) => {
+    console.log('initial: ', initialData)
     store.dispatch(updatePlayerLocations(initialData.players));
-    store.dispatch(updateBombLocations(initialData.bombs.allBombs))
-    store.dispatch(loadMap(initialData.mapState.mapState))
+    store.dispatch(updateBombLocations(initialData.bombs))
+    store.dispatch(loadMap(initialData.map))
     store.dispatch(setTime(initialData.timer.startTime, initialData.timer.endTime))
   })
 
 socket.on('update_world', (data) => {
   playerArr = Object.keys(data.players);
   delete data.players[socket.id];
-  delete data.bombs.allBombs[socket.id];
+  delete data.bombs[socket.id];
   store.dispatch(updatePlayerLocations(data.players))
-  store.dispatch(updateBombLocations(data.bombs.allBombs))
+  store.dispatch(updateBombLocations(data.bombs))
   store.dispatch(setTime(data.timer.startTime, data.timer.endTime))
 })
 
@@ -72,9 +73,9 @@ socket.on('update_world', (data) => {
 
 
   socket.on('reset_world', (data) => {
-    store.dispatch(loadMap(data.mapState.mapState));
+    store.dispatch(loadMap(data.map));
     store.dispatch(updatePlayerLocations(data.players));
-    store.dispatch(updateBombLocations(data.bombs.allBombs));
+    store.dispatch(updateBombLocations(data.bombs));
 
     restartWorld();
   })
