@@ -37,6 +37,8 @@ class App extends Component {
     return (
       <div>
           <Blocker />
+          {this.props.dead && <div style={{ backgroundColor: '#700303', position: 'absolute', opacity: '0.7', zIndex: '999', width: '100vw', height:
+            '100vh' }}></div>}
           {this.props.dead && <h1  style={{position: "absolute", right: 300}}> YOU ARE FUCKING DEAD</h1>}
             <div style={{position: "absolute", right: 0}}>
              { this.state.time !== 0 &&

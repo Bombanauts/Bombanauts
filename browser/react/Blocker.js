@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { controls } from '../game/main';
 
 class Blocker extends Component {
