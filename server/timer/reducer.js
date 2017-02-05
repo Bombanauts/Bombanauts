@@ -12,7 +12,7 @@ const timer = (state = initialState, action) => {
       return newState[action.roomId].timer;
     case SET_TIME:
       newState[action.roomId].timer.startTime = action.time;
-      newState[action.roomId].timer.endTime = 180000;
+      newState[action.roomId].timer.endTime = action.time + 181000;
       return newState;
     default:
       return newState;

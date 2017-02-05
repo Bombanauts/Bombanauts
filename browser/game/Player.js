@@ -1,7 +1,7 @@
 import store from '../store'
 import socket from '../socket'
 
-import { scene, world, bombObjects, blockCount, blocksObj } from './main'
+import { scene, world, bombObjects, blockCount, blocksObj, listener } from './main'
 import { destroyable, roundFour } from './utils/generateMap'
 import { Block } from './Explosion'
 

@@ -16,7 +16,7 @@ const timer = (state = initialState, action) => {
       return newState.timer;
     case SET_TIME:
       newState.startTime = action.time;
-      newState.endTime = action.time + action.timeLimit;
+      newState.endTime = action.timeLimit;
       return newState;
     default:
       return newState;

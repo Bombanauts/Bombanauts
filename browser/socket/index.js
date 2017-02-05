@@ -7,11 +7,12 @@ import { updateBombLocations, removePlayerBombs } from '../bombs/action-creator'
 import { loadMap } from '../maps/action-creator';
 import { setTime, getTime } from '../timer/action-creator';
 
-import { initCannon, init, animate, players, playerMeshes, world, scene, playerInstances } from '../game/main';
+import { initCannon, init, animate, players, playerMeshes, world, scene, playerInstances, listener, sphereBody, camera} from '../game/main';
 
 import { pointerChecker } from '../react/App';
 
 export let playerArr = [];
+let playerToKillName = '';
 
 export const initializeSocket = () => {
   socket.on('connect', function() {
@@ -52,11 +53,19 @@ export const initializeSocket = () => {
     })
 
     socket.on('kill_player', (data) => {
+
       let playerToKill = playerInstances.filter(player => {
         return player.socketId === data;
       })[0]
-
       if (playerToKill) {
+        let sound = new THREE.PositionalAudio( listener );
+        const audioLoader = new THREE.AudioLoader();
+        audioLoader.load( 'sounds/die.mp3', function( buffer ) {
+          sound.setBuffer( buffer );
+          sound.setRefDistance( 10 );
+          sound.play()
+        });
+
         playerToKill.explode()
       }
     })
