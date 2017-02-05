@@ -36,10 +36,14 @@ class App extends Component {
   render() {
     return (
       <div>
-          <Blocker />
-          {this.props.dead && <div style={{ backgroundColor: '#700303', position: 'absolute', opacity: '0.7', zIndex: '999', width: '100vw', height:
-            '100vh' }}></div>}
-          {this.props.dead && <h1  style={{position: "absolute", right: 300}}> YOU ARE FUCKING DEAD</h1>}
+          <Blocker dead={this.props.dead} />
+          { this.props.dead && <div style={{ backgroundColor: '#700303',
+            position: 'absolute',
+            opacity: '0.7',
+            width: '100vw',
+            height: '100vh',
+            pointerEvents: 'none'}}><h1  style={{position: "absolute", right: 500}}> YOU ARE FUCKING DEAD</h1>
+            </div>}
             <div style={{position: "absolute", right: 0}}>
              { this.state.time !== 0 &&
               <ReactCountdownClock
@@ -49,8 +53,7 @@ class App extends Component {
             size={100}
             timeFormat="hms"
             // onComplete={}
-            />
-            }
+            /> }
           </div>
       </div>
     )
