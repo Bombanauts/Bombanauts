@@ -3,6 +3,7 @@ import ReactCountdownClock from 'react-countdown-clock';
 import { connect } from 'react-redux';
 import store from '../store';
 import { initCannon, init, animate, controls } from '../game/main';
+import Dead from './Dead'
 
 const fontStyle = {
   'fontSize': '40px'
@@ -40,26 +41,26 @@ class App extends Component {
   render() {
     return (
       <div>
-        <div id="blocker">
+        <div id="blocker" className={(this.props.dead ? 'dead' : '')}>
           <div id="instructions">
             <span style={fontStyle}>Click to play</span>
             <br />
             (W,A,S,D = Move, SPACE = Jump, MOUSE = Look, CLICK = Shoot)
           </div>
         </div>
-            {this.props.dead && <h1  style={{position: "absolute", right: 300}}> YOU ARE FUCKING DEAD</h1>}
-            <div style={{position: "absolute", right: 0}}>
-             { this.state.time !== 0 &&
-              <ReactCountdownClock
+        {this.props.dead && <Dead />}
+        <div style={{position: "absolute", right: 0}}>
+         { this.state.time !== 0 &&
+          <ReactCountdownClock
             seconds={+this.state.time}
             color="#ddd"
             alpha={0.5}
             size={100}
             timeFormat="hms"
             // onComplete={}
-            />
-            }
-            </div>
+          />
+          }
+        </div>
       </div>
     )
   }

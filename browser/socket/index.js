@@ -53,7 +53,6 @@ socket.on('update_world', (data) => {
   })
 
   socket.on('kill_player', (data) => {
-
     let playerToKill = playerInstances.filter(player => {
       return player.socketId === data;
     })[0]

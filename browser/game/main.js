@@ -306,61 +306,63 @@ export function animate() {
   }
   //Animate Fire w/ Bombs
   let elapsed = clock.getElapsedTime()
-  for (let i = 0; i < bombObjects.length; i++) {
-    if (bombObjects[i].bool) {
-      if (bombObjects[i].fire) {
-        bombObjects[i].fire.update(elapsed)
-        if (bombObjects[i].fire.mesh.position.x === roundFour(sphereBody.position.x) &&
-          bombObjects[i].fire.mesh.position.z === roundFour(sphereBody.position.z)) {
-          dead = true;
-          socket.emit('kill_player', {
-            id: socket.id
-          })
-          store.dispatch(killPlayer())
+  if (!dead) {
+    for (let i = 0; i < bombObjects.length; i++) {
+      if (bombObjects[i].bool) {
+        if (bombObjects[i].fire) {
+          bombObjects[i].fire.update(elapsed)
+          if (bombObjects[i].fire.mesh.position.x === roundFour(sphereBody.position.x) &&
+            bombObjects[i].fire.mesh.position.z === roundFour(sphereBody.position.z)) {
+            dead = true;
+            socket.emit('kill_player', {
+              id: socket.id
+            })
+            store.dispatch(killPlayer())
+          }
         }
-      }
-      if (bombObjects[i].fire2) {
-        bombObjects[i].fire2.update(elapsed)
-        if (bombObjects[i].fire2.mesh.position.x === roundFour(sphereBody.position.x) &&
-          bombObjects[i].fire2.mesh.position.z === roundFour(sphereBody.position.z)) {
-          dead = true;
-          socket.emit('kill_player', {
-            id: socket.id
-          })
-          store.dispatch(killPlayer())
+        if (bombObjects[i].fire2) {
+          bombObjects[i].fire2.update(elapsed)
+          if (bombObjects[i].fire2.mesh.position.x === roundFour(sphereBody.position.x) &&
+            bombObjects[i].fire2.mesh.position.z === roundFour(sphereBody.position.z)) {
+            dead = true;
+            socket.emit('kill_player', {
+              id: socket.id
+            })
+            store.dispatch(killPlayer())
+          }
         }
-      }
-      if (bombObjects[i].fire3) {
-        bombObjects[i].fire3.update(elapsed)
-        if (bombObjects[i].fire3.mesh.position.x === roundFour(sphereBody.position.x) &&
-          bombObjects[i].fire3.mesh.position.z === roundFour(sphereBody.position.z)) {
-          dead = true;
-          socket.emit('kill_player', {
-            id: socket.id
-          })
-          store.dispatch(killPlayer())
+        if (bombObjects[i].fire3) {
+          bombObjects[i].fire3.update(elapsed)
+          if (bombObjects[i].fire3.mesh.position.x === roundFour(sphereBody.position.x) &&
+            bombObjects[i].fire3.mesh.position.z === roundFour(sphereBody.position.z)) {
+            dead = true;
+            socket.emit('kill_player', {
+              id: socket.id
+            })
+            store.dispatch(killPlayer())
+          }
         }
-      }
-      if (bombObjects[i].fire4) {
-        bombObjects[i].fire4.update(elapsed)
-        if (bombObjects[i].fire4.mesh.position.x === roundFour(sphereBody.position.x) &&
-          bombObjects[i].fire4.mesh.position.z === roundFour(sphereBody.position.z)) {
-          dead = true;
-          socket.emit('kill_player', {
-            id: socket.id
-          })
-          store.dispatch(killPlayer())
+        if (bombObjects[i].fire4) {
+          bombObjects[i].fire4.update(elapsed)
+          if (bombObjects[i].fire4.mesh.position.x === roundFour(sphereBody.position.x) &&
+            bombObjects[i].fire4.mesh.position.z === roundFour(sphereBody.position.z)) {
+            dead = true;
+            socket.emit('kill_player', {
+              id: socket.id
+            })
+            store.dispatch(killPlayer())
+          }
         }
-      }
-      if (bombObjects[i].fire5) {
-        bombObjects[i].fire5.update(elapsed)
-        if (bombObjects[i].fire5.mesh.position.x === roundFour(sphereBody.position.x) &&
-          bombObjects[i].fire5.mesh.position.z === roundFour(sphereBody.position.z)) {
-          dead = true;
-          socket.emit('kill_player', {
-            id: socket.id
-          })
-          store.dispatch(killPlayer())
+        if (bombObjects[i].fire5) {
+          bombObjects[i].fire5.update(elapsed)
+          if (bombObjects[i].fire5.mesh.position.x === roundFour(sphereBody.position.x) &&
+            bombObjects[i].fire5.mesh.position.z === roundFour(sphereBody.position.z)) {
+            dead = true;
+            socket.emit('kill_player', {
+              id: socket.id
+            })
+            store.dispatch(killPlayer())
+          }
         }
       }
     }
@@ -483,6 +485,8 @@ export function restartWorld() {
   yourballMeshes = [];
 
   createMap();
+
+  dead = false;
 
   sphereBody.position.x = spawnPositions[playerArr.indexOf(socket.id)].x;
   sphereBody.position.y = 5
