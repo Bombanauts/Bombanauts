@@ -1,15 +1,15 @@
 // we need this socket object to send messages to our server
 const socket = io('/')
 
-import store from '../store';
-import { updatePlayerLocations, removePlayer } from '../players/action-creator';
-import { updateBombLocations, removePlayerBombs } from '../bombs/action-creator'
-import { loadMap } from '../maps/action-creator';
-import { setTime, getTime } from '../timer/action-creator';
+import store from './store';
+import { updatePlayerLocations, removePlayer } from './players/action-creator';
+import { updateBombLocations, removePlayerBombs } from './bombs/action-creator'
+import { loadMap } from './maps/action-creator';
+import { setTime, getTime } from './timer/action-creator';
 
-import { initCannon, init, animate, players, playerMeshes, world, scene, playerInstances,  resetCount, createMap, restartWorld } from '../game/main';
+import { initCannon, init, animate, players, playerMeshes, world, scene, playerInstances,  resetCount, createMap, restartWorld } from './game/main';
 
-import { pointerChecker } from '../react/App';
+import { pointerChecker } from './react/App';
 
 export let playerArr = [];
 let playerToKillName = '';
