@@ -3,7 +3,7 @@ import socket from '../socket'
 const THREE = require('three')
 const CANNON = require('cannon')
 
-import { scene, world, camera, blockCount, blocksObj } from './main'
+import { scene, world, camera, blockCount, blocksObj, listener } from './main'
 import { VolumetricFire } from '../bombs/ParticleEngine';
 import { destroyable, roundFour } from './utils/generateMap'
 import { Block } from './Explosion.js'
@@ -28,6 +28,14 @@ export default class Bomb {
   }
 
   init() {
+    let explosionSound = new THREE.PositionalAudio( listener );
+    const explosionLoader = new THREE.AudioLoader();
+    explosionLoader.load( 'sounds/explosion.mp3', function( buffer ) {
+      explosionSound.setBuffer( buffer );
+      explosionSound.setRefDistance( 10 );
+      explosionSound.play()
+    });
+
     this.bombShape = new CANNON.Sphere(1.5);
 
     let bombGeometry = new THREE.SphereGeometry(this.bombShape.radius, 32, 32);

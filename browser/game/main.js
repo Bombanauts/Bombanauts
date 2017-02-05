@@ -12,7 +12,7 @@ import { Particle, Block } from './Explosion.js';
 
 import generateMap, { roundFour } from './utils/generateMap';
 
-let sphereShape, sphereBody, world, physicsMaterial;
+let sphereShape, world, physicsMaterial;
 let camera, scene, renderer, light;
 let geometry, material, mesh;
 let controls, time = Date.now();
@@ -20,6 +20,8 @@ let clock;
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 
+export let listener;
+export let sphereBody;
 export const walls = [];
 export let bombs = [];
 export let ballMeshes = [];
@@ -134,6 +136,10 @@ export function init() {
   light.target.position.set(0, 5, 0);
   scene.add(light);
 
+  //AUDIO
+
+
+
   //Create Fire
   clock = new THREE.Clock()
 
@@ -170,6 +176,8 @@ export function init() {
   sphereBody.position.x = 100;
   sphereBody.position.y = 100;
   sphereBody.position.z = 100;
+  listener = new THREE.AudioListener();
+  camera.add( listener );
 
   let others = store.getState().players.otherPlayers;
   let newPlayer;
@@ -296,7 +304,6 @@ export function animate() {
   for (let key in allBombs) {
     stateBombs.push(...allBombs[key])
   }
-
   //Animate Fire w/ Bombs
   let elapsed = clock.getElapsedTime()
   for (let i = 0; i < bombObjects.length; i++) {
