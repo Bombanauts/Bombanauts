@@ -2,7 +2,7 @@ import store from '../store'
 import socket from '../socket'
 
 import { scene, world, bombObjects, blockCount, blocksObj, listener } from './main'
-import { destroyable, roundFour } from './utils/generateMap'
+import { destroyable, roundFour } from './utils'
 import { Block } from './Explosion'
 
 const THREE = require('three')
@@ -26,10 +26,6 @@ export default class Player {
   }
 
   init() {
-    // color = '#726591'
-    const { id } = this;
-
-    // three
     const halfExtents = new CANNON.Vec3(2, 2, 2);
     const boxShape = new CANNON.Box(halfExtents);
     const boxGeometry = new THREE.BoxGeometry(halfExtents.x * 1.5, halfExtents.y * 1.5, halfExtents.z * 1.5);
@@ -57,7 +53,6 @@ export default class Player {
 
     // set spawn position
     playerMesh.position.set(this.x, this.y, this.z);
-
     playerBox.position.set(playerMesh.position.x, playerMesh.position.y, playerMesh.position.z);
 
     if (!this.dead) {

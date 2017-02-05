@@ -117,15 +117,6 @@ io.on('connection', (socket) => {
     store.dispatch(updateMap(data, socket.currentRoom))
   })
 
-  //remove the player from the state on socket disconnect
-  socket.on('disconnect', () => {
-    store.dispatch(removePlayer(socket.id, socket.currentRoom))
-    store.dispatch(removePlayerBombs(socket.id, socket.currentRoom))
-
-    io.in(socket.currentRoom).emit('remove_player', socket.id)
-    console.log('socket id ' + socket.id + ' has disconnected. : (');
-  })
-
   socket.on('reset_world', (data) => {
     let newMap = randomGeneration(Maps)
 
@@ -142,6 +133,16 @@ io.on('connection', (socket) => {
       timer: store.getState().timer[socket.currentRoom].timer
     })
   })
+
+  //remove the player from the state on socket disconnect
+  socket.on('disconnect', () => {
+    store.dispatch(removePlayer(socket.id, socket.currentRoom))
+    store.dispatch(removePlayerBombs(socket.id, socket.currentRoom))
+
+    io.in(socket.currentRoom).emit('remove_player', socket.id)
+    console.log('socket id ' + socket.id + ' has disconnected. : (');
+  })
+
 })
 
 app.use(express.static(path.join(__dirname, '..', 'public', 'assets')));
