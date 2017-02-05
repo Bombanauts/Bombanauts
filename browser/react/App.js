@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import ReactCountdownClock from 'react-countdown-clock';
 import { connect } from 'react-redux';
 import store from '../store';
-import { initCannon, init, animate, controls } from '../game/main';
+import { initCannon, init, animate } from '../game/main';
 import Blocker from './Blocker';
 
 function delay(t) {
