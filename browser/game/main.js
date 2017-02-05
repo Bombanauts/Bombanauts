@@ -23,8 +23,8 @@ const SCREEN_HEIGHT = window.innerHeight;
 export const walls = [];
 export let bombs = [];
 export let ballMeshes = [];
-export const boxes = [];
-export const boxMeshes = [];
+export let boxes = [];
+export let boxMeshes = [];
 export const destroyableBoxes = [];
 export const destroyableBoxMeshes = [];
 export let players = [];
@@ -255,6 +255,7 @@ export function init() {
 
 export function createMap() {
   let map = store.getState().mapState.mapState
+  console.log("CREATE MAP",map)
   generateMap(map);
 }
 
@@ -446,6 +447,64 @@ export function animate() {
   renderer.render(scene, camera);
   time = Date.now();
 }
+
+export function restartWorld() {
+  for ( let i = 0; i < boxMeshes.length; i++){
+     scene.remove(boxMeshes[i]);
+  }
+
+  boxMeshes = []
+
+  for (let i = 0; i < boxes.length; i++){
+     world.remove(boxes[i]);
+  }
+
+  boxes = []
+
+  for (let i = 0; i < bombs.length; i++) {
+    world.remove(bombs[i])
+  }
+
+  bombs = []
+
+  for (let i = 0; i < ballMeshes.length; i++) {
+    scene.remove(ballMeshes[i])
+  }
+
+  ballMeshes = []
+
+  for (let i = 0; i < yourBombs.length; i++) {
+    world.remove(yourBombs[i])
+  }
+
+  yourBombs = []
+
+  for (let i = 0; i < bombObjects.length; i++) {
+    if (bombObjects[i].clearTimeout) clearTimeout(bombObjects[i].clearTimeout)
+  }
+
+
+  for (let i = 0; i < yourballMeshes.length; i++) {
+    scene.remove(yourballMeshes[i])
+  }
+
+  yourballMeshes = [];
+
+  createMap();
+
+  sphereBody.position.x = spawnPositions[playerArr.indexOf(socket.id)].x;
+  sphereBody.position.y = 5
+  sphereBody.position.z = spawnPositions[playerArr.indexOf(socket.id)].z;
+}
+
+export function resetCount() {
+  counter = 0;
+}
+
+setTimeout(() => {
+  console.log('SET TIME OUT RESET WORLD')
+  socket.emit('reset_world', {})
+}, 10000)
 
 // this is outdated should use raycaster instead since it gives more info anyway
 // also projector is moved.

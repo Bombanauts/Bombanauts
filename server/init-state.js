@@ -1,4 +1,4 @@
-const Maps = require('./maps/map');
+const { Maps } = require('./maps/map');
 
 module.exports = {
   'Wolf 1061b': {

@@ -7,18 +7,19 @@ import { updateBombLocations, removePlayerBombs } from '../bombs/action-creator'
 import { loadMap } from '../maps/action-creator';
 import { setTime, getTime } from '../timer/action-creator';
 
-import { initCannon, init, animate, players, playerMeshes, world, scene, playerInstances } from '../game/main';
+import { initCannon, init, animate, players, playerMeshes, world, scene, playerInstances,  resetCount, createMap, restartWorld } from '../game/main';
 
 import { pointerChecker } from '../react/App';
 
 export let playerArr = [];
 
-export const initializeSocket = () => {
+// export const initializeSocket = () => {
   socket.on('connect', function() {
     socket.on('initial', (initialData) => {
+      console.log('INITIAL DATA', initialData)
       store.dispatch(updatePlayerLocations(initialData.players));
       store.dispatch(updateBombLocations(initialData.bombs.allBombs))
-      store.dispatch(loadMap(initialData.mapState.mapState[0]))
+      store.dispatch(loadMap(initialData.mapState.mapState))
       store.dispatch(setTime(initialData.timer.startTime, initialData.timer.endTime))
     })
 
@@ -61,8 +62,17 @@ export const initializeSocket = () => {
       }
     })
 
+
+    socket.on('reset_world', (data) => {
+      store.dispatch(loadMap(data.mapState.mapState));
+      store.dispatch(updatePlayerLocations(data.players));
+      store.dispatch(updateBombLocations(data.bombs.allBombs));
+      resetCount();
+      restartWorld();
+    })
+
   })
 
-}
+// }
 
 export default socket

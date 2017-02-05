@@ -11,7 +11,6 @@ const boundary = {},
   destroyable = {};
 
 const generateMap = (mapArr) => {
-  console.log(mapArr)
   const mapArrWidth = mapArr.length,
     mapArrHeight = mapArr[0].length;
 

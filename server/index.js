@@ -6,10 +6,10 @@ const port = process.env.PORT || 1337;
 const express = require('express');
 const app = express();
 const socketio = require('socket.io');
-const Maps = require('./maps/map');
+const { Maps, randomGeneration } = require('./maps/map');
 const {updatePlayers, removePlayer, killPlayer} = require('./players/action-creator');
 const { addBomb, updateBombPositions, removePlayerBombs, removeBomb } = require('./bombs/action-creator')
-const { updateMap } = require('./maps/action-creator')
+const { updateMap, loadMap } = require('./maps/action-creator')
 const { setTime } = require('./timer/action-creator')
 
 const store = require('./store')
@@ -64,20 +64,22 @@ io.on('connection', (socket) => {
   socket.join(currentRoomName);
   socket.currentRoom = currentRoomName;
 
-
-
   let currState = store.getState();
   let convertedState = convertStateForFrontEnd(currState, socket.currentRoom);
+
   if (createdRoom) {
+    let randomMap = randomGeneration(Maps)
+    console.log('random', randomMap)
+    store.dispatch(loadMap(randomMap, socket.currentRoom))
     let currentTime = Date.now();
     store.dispatch(setTime(currentTime, 180, socket.currentRoom))
-    io.sockets.emit('initial', convertedState);
+    console.log('convertedState', convertedState)
+    socket.emit('initial', convertedState);
   } else {
-    io.sockets.emit('initial', convertedState);
-
+    socket.emit('initial', convertedState);
+  }
     console.log(chalk.blue('A new client has connected'));
     console.log(chalk.yellow('socket id: ', socket.id));
-  }
 
   socket.on('get_players', () => {
     socket.emit('get_players', store.getState().players[socket.currentRoom]);
@@ -118,6 +120,28 @@ io.on('connection', (socket) => {
     io.in(socket.currentRoom).emit('remove_player', socket.id)
     console.log('socket id ' + socket.id + ' has disconnected. : (');
   })
+
+  socket.on('reset_world', (data) => {
+    let newMap = randomGeneration(Maps)
+
+    console.log('newMap', newMap)
+    console.log('prev map: ', store.getState().mapState[socket.currentRoom])
+    store.dispatch(loadMap(newMap, socket.currentRoom))
+    console.log('new map: ', store.getState().mapState[socket.currentRoom])
+
+    io.in(socket.currentRoom).emit('reset_world', {
+      players: store.getState().players[socket.currentRoom],
+      bombs: {
+        allBombs: []
+      },
+      mapState: {
+        mapState: store.getState().mapState[socket.currentRoom].mapState
+      }
+      // ,
+      // timer: state.timer[room].timer
+    })
+  })
+
 })
 
 app.use(express.static(path.join(__dirname, '..', 'public', 'assets')));
@@ -127,7 +151,6 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
-
 
 server.listen(port, function () {
     console.log(`The server is listening on port ${port}!`);
