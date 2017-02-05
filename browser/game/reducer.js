@@ -6,7 +6,6 @@ const initialState = {
 
 export const dead = (state = initialState, action) => {
   const newState = Object.assign({}, state);
-  // console.log('NEW STATE', newState)
   switch (action.type) {
     case KILL_PLAYER:
       newState.dead = true;

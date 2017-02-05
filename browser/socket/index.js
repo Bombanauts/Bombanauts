@@ -16,7 +16,6 @@ export let playerArr = [];
 // export const initializeSocket = () => {
   socket.on('connect', function() {
     socket.on('initial', (initialData) => {
-      console.log('INITIAL DATA', initialData)
       store.dispatch(updatePlayerLocations(initialData.players));
       store.dispatch(updateBombLocations(initialData.bombs.allBombs))
       store.dispatch(loadMap(initialData.mapState.mapState))
@@ -67,7 +66,7 @@ export let playerArr = [];
       store.dispatch(loadMap(data.mapState.mapState));
       store.dispatch(updatePlayerLocations(data.players));
       store.dispatch(updateBombLocations(data.bombs.allBombs));
-      resetCount();
+
       restartWorld();
     })
 

@@ -25,14 +25,12 @@ export let bombs = [];
 export let ballMeshes = [];
 export let boxes = [];
 export let boxMeshes = [];
-export const destroyableBoxes = [];
-export const destroyableBoxMeshes = [];
 export let players = [];
 export let playerMeshes = [];
 export let yourBombs = [];
 export let yourballMeshes = [];
 export let playerInstances = [];
-const bombObjects = [];
+let bombObjects = [];
 let count = 1;
 let prevPlayerStateLength = 0;
 let dead = false;
@@ -75,13 +73,6 @@ export function initCannon() {
   world.gravity.set(0, -40, 0);
   world.broadphase = new CANNON.NaiveBroadphase();
 
-  // Create a slippery material (friction coefficient = 0.0)
-  // physicsMaterial = new CANNON.Material('groundMaterial');
-  // const physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
-  //   physicsMaterial,
-  //     0.0, //friction
-  //     0.9// restitution
-  // );
 
   physicsMaterial = new CANNON.Material('groundMaterial');
   // Adjust constraint equation parameters for ground/ground contact
@@ -94,8 +85,6 @@ export function initCannon() {
     frictionEquationRegularizationTime: 3,
   });
 
-  // physicsMaterial.contactEquationStiffness = 1e8;
-  // physicsMaterial.contactEquationRegularizationTime = 3;
   //add the contact materials to the world
   world.addContactMaterial(physicsContactMaterial);
 
@@ -164,8 +153,8 @@ export function init() {
   mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
 
+  //skybox
   const skyGeo = new THREE.SphereGeometry(1000, 32, 32);
-  // const skyTexture = new THREE.TextureLoader().load('images/sky.jpg');
   const skyMaterial = new THREE.MeshBasicMaterial({ color: '#7EC0EE' });
   const sky = new THREE.Mesh(skyGeo, skyMaterial);
   sky.material.side = THREE.BackSide;
@@ -255,7 +244,6 @@ export function init() {
 
 export function createMap() {
   let map = store.getState().mapState.mapState
-  console.log("CREATE MAP",map)
   generateMap(map);
 }
 
@@ -290,7 +278,6 @@ export function animate() {
       requestAnimationFrame(animate);
     }, 1000 / 60) //throttled to 60 times per second
 
-  // console.log('COUNTER', counter)
   if (counter === 50) {
     sphereBody.position.x = spawnPositions[playerArr.indexOf(socket.id)].x;
     sphereBody.position.y = 5
@@ -449,14 +436,14 @@ export function animate() {
 }
 
 export function restartWorld() {
-  for ( let i = 0; i < boxMeshes.length; i++){
-     scene.remove(boxMeshes[i]);
+  for (let i = 0; i < boxMeshes.length; i++) {
+    scene.remove(boxMeshes[i]);
   }
 
   boxMeshes = []
 
-  for (let i = 0; i < boxes.length; i++){
-     world.remove(boxes[i]);
+  for (let i = 0; i < boxes.length; i++) {
+    world.remove(boxes[i]);
   }
 
   boxes = []
@@ -472,16 +459,14 @@ export function restartWorld() {
   }
 
   ballMeshes = []
-
-  for (let i = 0; i < yourBombs.length; i++) {
-    world.remove(yourBombs[i])
-  }
-
   yourBombs = []
 
   for (let i = 0; i < bombObjects.length; i++) {
     if (bombObjects[i].clearTimeout) clearTimeout(bombObjects[i].clearTimeout)
+    if (bombObjects[i].bombBody) world.remove(bombObjects[i].bombBody)
   }
+
+  bombObjects = []
 
 
   for (let i = 0; i < yourballMeshes.length; i++) {
@@ -497,17 +482,5 @@ export function restartWorld() {
   sphereBody.position.z = spawnPositions[playerArr.indexOf(socket.id)].z;
 }
 
-export function resetCount() {
-  counter = 0;
-}
-
-setTimeout(() => {
-  console.log('SET TIME OUT RESET WORLD')
-  socket.emit('reset_world', {})
-}, 10000)
-
-// this is outdated should use raycaster instead since it gives more info anyway
-// also projector is moved.
-// to adjust to use raycaster we need to adjust yawObject and pitch object
 
 export { scene, camera, renderer, controls, light, getShootDir, world }
