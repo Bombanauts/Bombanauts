@@ -1,4 +1,4 @@
-import { boxes, boxMeshes, destroyableBoxes, destroyableBoxMeshes } from '../main'
+import { boxes, boxMeshes } from '../main'
 import DestroyableCube from '../Cube'
 import Wall from '../Wall'
 import FixedCube from '../FixedCube'
@@ -7,11 +7,13 @@ const THREE = require('three');
 const CANNON = require('cannon');
 
 const boundary = {},
-  fixedBox = {},
-  destroyable = {};
+  fixedBox = {};
+let destroyable;
 
 const generateMap = (mapArr) => {
-  console.log(mapArr)
+  destroyable = null;
+  destroyable = {};
+
   const mapArrWidth = mapArr.length,
     mapArrHeight = mapArr[0].length;
 
@@ -55,8 +57,8 @@ const generateMap = (mapArr) => {
       else if (mapArr[j][k] === 3) { //DESTROYABLE BOX
         const destroyableBox = new DestroyableCube(crateMaterial, crateTexture, fixedCubeShape, fixedCubeGeometry, x, y, z, j, k);
         destroyableBox.init();
-        destroyableBoxes.push(destroyableBox.cubeBox);
-        destroyableBoxMeshes.push(destroyableBox.cubeMesh);
+        boxes.push(destroyableBox.cubeBox);
+        boxMeshes.push(destroyableBox.cubeMesh);
         destroyable[`${x}_${z}`] = [true, destroyableBox]
       }
       else if (mapArr[j][k] === 0) { // Grass

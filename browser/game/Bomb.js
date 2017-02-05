@@ -16,6 +16,7 @@ export default class Bomb {
     this.bombBody;
     this.bombShape;
     this.bool = true;
+    this.clearTimeout = null;
     this.fire;
     this.fire2;
     this.fire3;
@@ -58,7 +59,7 @@ export default class Bomb {
       colorBool = !colorBool;
     }, 100)}, 800)
 
-    setTimeout(() => {
+    this.clearTimeout = setTimeout(() => {
       this.explode()
       clearInterval(clear)
       this.bombMesh.material.color.setHex(0x000000)
