@@ -33,11 +33,11 @@ export const generateMap = (mapArr) => {
   const fixedCubeMaterial = new THREE.MeshLambertMaterial({ map: fixedCubeTexture });
 
   // PHYSICS BODY AND SHAPE FOR CRATE, WALL, FIXED CUBE
-  const halfExtents = new CANNON.Vec3(2, 2, 2);
+  const halfExtents = new CANNON.Vec3(2, 10, 2);
   const fixedCubeShape = new CANNON.Box(halfExtents);
-  const fixedCubeGeometry = new THREE.BoxGeometry(halfExtents.x * 1.9, halfExtents.y * 1.9, halfExtents.z * 1.9);
+  const fixedCubeGeometry = new THREE.BoxGeometry(halfExtents.x * 1.9, 3.8, halfExtents.z * 1.9);
 
-  const wallGeometry = new THREE.BoxGeometry(halfExtents.x * 2, halfExtents.y * 3.5, halfExtents.z * 2);
+  const wallGeometry = new THREE.BoxGeometry(halfExtents.x * 2, 6, halfExtents.z * 2);
 
   for (let j = 0; j < mapArrWidth; j++) {
     for (let k = 0; k < mapArrHeight; k++) {
@@ -91,7 +91,6 @@ export const animateFire = (bombObjects, clock) => {
         bomb.fire.update(elapsed)
         const firePositionX = bomb.fire.mesh.position.x
         const firePositionZ = bomb.fire.mesh.position.z
-
 
         if (firePositionX === playerPositionX &&
           firePositionZ === playerPositionZ) {
