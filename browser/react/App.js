@@ -66,11 +66,6 @@ class App extends Component {
   }
 }
 
-// const mapStateToProps = (state) => ({
-//   dead: state.dead,
-//   winner: state.winner
-// })
-
 const mapStateToProps = (state) => {
   return {
     dead: state.dead.dead,
