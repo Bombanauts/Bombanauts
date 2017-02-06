@@ -11,6 +11,7 @@ const {updatePlayers, removePlayer, killPlayer} = require('./players/action-crea
 const { addBomb, updateBombPositions, removePlayerBombs, removeBomb } = require('./bombs/action-creator')
 const { updateMap } = require('./maps/action-creator')
 const { setTime } = require('./timer/action-creator')
+const { setWinner } = require('./winner/action-creator')
 
 const store = require('./store')
 const worldNames = require('./world-names')
@@ -51,8 +52,9 @@ const convertStateForFrontEnd = (state, room) => {
       mapState: {
         mapState: state.mapState[room].mapState
       },
-      timer: state.timer[room].timer
-    }
+      timer: state.timer[room].timer,
+      winner: state.winner[room].winner
+  }
 }
 
 //  use socket server as an event emitter in order to listen for new connctions
@@ -87,8 +89,30 @@ io.on('connection', (socket) => {
     store.dispatch(updatePlayers({ id: data.playerId, position: data.playerPosition, dead: data.dead }, socket.currentRoom));
     store.dispatch(updateBombPositions({ userId: data.playerId, bombs: data.playerBombs }, socket.currentRoom))
     let currentState = store.getState();
+    // console.log(currentState.players[socket.currentRoom])
     let newState = convertStateForFrontEnd(currentState, socket.currentRoom)
+
+    let currentPlayers = currentState.players[socket.currentRoom];
+    
+    if (currentPlayers) { 
+      let currentPlayersIds = Object.keys(currentPlayers)
+      let currentPlayersLength = currentPlayersIds.length
+      let alivePlayers = []
+ 
+     for (let player in currentPlayers) {
+       if (!currentPlayers[player].dead) {
+         currentPlayers[player].socketId = player
+         alivePlayers.push(currentPlayers[player])
+       }
+     }
+ 
+     if (currentPlayersLength > 1 && alivePlayers.length === 1) {
+       store.dispatch(setWinner(alivePlayers[0].socketId, socket.currentRoom))
+     }}
+
     io.in(socket.currentRoom).emit('update_world', newState)
+
+
   })
 
   //add new bomb to the state when a player clicks

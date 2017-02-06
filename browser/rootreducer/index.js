@@ -4,11 +4,13 @@ import { bombs } from '../bombs/reducer'
 import { mapState } from '../maps/reducer'
 import { dead } from '../game/reducer'
 import timer from '../timer/reducer'
+import winner from '../winner/reducer'
 
 export default combineReducers({
   players,
   bombs,
   mapState,
   dead,
-  timer
+  timer,
+  winner
 })
