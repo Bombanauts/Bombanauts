@@ -12,5 +12,5 @@ export default combineReducers({
   mapState,
   dead,
   timer,
-  winners
+  winner
 })
