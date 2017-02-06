@@ -47,7 +47,7 @@ class App extends Component {
             (W,A,S,D = Move, SPACE = Jump, MOUSE = Look, CLICK = Shoot)
           </div>
         </div>
-            {this.props.winner && <h1  style={{position: "absolute", right: 500}}>{this.props.winner} Wins!</h1>}
+            {this.props.winner.playerId && <h1  style={{position: "absolute", right: 500}}>{this.props.winner.playerId} Wins!</h1>}
             {this.props.dead && <h1  style={{position: "absolute", right: 500, top: 40}}> YOU ARE DEAD</h1>}
             <div style={{position: "absolute", right: 0}}>
              { this.state.time !== 0 &&
@@ -68,7 +68,7 @@ class App extends Component {
 
 const mapStateToProps = (state) => ({
     dead: state.dead.dead,
-    winner: state.winner.playerId
+    winner: state.winner
 })
 
 export default connect(mapStateToProps)(App);

@@ -2,6 +2,7 @@
 const socket = io('/')
 
 import store from './store';
+window.store = store;
 import { updatePlayerLocations, removePlayer } from './players/action-creator';
 import { updateBombLocations, removePlayerBombs } from './bombs/action-creator'
 import { loadMap } from './maps/action-creator';
@@ -9,7 +10,7 @@ import { setTime, getTime } from './timer/action-creator';
 import { setWinner } from './winner/action-creator'
 
 
-import { initCannon, init, animate, players, playerMeshes, world, scene, playerInstances,  resetCount, createMap, restartWorld } from './game/main';
+import { initCannon, init, animate, players, playerMeshes, world, scene, playerInstances,  resetCount, createMap, restartWorld, listener} from './game/main';
 
 import { pointerChecker } from './react/App';
 
@@ -32,8 +33,10 @@ socket.on('update_world', (data) => {
   store.dispatch(updatePlayerLocations(data.players))
   store.dispatch(updateBombLocations(data.bombs.allBombs))
   store.dispatch(setTime(data.timer.startTime, data.timer.endTime))
-  store.dispatch(setWinner(data.winner))
 })
+  socket.on('set_winner', (winner) => {
+    store.dispatch(setWinner(winner));
+  })
 
   socket.on('update_bomb_positions', (data) => {
     delete data[socket.id];
