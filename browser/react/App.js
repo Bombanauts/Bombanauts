@@ -67,9 +67,10 @@ class App extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    dead: state.dead.dead,
+    dead: state.dead,
     winner: state.winner
 })
+
 
 export default connect(mapStateToProps)(App);
 

@@ -169,7 +169,7 @@ export function init() {
   listener = new THREE.AudioListener();
   camera.add( listener );
 
-  let others = store.getState().players.otherPlayers;
+  let others = store.getState().players;
   let newPlayer;
 
   for (let player in others) {
@@ -275,9 +275,9 @@ export function animate() {
 
   //gathering your current state
   const state = store.getState();
-  const others = state.players.otherPlayers;
+  const others = state.players;
   const playerIds = Object.keys(others)
-  const allBombs = state.bombs.allBombs;
+  const allBombs = state.bombs;
   const stateBombs = [];
   for (let key in allBombs) {
     stateBombs.push(...allBombs[key])

@@ -68,6 +68,11 @@ export const generateMap = (mapArr) => {
   }
 }
 
+export const createMap = () => {
+  let map = store.getState().map
+  generateMap(map);
+}
+
 export const roundFour = (num) => {
   return Math.round(num / 4) * 4
 }
@@ -199,10 +204,6 @@ export const deleteWorld = (scene, world, boxMeshes, boxes, bombs, bombMeshes, y
   }
 }
 
-export const createMap = () => {
-  let map = store.getState().mapState.mapState
-  generateMap(map);
-}
 
 export const getShootDir = (projector, camera, targetVec) => {
   const vector = targetVec;
