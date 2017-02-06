@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import store from '../store';
 import { initCannon, init, animate, controls } from '../game/main';
 
-window.store = store;
-
 const fontStyle = {
   'fontSize': '40px'
 }
