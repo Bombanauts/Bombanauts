@@ -98,28 +98,7 @@ io.on('connection', (socket) => {
     let currentState = store.getState();
     // console.log(currentState.players[socket.currentRoom])
     let newState = convertStateForFrontEnd(currentState, socket.currentRoom)
-
-    let currentPlayers = currentState.players[socket.currentRoom];
-    
-    if (currentPlayers) { 
-      let currentPlayersIds = Object.keys(currentPlayers)
-      let currentPlayersLength = currentPlayersIds.length
-      let alivePlayers = []
- 
-     for (let player in currentPlayers) {
-       if (!currentPlayers[player].dead) {
-         currentPlayers[player].socketId = player
-         alivePlayers.push(currentPlayers[player])
-       }
-     }
- 
-     if (currentPlayersLength > 1 && alivePlayers.length === 1) {
-       store.dispatch(setWinner(alivePlayers[0].socketId, socket.currentRoom))
-     }}
-
     io.in(socket.currentRoom).emit('update_world', newState)
-
-
   })
 
   //add new bomb to the state when a player clicks
@@ -133,7 +112,26 @@ io.on('connection', (socket) => {
     store.dispatch(killPlayer(data.id, socket.currentRoom))
     io.in(socket.currentRoom).emit('kill_player', data.id)
     let currentState = store.getState();
+    let currentPlayers = currentState.players[socket.currentRoom];
+
+    if (currentPlayers) {
+        let currentPlayersIds = Object.keys(currentPlayers)
+        let currentPlayersLength = currentPlayersIds.length
+        let alivePlayers = []
+
+       for (let player in currentPlayers) {
+         if (!currentPlayers[player].dead) {
+           currentPlayers[player].socketId = player
+           alivePlayers.push(currentPlayers[player])
+         }
+       }
+
+       if (currentPlayersLength > 1 && alivePlayers.length === 1) {
+        store.dispatch(setWinner(alivePlayers[0].socketId, socket.currentRoom))
+       }
+    }
     let newState = convertStateForFrontEnd(currentState, socket.currentRoom)
+    io.in(socket.currentRoom).emit('set_winner', newState.winner)
     io.in(socket.currentRoom).emit('update_world', newState)
   })
 
@@ -154,7 +152,8 @@ io.on('connection', (socket) => {
       mapState: {
         mapState: store.getState().mapState[socket.currentRoom].mapState
       },
-      timer: store.getState().timer[socket.currentRoom].timer
+      timer: store.getState().timer[socket.currentRoom].timer,
+      winner: null
     })
   })
 
@@ -162,7 +161,10 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     store.dispatch(removePlayer(socket.id, socket.currentRoom))
     store.dispatch(removePlayerBombs(socket.id, socket.currentRoom))
-
+    let currentStatePlayers = Object.keys(store.getState().players[socket.currentRoom].players);
+    if (!currentStatePlayers.length) {
+      store.dispatch(setWinner(null, socket.currentRoom))
+    }
     io.in(socket.currentRoom).emit('remove_player', socket.id)
     console.log('socket id ' + socket.id + ' has disconnected. : (');
   })
