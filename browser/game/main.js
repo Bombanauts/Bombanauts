@@ -1,16 +1,15 @@
 const THREE = require('three')
 const CANNON = require('cannon')
 import store from '../store';
-import socket from '../socket';
+import socket, { playerArr } from '../socket';
 
 import { PointerLockControls } from './PointerLockControls';
 import Player from './Player'
 import Bomb from './Bomb'
-import { killPlayer } from './action-creator'
-
+import { killPlayer } from '../dead/action-creator'
 import { Particle, Block } from './Explosion.js';
 
-import generateMap, { roundFour } from './utils/generateMap';
+import { generateMap, roundFour, animateFire, animatePlayers, animateExplosion, animateBombs, deleteWorld, createMap, getShootDir } from './utils';
 
 let sphereShape, world, physicsMaterial;
 let camera, scene, renderer, light;
@@ -24,32 +23,33 @@ export let listener;
 export let sphereBody;
 export const walls = [];
 export let bombs = [];
-export let ballMeshes = [];
+export let bombMeshes = [];
 export let boxes = [];
 export let boxMeshes = [];
 export let players = [];
 export let playerMeshes = [];
 export let yourBombs = [];
-export let yourballMeshes = [];
+export let yourBombMeshes = [];
 export let playerInstances = [];
+export const blocksObj = {};
+export const blockCount = 50;
+
 let bombObjects = [];
 let count = 1;
 let prevPlayerStateLength = 0;
 let dead = false;
 let allowBomb = true;
-
-import { playerArr } from '../socket'
+const dt = 1 / 60;
+let prevStateLength = 0;
+let counter = 0;
 const spawnPositions = [
   { x: 11.5, y: 1.5, z: -4 },
   { x: 12.1, y: 1.5, z: 36.4 },
   { x: -36, y: 1.5, z: 36 },
   { x: -36.4, y: 1.5, z: -4 },
 ]
-
 const bombMaterial = new THREE.MeshLambertMaterial({ color: '#000000' })
 
-export const blocksObj = {};
-export const blockCount = 50;
 
 export function initCannon() {
   //set up our world, check for other players
@@ -117,13 +117,7 @@ const shootVelo = 8;
 const projector = new THREE.Projector();
 
 // get shoot direction might need to be adjusted to use ray caster instead
-const getShootDir = function(targetVec) {
-  const vector = targetVec;
-  targetVec.set(0, 0, 1);
-  projector.unprojectVector(vector, camera);
-  const ray = new THREE.Ray(sphereBody.position, vector.sub(sphereBody.position).normalize());
-  targetVec.copy(ray.direction);
-}
+
 
 export function init() {
   camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1500);
@@ -136,11 +130,7 @@ export function init() {
   light.target.position.set(0, 5, 0);
   scene.add(light);
 
-  //AUDIO
-
-
-
-  //Create Fire
+  //create clock for fire animation
   clock = new THREE.Clock()
 
   controls = new PointerLockControls(camera, sphereBody);
@@ -179,7 +169,7 @@ export function init() {
   listener = new THREE.AudioListener();
   camera.add( listener );
 
-  let others = store.getState().players.otherPlayers;
+  let others = store.getState().players;
   let newPlayer;
 
   for (let player in others) {
@@ -220,7 +210,7 @@ export function init() {
           yourBombs = yourBombs.filter((bomb) => {
             return bomb.id !== bombInfo.id
           })
-          yourballMeshes = yourballMeshes.filter(mesh => {
+          yourBombMeshes = yourBombMeshes.filter(mesh => {
             return newBomb.bombMesh.id !== mesh.id
           })
         }, 2000)
@@ -228,18 +218,17 @@ export function init() {
         //add bomb and mesh to your bombs arrays
         yourBombs.push(bombInfo)
         bombObjects.push(newBomb)
-        yourballMeshes.push(newBomb.bombMesh);
+        yourBombMeshes.push(newBomb.bombMesh);
 
         // get its direction using getShootDir function
-        getShootDir(shootDirection);
+        getShootDir(projector, camera, shootDirection);
 
         // give it a shoot velocity
         newBomb.bombBody.velocity.set(shootDirection.x * shootVelo,
           shootDirection.y * shootVelo,
           shootDirection.z * shootVelo);
 
-        // Move the ball outside the player sphere
-        // x,y,z adjusted so it's actually updating the position of the sphere
+        // shoot your bomb
         x += shootDirection.x * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
         y += shootDirection.y * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
         z += shootDirection.z * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
@@ -250,22 +239,11 @@ export function init() {
   }
 }
 
-export function createMap() {
-  let map = store.getState().mapState.mapState
-  generateMap(map);
-}
-
 export function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
-
-const dt = 1 / 60; // change in time for walking
-
-let prevStateLength = 0;
-
-let counter = 0;
 
 //animation GAME LOOP
 export function animate() {
@@ -286,6 +264,7 @@ export function animate() {
       requestAnimationFrame(animate);
     }, 1000 / 60) //throttled to 60 times per second
 
+  //set player spawn after getting initial state from sockets
   if (counter === 50) {
     sphereBody.position.x = spawnPositions[playerArr.indexOf(socket.id)].x;
     sphereBody.position.y = 5
@@ -294,79 +273,17 @@ export function animate() {
 
   world.step(dt); // function that allows walking from CANNON
 
-  const others = store.getState().players.otherPlayers;
-  const playerIds = Object.keys(others)
-
+  //gathering your current state
   const state = store.getState();
-  const allBombs = state.bombs.allBombs;
+  const others = state.players;
+  const playerIds = Object.keys(others)
+  const allBombs = state.bombs;
   const stateBombs = [];
-
   for (let key in allBombs) {
     stateBombs.push(...allBombs[key])
   }
-  //Animate Fire w/ Bombs
-  let elapsed = clock.getElapsedTime()
-  for (let i = 0; i < bombObjects.length; i++) {
-    if (bombObjects[i].bool) {
-      if (bombObjects[i].fire) {
-        bombObjects[i].fire.update(elapsed)
-        if (bombObjects[i].fire.mesh.position.x === roundFour(sphereBody.position.x) &&
-          bombObjects[i].fire.mesh.position.z === roundFour(sphereBody.position.z)) {
-          dead = true;
-          socket.emit('kill_player', {
-            id: socket.id
-          })
-          store.dispatch(killPlayer())
-        }
-      }
-      if (bombObjects[i].fire2) {
-        bombObjects[i].fire2.update(elapsed)
-        if (bombObjects[i].fire2.mesh.position.x === roundFour(sphereBody.position.x) &&
-          bombObjects[i].fire2.mesh.position.z === roundFour(sphereBody.position.z)) {
-          dead = true;
-          socket.emit('kill_player', {
-            id: socket.id
-          })
-          store.dispatch(killPlayer())
-        }
-      }
-      if (bombObjects[i].fire3) {
-        bombObjects[i].fire3.update(elapsed)
-        if (bombObjects[i].fire3.mesh.position.x === roundFour(sphereBody.position.x) &&
-          bombObjects[i].fire3.mesh.position.z === roundFour(sphereBody.position.z)) {
-          dead = true;
-          socket.emit('kill_player', {
-            id: socket.id
-          })
-          store.dispatch(killPlayer())
-        }
-      }
-      if (bombObjects[i].fire4) {
-        bombObjects[i].fire4.update(elapsed)
-        if (bombObjects[i].fire4.mesh.position.x === roundFour(sphereBody.position.x) &&
-          bombObjects[i].fire4.mesh.position.z === roundFour(sphereBody.position.z)) {
-          dead = true;
-          socket.emit('kill_player', {
-            id: socket.id
-          })
-          store.dispatch(killPlayer())
-        }
-      }
-      if (bombObjects[i].fire5) {
-        bombObjects[i].fire5.update(elapsed)
-        if (bombObjects[i].fire5.mesh.position.x === roundFour(sphereBody.position.x) &&
-          bombObjects[i].fire5.mesh.position.z === roundFour(sphereBody.position.z)) {
-          dead = true;
-          socket.emit('kill_player', {
-            id: socket.id
-          })
-          store.dispatch(killPlayer())
-        }
-      }
-    }
-  }
 
-  //make a new player object if there is one
+  //make new player objects if there are a different number of players than previously
   if (playerIds.length !== players.length) {
     players.forEach(body => {
       world.remove(body)
@@ -388,27 +305,6 @@ export function animate() {
     }
   }
 
-  //updating player positions
-  for (let i = 0; i < players.length; i++) {
-    if (others[playerIds[i]] && !others[playerIds[i]].dead) {
-      let { x, y, z } = others[playerIds[i]]
-      playerMeshes[i].position.set(x, y, z);
-      players[i].position.x = x;
-      players[i].position.y = y;
-      players[i].position.z = z;
-    }
-  }
-
-  for (let block in blocksObj) {
-    if (blocksObj[block].length) {
-      for (let i = 0; i < blocksObj[block].length; i++) {
-        blocksObj[block][i].loop(block);
-      }
-    } else {
-      delete blocksObj[block]
-    }
-  }
-
   // add new bomb if there is one
   if (stateBombs.length > prevStateLength) {
     const mostRecentBomb = stateBombs[stateBombs.length - 1]
@@ -417,70 +313,32 @@ export function animate() {
 
     bombs.push(newBomb.bombBody)
     bombObjects.push(newBomb)
-    ballMeshes.push(newBomb.bombMesh)
+    bombMeshes.push(newBomb.bombMesh)
   }
-
-  //way to get around removing bombs from the state
+  //reset previous state length
   prevStateLength = stateBombs.length
 
-  //update bomb position
-  let indexAdd = bombs.length - stateBombs.length;
-  for (let i = 0; i < prevStateLength; i++) {
-    let { x, y, z } = stateBombs[i].position
-    bombs[i + indexAdd].position.x = x;
-    bombs[i + indexAdd].position.y = y;
-    bombs[i + indexAdd].position.z = z;
-    ballMeshes[i + indexAdd].position.copy(bombs[i + indexAdd].position)
-  }
-
-  for (let i = 0; i < yourBombs.length; i++) {
-    yourballMeshes[i].position.copy(yourBombs[i].position)
-  }
+  //animate fire with bombs
+  const isDead = animateFire(bombObjects, clock)
+  if (isDead) dead = true;
+  //updating player positions
+  animatePlayers(players, playerIds, others, playerMeshes)
+  //animating explosion particles
+  animateExplosion(blocksObj)
+  //animating bomb positions
+  animateBombs(yourBombs, yourBombMeshes, bombs, stateBombs, bombMeshes, prevStateLength)
 
   controls.update(Date.now() - time);
   renderer.render(scene, camera);
   time = Date.now();
 }
 
+
+//clear out and rebuild entire map to restart, respawn player
 export function restartWorld() {
-  for (let i = 0; i < boxMeshes.length; i++) {
-    scene.remove(boxMeshes[i]);
-  }
+  deleteWorld(scene, world, boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes);
 
-  boxMeshes = []
-
-  for (let i = 0; i < boxes.length; i++) {
-    world.remove(boxes[i]);
-  }
-
-  boxes = []
-
-  for (let i = 0; i < bombs.length; i++) {
-    world.remove(bombs[i])
-  }
-
-  bombs = []
-
-  for (let i = 0; i < ballMeshes.length; i++) {
-    scene.remove(ballMeshes[i])
-  }
-
-  ballMeshes = []
-  yourBombs = []
-
-  for (let i = 0; i < bombObjects.length; i++) {
-    if (bombObjects[i].clearTimeout) clearTimeout(bombObjects[i].clearTimeout)
-    if (bombObjects[i].bombBody) world.remove(bombObjects[i].bombBody)
-  }
-
-  bombObjects = []
-
-
-  for (let i = 0; i < yourballMeshes.length; i++) {
-    scene.remove(yourballMeshes[i])
-  }
-
-  yourballMeshes = [];
+  boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes = []
 
   createMap();
 
@@ -490,4 +348,4 @@ export function restartWorld() {
 }
 
 
-export { scene, camera, renderer, controls, light, getShootDir, world }
+export { scene, camera, renderer, controls, light, world }

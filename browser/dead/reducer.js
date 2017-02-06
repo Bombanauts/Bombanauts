@@ -1,14 +1,12 @@
 import { KILL_PLAYER } from './action-creator.js'
 
-const initialState = {
-  dead: false
-}
+let initialState = false;
 
 export const dead = (state = initialState, action) => {
-  const newState = Object.assign({}, state);
+  let newState = state
   switch (action.type) {
     case KILL_PLAYER:
-      newState.dead = true;
+      newState = true;
       break;
     default:
       return state;

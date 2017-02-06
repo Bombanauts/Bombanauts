@@ -55,6 +55,10 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state) => state.dead
+const mapStateToProps = (state) => ({
+    dead: state.dead,
+    winner: state.winner
+})
+
 
 export default connect(mapStateToProps)(App);
