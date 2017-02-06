@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import store from '../store';
 import { initCannon, init, animate, controls } from '../game/main';
 
+window.store = store;
+
 const fontStyle = {
   'fontSize': '40px'
 }
@@ -47,7 +49,8 @@ class App extends Component {
             (W,A,S,D = Move, SPACE = Jump, MOUSE = Look, CLICK = Shoot)
           </div>
         </div>
-            {this.props.dead && <h1  style={{position: "absolute", right: 300}}> YOU ARE FUCKING DEAD</h1>}
+            {this.props.winner && <h1  style={{position: "absolute", right: 500}}>{this.props.winner} Wins!</h1>}
+            {this.props.dead && <h1  style={{position: "absolute", right: 500, top: 40}}> YOU ARE DEAD</h1>}
             <div style={{position: "absolute", right: 0}}>
              { this.state.time !== 0 &&
               <ReactCountdownClock
@@ -65,7 +68,10 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state) => state.dead
+const mapStateToProps = (state) => ({
+    dead: state.dead.dead,
+    winner: state.winner.playerId
+})
 
 export default connect(mapStateToProps)(App);
 
