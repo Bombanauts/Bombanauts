@@ -86,21 +86,13 @@ export const animateFire = (bombObjects, clock) => {
     const playerPositionX = roundFour(sphereBody.position.x)
     const playerPositionZ = roundFour(sphereBody.position.z)
 
-    const firePositionX = bomb.fire.mesh.position.x
-    const fire2PositionX = bomb.fire2.mesh.position.x
-    const fire3PositionX = bomb.fire3.mesh.position.x
-    const fire4PositionX = bomb.fire4.mesh.position.x
-    const fire5PositionX = bomb.fire5.mesh.position.x
-
-    const firePositionZ = bomb.fire.mesh.position.z
-    const fire2PositionZ = bomb.fire2.mesh.position.z
-    const fire3PositionZ = bomb.fire3.mesh.position.z
-    const fire4PositionZ = bomb.fire4.mesh.position.z
-    const fire5PositionZ = bomb.fire5.mesh.position.z
-
     if (bomb.bool) {
       if (bomb.fire) {
         bomb.fire.update(elapsed)
+        const firePositionX = bomb.fire.mesh.position.x
+        const firePositionZ = bomb.fire.mesh.position.z
+
+
         if (firePositionX === playerPositionX &&
           firePositionZ === playerPositionZ) {
           isDead = true;
@@ -110,8 +102,12 @@ export const animateFire = (bombObjects, clock) => {
           store.dispatch(killPlayer())
         }
       }
+
       if (bomb.fire2) {
         bomb.fire2.update(elapsed)
+        const fire2PositionX = bomb.fire2.mesh.position.x
+        const fire2PositionZ = bomb.fire2.mesh.position.z
+
         if (fire2PositionX === playerPositionX &&
           fire2PositionZ === playerPositionZ) {
           isDead = true;
@@ -121,8 +117,12 @@ export const animateFire = (bombObjects, clock) => {
           store.dispatch(killPlayer())
         }
       }
+
       if (bomb.fire3) {
         bomb.fire3.update(elapsed)
+        const fire3PositionX = bomb.fire3.mesh.position.x
+        const fire3PositionZ = bomb.fire3.mesh.position.z
+
         if (fire3PositionX === playerPositionX &&
           fire3PositionZ === playerPositionZ) {
           isDead = true;
@@ -132,8 +132,12 @@ export const animateFire = (bombObjects, clock) => {
           store.dispatch(killPlayer())
         }
       }
+
       if (bomb.fire4) {
         bomb.fire4.update(elapsed)
+        const fire4PositionX = bomb.fire4.mesh.position.x
+        const fire4PositionZ = bomb.fire4.mesh.position.z
+
         if (fire4PositionX === playerPositionX &&
           fire4PositionZ === playerPositionZ) {
           isDead = true;
@@ -143,8 +147,12 @@ export const animateFire = (bombObjects, clock) => {
           store.dispatch(killPlayer())
         }
       }
+
       if (bomb.fire5) {
         bomb.fire5.update(elapsed)
+        const fire5PositionX = bomb.fire5.mesh.position.x
+        const fire5PositionZ = bomb.fire5.mesh.position.z
+
         if (fire5PositionX === playerPositionX &&
           fire5PositionZ === playerPositionZ) {
           isDead = true;
