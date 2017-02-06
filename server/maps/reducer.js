@@ -1,3 +1,4 @@
+
 const { GENERATE_MAP, EXPLODE_BOX } = require('./constants');
 const initialState = require('../init-state');
 

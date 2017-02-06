@@ -5,7 +5,7 @@ import store from '../store';
 import { initCannon, init, animate, controls } from '../game/main';
 
 const fontStyle = {
-  'fontSize': '40px'
+  'fontSize': '40px'  // Again consider setting this in some kind of external `style` file
 }
 
 function delay(t) {
@@ -73,6 +73,7 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps)(App);
 
+// Should this be in a separate file?
 export function pointerChecker() {
   const blocker = document.getElementById( 'blocker' );
   const instructions = document.getElementById( 'instructions' );

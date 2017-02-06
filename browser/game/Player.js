@@ -22,7 +22,7 @@ export default class Player {
     this.dead = dead;
     this.material;
 
-    this.init = this.init.bind(this)
+    this.init = this.init.bind(this)  // According to Ashi according to Dan Abramov if you set this as a class property you don't need to `bind`
   }
 
   init() {
@@ -30,12 +30,12 @@ export default class Player {
     const boxShape = new CANNON.Box(halfExtents);
     const boxGeometry = new THREE.BoxGeometry(halfExtents.x * 1.5, halfExtents.y * 1.5, halfExtents.z * 1.5);
 
-    let face = new THREE.TextureLoader().load('images/creeperface.jpg');
+    let face = new THREE.TextureLoader().load('images/creeperface.jpg');  // Why `let`s
     let body = new THREE.TextureLoader().load('images/creeperbody.jpg');
     let textureFace = new THREE.MeshLambertMaterial({ map: face });
     let textureBody = new THREE.MeshLambertMaterial({ map: body });
     const materials = [
-      textureFace,
+      textureFace,  // Is there a way to get around having double references?
       textureFace,
       textureBody,
       textureBody,
@@ -75,6 +75,7 @@ export default class Player {
       blocksObj[this.playerMesh.id] = particles.slice();
       world.remove(this.playerBox)
       scene.remove(this.playerMesh)
+      // Same thought here as in `Cube.js`
       this.dead = true;
       return true; //returning for knowing if socket should emit on explosion call
     }

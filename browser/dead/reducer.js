@@ -9,10 +9,10 @@ export const dead = (state = initialState, action) => {
   switch (action.type) {
     case KILL_PLAYER:
       newState.dead = true;
-      break;
+      break;  // If you only have one default state maybe consider returning `newState` here?
     default:
       return state;
   }
 
-  return newState
+  return newState  // Unless you like the consistency of having it here
 }

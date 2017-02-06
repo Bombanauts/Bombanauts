@@ -7,10 +7,12 @@ export const Particle = function (width, height, depth) {
   THREE.Geometry.call(this);
 
   const scope = this,
-  widthHalf = width / 2,
-  heightHalf = height / 2,
-  depthHalf = depth / 2;
+    widthHalf = width / 2,
+    heightHalf = height / 2,
+    depthHalf = depth / 2;  // If you're doing a multiline(?? w/e this is called) variable dex, consider indenting subsecquent dex.
 
+
+  // What is going on here and is there a way to DRY this out?
   vertices(  widthHalf,  heightHalf, -depthHalf );
   vertices(  widthHalf, -heightHalf, -depthHalf );
   vertices( -widthHalf, -heightHalf, -depthHalf );
@@ -40,7 +42,7 @@ Particle.prototype = new THREE.Geometry();
 Particle.prototype.constructor = Particle;
 
 export const Block = function (scene, world, position, type, geometry, material) {
-  const MAX_SIZE = 0.5;
+  const MAX_SIZE = 0.5;  // What and why are these hard-coded values?
   const MIN_SIZE = 0.08;
 
   //create cube or bomb particles
@@ -68,9 +70,10 @@ export const Block = function (scene, world, position, type, geometry, material)
 }
 
 Block.prototype.reset = function(x, y, z){
-  const MAX_SPEED = 0.75;
+  const MAX_SPEED = 0.75;  // Same question
   const MAX_ROT = 0.1;
 
+  // Consider DRYing this out with a 'utils' function?
   this.xd = Math.random() * MAX_SPEED * 2 - MAX_SPEED ;
   this.yd = Math.abs(Math.random() * MAX_SPEED * 2 - MAX_SPEED) ;
   this.zd = Math.random() * MAX_SPEED * 2 - MAX_SPEED ;

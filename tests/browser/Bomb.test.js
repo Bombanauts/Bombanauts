@@ -9,7 +9,7 @@ import { bombs } from '../../browser/bombs/reducer'
 import * as types from '../../browser/bombs/constants'
 
 describe ('Bomb action-creators', () => {
-	
+
 	describe('updateBombLocations', () => {
 
 		it('returns expected action description', () => {
@@ -58,7 +58,7 @@ describe('Bomb reducer', () => {
   describe('reducing on UPDATE_BOMB_LOCATIONS', () => {
 
   	it('affects state by updating bomb locations', () => {
-			
+
 			const allBombs = {
 				"UidDcC7s6X6QrYr2AAAB": [{position: {x: 1, y: 1, z: 1}}]
 			}
