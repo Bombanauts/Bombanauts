@@ -5,9 +5,9 @@ const {
   KILL_PLAYER
 } = require('./constants')
 
-const initialState = require('../init-state');
+const initialState = require('./init-state');
 
-//the players are stored in the state each with a key of their socket id, with a property of an object containing their x, y, z coordinates
+//players reducer has initial state of all of the room names, each of which is a key for an object that contains keys of players' IDs and properties of an object containing that player's position and their death status
 const players = (state = initialState, action) => {
   let newState = Object.assign({}, state);
   switch (action.type) {
@@ -30,7 +30,7 @@ const players = (state = initialState, action) => {
       if (newState[action.roomId][action.id]) newState[action.roomId][action.id].dead = true;
       return newState;
     default:
-      return newState;
+      return state;
   }
 }
 

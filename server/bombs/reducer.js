@@ -4,13 +4,11 @@ const {
   REMOVE_BOMB,
   REMOVE_PLAYER_BOMBS
 } = require('./constants')
-let initialState = require('../init-state');
+const initialState = require('./init-state');
 
-//the bombs are stored in a room object within the state, that has keys of the user's socket ID, each with a property of an array of that user's bomb objects
+//bombs reducer has initial state of all of the room names, each of which is a key for an object containing player ID keys with properties of arrays of that player's current bombs
 const bombs = (state = initialState, action) => {
   let newState = Object.assign({}, state)
-  console.log('in bombs reducer')
-  console.log(newState)
   switch (action.type) {
     case ADD_BOMB:
       const newBomb = action.newBomb
@@ -20,16 +18,18 @@ const bombs = (state = initialState, action) => {
         position: newBomb.position
       })
       if (newState[action.roomId][undefined]) delete newState[action.roomId][undefined]
-      return newState;
+      break;
     case UPDATE_BOMB_POSITIONS:
       newState[action.roomId][action.bombs.userId] = action.bombs.bombs
-      return newState;
+      break;
     case REMOVE_PLAYER_BOMBS:
       delete newState[action.roomId][action.id]
       return newState;
     default:
       return state;
   }
+
+  return newState;
 }
 
 module.exports = bombs;

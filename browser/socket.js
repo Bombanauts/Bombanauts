@@ -1,5 +1,6 @@
 // we need this socket object to send messages to our server
 const socket = io('/')
+const THREE = require('three')
 
 import store from './store';
 import { updatePlayerLocations, removePlayer } from './players/action-creator';
@@ -7,7 +8,7 @@ import { updateBombLocations, removePlayerBombs } from './bombs/action-creator'
 import { loadMap } from './maps/action-creator';
 import { setTime, getTime } from './timer/action-creator';
 
-import { initCannon, init, animate, players, playerMeshes, world, scene, playerInstances,  resetCount, createMap, restartWorld } from './game/main';
+import { initCannon, init, animate, players, playerMeshes, world, scene, playerInstances,  resetCount, createMap, restartWorld, listener } from './game/main';
 
 import { pointerChecker } from './react/App';
 
@@ -17,7 +18,6 @@ let playerToKillName = '';
 
 socket.on('connect', function() {
   socket.on('initial', (initialData) => {
-    console.log('initial: ', initialData)
     store.dispatch(updatePlayerLocations(initialData.players));
     store.dispatch(updateBombLocations(initialData.bombs))
     store.dispatch(loadMap(initialData.map))
@@ -39,22 +39,7 @@ socket.on('update_world', (data) => {
     store.dispatch(updateBombLocations(data))
   })
 
-  socket.on('remove_player', (id) => {
-    store.dispatch(removePlayer(id))
-
-    let playerBody = world.bodies.filter((child) => {
-      return child.name === id;
-    })[0];
-    let playerMesh = scene.children.filter((child) => {
-      return child.name === id;
-    })[0];
-
-    if (playerBody) world.remove(playerBody)
-    if (playerMesh) scene.remove(playerMesh)
-  })
-
   socket.on('kill_player', (data) => {
-
     let playerToKill = playerInstances.filter(player => {
       return player.socketId === data;
     })[0]
@@ -80,6 +65,19 @@ socket.on('update_world', (data) => {
     restartWorld();
   })
 
+  socket.on('remove_player', (id) => {
+    store.dispatch(removePlayer(id))
+
+    let playerBody = world.bodies.filter((child) => {
+      return child.name === id;
+    })[0];
+    let playerMesh = scene.children.filter((child) => {
+      return child.name === id;
+    })[0];
+
+    if (playerBody) world.remove(playerBody)
+    if (playerMesh) scene.remove(playerMesh)
+  })
 })
 
 export default socket
