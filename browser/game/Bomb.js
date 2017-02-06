@@ -18,7 +18,7 @@ export default class Bomb {
     this.bombMesh;
     this.bombBody;
     this.bombShape;
-    this.fire;
+    this.fire;  // Is this a case for Tom's 1st law...? Esp if you are eventually going to set all the fires to `null` anyway, is there a reason you don't initialise them to  `null`?
     this.fire2;
     this.fire3;
     this.fire4;
@@ -55,7 +55,7 @@ export default class Bomb {
     let clear;
     setTimeout(() => {
       clear = setInterval(() => {
-      if (!colorBool) this.bombMesh.material.color.setHex(0x510000)
+      if (!colorBool) this.bombMesh.material.color.setHex(0x510000)  // Consider setting colors to descriptive variable names and having their values stored in some singular style file
       else if (colorBool) this.bombMesh.material.color.setHex(0x000000)
       colorBool = !colorBool;
     }, 100)}, 800)
@@ -93,11 +93,13 @@ export default class Bomb {
 
     function createFire(x, y, z) {
       const fire = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
-      fire.mesh.frustumCulled = false;
+      fire.mesh.frustumCulled = false;  // What is 'frustum'?
       fire.mesh.position.set(x, y, z)
       scene.add(fire.mesh)
       return fire
     }
+
+    // Can you DRY out this next section -- a util function maybe?
 
     const middle = `${x}_${z}`;
     const right = `${x + 4}_${z}`;
@@ -180,7 +182,7 @@ export default class Bomb {
       this.fire5 = null;
 
       //to speed up the animation function
-      this.bool = false;
+      this.bool = false;  // Is this the only way?
     }, 1000)
   }
 }

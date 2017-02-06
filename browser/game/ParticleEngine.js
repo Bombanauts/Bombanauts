@@ -1,3 +1,5 @@
+// Seems like a lot of my comments from CR01 still stand here
+
 /**
  * @author yomotsu / http://yomotsu.net
  * ported from http://webgl-fire.appspot.com/html/fire.html
@@ -145,7 +147,7 @@ const initMaterial = (function() {
   const textureLoader = new THREE.TextureLoader();
 
   return function() {
-    if (!!material) return material;
+    if (!!material) return material;  // Why not just `if(material)`
 
     const nzw = textureLoader.load(VolumetricFire.texturePath + 'nzw.png');
     nzw.wrapS = THREE.RepeatWrapping;

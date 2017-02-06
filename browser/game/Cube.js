@@ -47,10 +47,11 @@ export default class DestroyableCube {
         const block = new Block(scene, world, {x: this.x, y: this.y, z: this.z}, 'cube', boxParticleGeometry, this.material);
         particles.push(block);
       }
-      blocksObj[this.cubeMesh.id] = particles.slice();
+      blocksObj[this.cubeMesh.id] = particles.slice();  // maybe more semantic name for `blocksObj`?
       world.remove(this.cubeBox)
       scene.remove(this.cubeMesh)
       this.exploded = true;
+      // *IF* this is returning `true` conceptually because `this.exploded` is true, consider returning `this.exploded`...?
       return true; //returning for knowing if socket should emit on explosion call
     }
   }

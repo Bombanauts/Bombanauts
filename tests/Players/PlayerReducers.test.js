@@ -11,7 +11,7 @@ describe('Player Reducer', () => {
   })
 
   it('return default state if action.type has no case', () => {
-    testStore.dispatch({ type: 'gibberish', gibberish: 'mo gibberish' })
+    testStore.dispatch({ type: 'gibberish', gibberish: 'mo gibberish' })  // 'mo gibberish' lol
     expect(testStore.getState()).to.deep.equal({})
   })
 

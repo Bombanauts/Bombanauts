@@ -3,7 +3,7 @@ const CANNON = require('cannon')
 
 export const PointerLockControls = function(camera, cannonBody) {
 
-  const eyeYPos = 2; // eyes are 2 meters above the ground
+  const eyeYPos = 2; // eyes are 2 meters above the ground  // !! Wow, tall dude
   const velocityFactor = 0.3;
   const jumpVelocity = 20;
   const scope = this;
@@ -27,6 +27,8 @@ export const PointerLockControls = function(camera, cannonBody) {
 
   cannonBody.addEventListener('collide', function(e) {
     const contact = e.contact;
+
+    // Are these properties provided or can you rename them more descriptively -- esp. considering the below comments?
     // contact.bi and contact.bj are the colliding bodies, and contact.ni is the collision normal.
     // bi is the player body, flip the contact normal
     if (contact.bi.id === cannonBody.id) contact.ni.negate(contactNormal);
@@ -51,6 +53,7 @@ export const PointerLockControls = function(camera, cannonBody) {
     pitchObject.rotation.x = Math.max(-PI_2, Math.min(PI_2, pitchObject.rotation.x));
   };
 
+  // Is there a way to DRY this up? Do you really need all these cases? Util function maybe?
   const onKeyDown = function(event) {
     switch (event.keyCode) {
       case 38: // up
@@ -128,6 +131,7 @@ export const PointerLockControls = function(camera, cannonBody) {
 
     inputVelocity.set(0, 0, 0);
 
+    // DRY up with util function?
     if (moveForward) {
       inputVelocity.z = -velocityFactor * delta;
     }

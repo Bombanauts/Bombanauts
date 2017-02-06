@@ -1,3 +1,5 @@
+// This file seems unnecessarily long and messy -- at minimum perhaps consider rearranging and commenting the code so that it's more organized...?
+
 const THREE = require('three')
 const CANNON = require('cannon')
 import store from '../store';
@@ -34,7 +36,7 @@ export let playerInstances = [];
 export const blocksObj = {};
 export const blockCount = 50;
 
-let bombObjects = [];
+let bombObjects = [];  // Const?
 let count = 1;
 let prevPlayerStateLength = 0;
 let dead = false;
@@ -65,7 +67,7 @@ export function initCannon() {
   solver.iterations = 7;
   solver.tolerance = 0.1;
   const split = true;
-  if (split)
+  if (split)  // Why even have this if logic -- if `split` is always true that is?
     world.solver = new CANNON.SplitSolver(solver);
   else
     world.solver = solver;
@@ -142,7 +144,7 @@ export function init() {
   const texture = new THREE.TextureLoader().load('images/grass.jpeg');
   material = new THREE.MeshLambertMaterial({ map: texture });
   //repeat texture tiling for the floor
-  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapS = THREE.RepeatWrapping;  // What are `S` and `T`?
   texture.wrapT = THREE.RepeatWrapping;
   texture.repeat.x = 20;
   texture.repeat.y = 20;
@@ -294,7 +296,7 @@ export function animate() {
     players = [];
     playerMeshes = [];
     playerInstances = [];
-    for (let player in others) {
+    for (let player in others) {  // Maybe `otherPlayers` is clearer?
       let newPlayer;
       newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead)
       newPlayer.init()
@@ -305,7 +307,7 @@ export function animate() {
     }
   }
 
-  // add new bomb if there is one
+  // add new bomb if there is one  // ????? This comment though
   if (stateBombs.length > prevStateLength) {
     const mostRecentBomb = stateBombs[stateBombs.length - 1]
     const newBomb = new Bomb(mostRecentBomb.id, mostRecentBomb.position, bombMaterial)

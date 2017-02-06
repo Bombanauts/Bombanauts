@@ -13,7 +13,7 @@ export const boundary = {}
 export const fixedBox = {}
 export let destroyable;
 
-export const generateMap = (mapArr) => {
+export const generateMap = mapArr => {
   destroyable = null;
   destroyable = {};
 
@@ -45,7 +45,8 @@ export const generateMap = (mapArr) => {
       const y = 2
       const z = -(k + mapArrWidth) * 4 + 100;
 
-      if (mapArr[j][k] === 2) { // Create Box
+      // Maybe use a switch case here?
+      if (mapArr[j][k] === 2) { // Create Box  -- Maybe have a more descriptive comment for when you create a box, i.e. what this predicate represents
         const fixedCube = new FixedCube(fixedCubeMaterial, fixedCubeTexture, fixedCubeShape, fixedCubeGeometry, x, y, z);
         fixedCube.init()
         boxes.push(fixedCube.fixedCubeBody);
@@ -72,6 +73,7 @@ export const roundFour = (num) => {
   return Math.round(num / 4) * 4
 }
 
+// Can you DRY up this function?
 export const animateFire = (bombObjects, clock) => {
   let isDead = false
   let elapsed = clock.getElapsedTime()
@@ -178,6 +180,7 @@ export const animateBombs = (yourBombs, yourBombMeshes, bombs, stateBombs, bombM
 }
 
 export const deleteWorld = (scene, world, boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes) => {
+  // DRY out?
   for (let i = 0; i < boxMeshes.length; i++) {
     scene.remove(boxMeshes[i]);
   }

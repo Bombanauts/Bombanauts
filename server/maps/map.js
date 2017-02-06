@@ -19,7 +19,7 @@ let Maps = [ // 1  2  3  4  5  6  7  8  9  10 11 12
 
 // for randomizing destroyable box tiles while ensuring spawns are clear
 const randomGeneration = (arr) => {
-  let newArr = [[],[],[],[],[],[],[],[],[],[],[],[],[],[], []]
+  let newArr = [[],[],[],[],[],[],[],[],[],[],[],[],[],[], []]  // Can you do this more cleanly? Also, CONST?
   for (let j = 0; j < arr.length; j++) {
     for (let k = 0; k < arr[0].length; k++) {
       if (arr[j][k] === 3) {

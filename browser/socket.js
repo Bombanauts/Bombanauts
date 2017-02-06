@@ -9,13 +9,12 @@ import { loadMap } from './maps/action-creator';
 import { setTime, getTime } from './timer/action-creator';
 import { setWinner } from './winner/action-creator'
 
-
 import { initCannon, init, animate, players, playerMeshes, world, scene, playerInstances,  resetCount, createMap, restartWorld, listener} from './game/main';
 
 import { pointerChecker } from './react/App';
 
 export let playerArr = [];
-let playerToKillName = '';
+let playerToKillName = '';  // Are players assigned specific targets? 😱
 
 
 socket.on('connect', function() {
@@ -47,7 +46,7 @@ socket.on('update_world', (data) => {
   socket.on('remove_player', (id) => {
     store.dispatch(removePlayer(id))
 
-    let playerBody = world.bodies.filter((child) => {
+    let playerBody = world.bodies.filter((child) => {  // Why still `let`s?  Also consider making these single line arrow functions?
       return child.name === id;
     })[0];
     let playerMesh = scene.children.filter((child) => {
@@ -64,7 +63,7 @@ socket.on('update_world', (data) => {
       return player.socketId === data;
     })[0]
     if (playerToKill) {
-      let sound = new THREE.PositionalAudio( listener );
+      let sound = new THREE.PositionalAudio( listener );  // CONST??????
       const audioLoader = new THREE.AudioLoader();
       audioLoader.load( 'sounds/die.mp3', function( buffer ) {
         sound.setBuffer( buffer );
