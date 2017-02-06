@@ -81,11 +81,28 @@ export const animateFire = (bombObjects, clock) => {
   let isDead = false
   let elapsed = clock.getElapsedTime()
   for (let i = 0; i < bombObjects.length; i++) {
-    if (bombObjects[i].bool) {
-      if (bombObjects[i].fire) {
-        bombObjects[i].fire.update(elapsed)
-        if (bombObjects[i].fire.mesh.position.x === roundFour(sphereBody.position.x) &&
-          bombObjects[i].fire.mesh.position.z === roundFour(sphereBody.position.z)) {
+    const bomb = bombObjects[i]
+
+    const playerPositionX = roundFour(sphereBody.position.x)
+    const playerPositionZ = roundFour(sphereBody.position.z)
+
+    const firePositionX = bomb.fire.mesh.position.x
+    const fire2PositionX = bomb.fire2.mesh.position.x
+    const fire3PositionX = bomb.fire3.mesh.position.x
+    const fire4PositionX = bomb.fire4.mesh.position.x
+    const fire5PositionX = bomb.fire5.mesh.position.x
+
+    const firePositionZ = bomb.fire.mesh.position.z
+    const fire2PositionZ = bomb.fire2.mesh.position.z
+    const fire3PositionZ = bomb.fire3.mesh.position.z
+    const fire4PositionZ = bomb.fire4.mesh.position.z
+    const fire5PositionZ = bomb.fire5.mesh.position.z
+
+    if (bomb.bool) {
+      if (bomb.fire) {
+        bomb.fire.update(elapsed)
+        if (firePositionX === playerPositionX &&
+          firePositionZ === playerPositionZ) {
           isDead = true;
           socket.emit('kill_player', {
             id: socket.id
@@ -93,10 +110,10 @@ export const animateFire = (bombObjects, clock) => {
           store.dispatch(killPlayer())
         }
       }
-      if (bombObjects[i].fire2) {
-        bombObjects[i].fire2.update(elapsed)
-        if (bombObjects[i].fire2.mesh.position.x === roundFour(sphereBody.position.x) &&
-          bombObjects[i].fire2.mesh.position.z === roundFour(sphereBody.position.z)) {
+      if (bomb.fire2) {
+        bomb.fire2.update(elapsed)
+        if (fire2PositionX === playerPositionX &&
+          fire2PositionZ === playerPositionZ) {
           isDead = true;
           socket.emit('kill_player', {
             id: socket.id
@@ -104,10 +121,10 @@ export const animateFire = (bombObjects, clock) => {
           store.dispatch(killPlayer())
         }
       }
-      if (bombObjects[i].fire3) {
-        bombObjects[i].fire3.update(elapsed)
-        if (bombObjects[i].fire3.mesh.position.x === roundFour(sphereBody.position.x) &&
-          bombObjects[i].fire3.mesh.position.z === roundFour(sphereBody.position.z)) {
+      if (bomb.fire3) {
+        bomb.fire3.update(elapsed)
+        if (fire3PositionX === playerPositionX &&
+          fire3PositionZ === playerPositionZ) {
           isDead = true;
           socket.emit('kill_player', {
             id: socket.id
@@ -115,10 +132,10 @@ export const animateFire = (bombObjects, clock) => {
           store.dispatch(killPlayer())
         }
       }
-      if (bombObjects[i].fire4) {
-        bombObjects[i].fire4.update(elapsed)
-        if (bombObjects[i].fire4.mesh.position.x === roundFour(sphereBody.position.x) &&
-          bombObjects[i].fire4.mesh.position.z === roundFour(sphereBody.position.z)) {
+      if (bomb.fire4) {
+        bomb.fire4.update(elapsed)
+        if (fire4PositionX === playerPositionX &&
+          fire4PositionZ === playerPositionZ) {
           isDead = true;
           socket.emit('kill_player', {
             id: socket.id
@@ -126,10 +143,10 @@ export const animateFire = (bombObjects, clock) => {
           store.dispatch(killPlayer())
         }
       }
-      if (bombObjects[i].fire5) {
-        bombObjects[i].fire5.update(elapsed)
-        if (bombObjects[i].fire5.mesh.position.x === roundFour(sphereBody.position.x) &&
-          bombObjects[i].fire5.mesh.position.z === roundFour(sphereBody.position.z)) {
+      if (bomb.fire5) {
+        bomb.fire5.update(elapsed)
+        if (fire5PositionX === playerPositionX &&
+          fire5PositionZ === playerPositionZ) {
           isDead = true;
           socket.emit('kill_player', {
             id: socket.id

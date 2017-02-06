@@ -67,6 +67,19 @@ export default class Bomb {
     }, 2000)
   }
 
+  createFire(x, y, z) {
+    const fireWidth = 4
+    const fireHeight = 12
+    const fireDepth = 4
+    const sliceSpacing = 0.5
+
+    const fire = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
+    fire.mesh.frustumCulled = false;
+    fire.mesh.position.set(x, y, z)
+    scene.add(fire.mesh)
+    return fire
+  }
+
   explode() {
     const x = roundFour(this.bombBody.position.x)
     const y = this.bombBody.position.y + 4
@@ -85,20 +98,6 @@ export default class Bomb {
     scene.remove(this.bombMesh)
     world.remove(this.bombBody)
 
-    // create Fire
-    const fireWidth = 4
-    const fireHeight = 12
-    const fireDepth = 4
-    const sliceSpacing = 0.5
-
-    function createFire(x, y, z) {
-      const fire = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
-      fire.mesh.frustumCulled = false;
-      fire.mesh.position.set(x, y, z)
-      scene.add(fire.mesh)
-      return fire
-    }
-
     const middle = `${x}_${z}`;
     const right = `${x + 4}_${z}`;
     const left = `${x - 4}_${z}`;
@@ -106,7 +105,7 @@ export default class Bomb {
     const bottom = `${x}_${z - 4}`;
 
     if (destroyable[middle]) {
-      this.fire = createFire(x, y, z)
+      this.fire = this.createFire(x, y, z)
       if (destroyable[middle].length) {
         if (destroyable[middle][1].explode()) {
           socket.emit('destroy_cube', {
@@ -118,7 +117,7 @@ export default class Bomb {
     }
 
     if (destroyable[right]) {
-      this.fire2 = createFire(x + 4, y, z)
+      this.fire2 = this.createFire(x + 4, y, z)
       if (destroyable[right].length) {
         if (destroyable[right][1].explode()) {
           socket.emit('destroy_cube', {
@@ -130,7 +129,7 @@ export default class Bomb {
     }
 
     if (destroyable[left]) {
-      this.fire3 = createFire(x - 4, y, z)
+      this.fire3 = this.createFire(x - 4, y, z)
       if (destroyable[left].length) {
         if (destroyable[left][1].explode()) {
           socket.emit('destroy_cube', {
@@ -142,7 +141,7 @@ export default class Bomb {
     }
 
     if (destroyable[top]) {
-      this.fire4 = createFire(x, y, z + 4)
+      this.fire4 = this.createFire(x, y, z + 4)
       if (destroyable[top].length) {
        if (destroyable[top][1].explode()) {
         socket.emit('destroy_cube', {
@@ -154,7 +153,7 @@ export default class Bomb {
     }
 
     if (destroyable[bottom]) {
-      this.fire5 = createFire(x, y, z - 4)
+      this.fire5 = this.createFire(x, y, z - 4)
       if (destroyable[bottom].length) {
         if (destroyable[bottom][1].explode()) {
           socket.emit('destroy_cube', {
