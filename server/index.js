@@ -98,10 +98,7 @@ io.on('connection', (socket) => {
     let currentState = store.getState();
     // console.log(currentState.players[socket.currentRoom])
     let newState = convertStateForFrontEnd(currentState, socket.currentRoom)
-
     io.in(socket.currentRoom).emit('update_world', newState)
-
-
   })
 
   //add new bomb to the state when a player clicks
@@ -164,7 +161,10 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     store.dispatch(removePlayer(socket.id, socket.currentRoom))
     store.dispatch(removePlayerBombs(socket.id, socket.currentRoom))
-
+    let currentStatePlayers = Object.keys(store.getState().players[socket.currentRoom].players);
+    if (!currentStatePlayers.length) {
+      store.dispatch(setWinner(null, socket.currentRoom))
+    }
     io.in(socket.currentRoom).emit('remove_player', socket.id)
     console.log('socket id ' + socket.id + ' has disconnected. : (');
   })
