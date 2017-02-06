@@ -6,10 +6,10 @@ const port = process.env.PORT || 1337;
 const express = require('express');
 const app = express();
 const socketio = require('socket.io');
-const Maps = require('./maps/map');
-const {updatePlayers, removePlayer, killPlayer} = require('./players/action-creator');
+const { Maps, randomGeneration } = require('./maps/map');
+const { updatePlayers, removePlayer, killPlayer } = require('./players/action-creator');
 const { addBomb, updateBombPositions, removePlayerBombs, removeBomb } = require('./bombs/action-creator')
-const { updateMap } = require('./maps/action-creator')
+const { updateMap, loadMap } = require('./maps/action-creator')
 const { setTime } = require('./timer/action-creator')
 const { setWinner } = require('./winner/action-creator')
 
@@ -22,13 +22,13 @@ server.on('request', app);
 const io = socketio(server)
 
 const roomName = (connectedSocket, roomsList) => {
-  let roomsNames = Object.keys(roomsList).filter( room => {
+  let roomsNames = Object.keys(roomsList).filter(room => {
     return room.length < 12
   });
   let currentRoomName;
   let createdRoom = false;
   if (!roomsNames.length) {
-    return {currentRoomName:worldNames[0], createdRoom: true};
+    return { currentRoomName: worldNames[0], createdRoom: true };
   }
   for (let i = 0; i < roomsNames.length; i++) {
     if (roomsList[roomsNames[i]].length < 4) {
@@ -40,7 +40,7 @@ const roomName = (connectedSocket, roomsList) => {
       createdRoom = true;
     }
   }
-  return {currentRoomName, createdRoom};
+  return { currentRoomName, createdRoom };
 }
 
 const convertStateForFrontEnd = (state, room) => {
@@ -61,25 +61,32 @@ const convertStateForFrontEnd = (state, room) => {
 io.on('connection', (socket) => {
   delete socket.adapter.rooms[socket.id]
   let rooms = io.sockets.adapter.rooms;
-  let {currentRoomName, createdRoom} = roomName(socket, rooms)
+  let { currentRoomName, createdRoom } = roomName(socket, rooms)
 
   socket.join(currentRoomName);
   socket.currentRoom = currentRoomName;
 
+  let currState;
 
-
-  let currState = store.getState();
-  let convertedState = convertStateForFrontEnd(currState, socket.currentRoom);
   if (createdRoom) {
+    console.log('new room')
+    let randomMap = randomGeneration(Maps)
+    store.dispatch(loadMap(randomMap, socket.currentRoom))
+
     let currentTime = Date.now();
     store.dispatch(setTime(currentTime, 180, socket.currentRoom))
-    io.sockets.emit('initial', convertedState);
-  } else {
-    io.sockets.emit('initial', convertedState);
 
-    console.log(chalk.blue('A new client has connected'));
-    console.log(chalk.yellow('socket id: ', socket.id));
+    currState = convertStateForFrontEnd(store.getState(), socket.currentRoom);
+
+    socket.emit('initial', currState);
+  } else {
+    currState = convertStateForFrontEnd(store.getState(), socket.currentRoom);
+    console.log('joining a room')
+    socket.emit('initial', currState);
   }
+
+  console.log(chalk.blue('A new client has connected'));
+  console.log(chalk.yellow('socket id: ', socket.id));
 
   socket.on('get_players', () => {
     socket.emit('get_players', store.getState().players[socket.currentRoom]);
@@ -134,6 +141,23 @@ io.on('connection', (socket) => {
     store.dispatch(updateMap(data, socket.currentRoom))
   })
 
+  socket.on('reset_world', (data) => {
+    let newMap = randomGeneration(Maps)
+
+    store.dispatch(loadMap(newMap, socket.currentRoom))
+
+    io.in(socket.currentRoom).emit('reset_world', {
+      players: store.getState().players[socket.currentRoom],
+      bombs: {
+        allBombs: []
+      },
+      mapState: {
+        mapState: store.getState().mapState[socket.currentRoom].mapState
+      },
+      timer: store.getState().timer[socket.currentRoom].timer
+    })
+  })
+
   //remove the player from the state on socket disconnect
   socket.on('disconnect', () => {
     store.dispatch(removePlayer(socket.id, socket.currentRoom))
@@ -142,17 +166,17 @@ io.on('connection', (socket) => {
     io.in(socket.currentRoom).emit('remove_player', socket.id)
     console.log('socket id ' + socket.id + ' has disconnected. : (');
   })
+
 })
 
 app.use(express.static(path.join(__dirname, '..', 'public', 'assets')));
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
-app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
-
-server.listen(port, function () {
-    console.log(`The server is listening on port ${port}!`);
+server.listen(port, function() {
+  console.log(`The server is listening on port ${port}!`);
 });

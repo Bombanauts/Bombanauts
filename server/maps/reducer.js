@@ -9,7 +9,7 @@ const reducer = (state = initialState, action) => {
       newState[action.roomId].mapState = action.map
       break;
     case EXPLODE_BOX:
-      newState[action.roomId].mapState[0][action.coordinates.j][action.coordinates.k] = 0;
+      newState[action.roomId].mapState[action.coordinates.j][action.coordinates.k] = 0;
       break;
     default:
       return state;

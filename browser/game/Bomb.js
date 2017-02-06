@@ -4,24 +4,26 @@ const THREE = require('three')
 const CANNON = require('cannon')
 
 import { scene, world, camera, blockCount, blocksObj, listener } from './main'
-import { VolumetricFire } from '../bombs/ParticleEngine';
-import { destroyable, roundFour } from './utils/generateMap'
+import { VolumetricFire } from './ParticleEngine';
+import { destroyable, roundFour } from './utils'
 import { Block } from './Explosion.js'
 
 export default class Bomb {
   constructor(id, position, material) {
     this.id = id;
     this.position = position;
+    this.bool = true;
+    this.clearTimeout = null;
+    this.material = material;
     this.bombMesh;
     this.bombBody;
     this.bombShape;
-    this.bool = true;
     this.fire;
     this.fire2;
     this.fire3;
     this.fire4;
     this.fire5;
-    this.material = material;
+
     this.init = this.init.bind(this);
     this.explode = this.explode.bind(this);
   }
@@ -58,7 +60,7 @@ export default class Bomb {
       colorBool = !colorBool;
     }, 100)}, 800)
 
-    setTimeout(() => {
+    this.clearTimeout = setTimeout(() => {
       this.explode()
       clearInterval(clear)
       this.bombMesh.material.color.setHex(0x000000)
