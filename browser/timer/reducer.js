@@ -7,7 +7,7 @@ const initialState = 180;
 
 
 const timer = (state = initialState, action) => {
-  let newState = Object.assign({}, state);
+  let newState = state;
   switch (action.type) {
     case SET_TIME:
       newState = action.time;

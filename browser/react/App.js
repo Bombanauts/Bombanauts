@@ -3,7 +3,7 @@ import ReactCountdownClock from 'react-countdown-clock';
 import { connect } from 'react-redux';
 import socket from '../socket';
 import store from '../store';
-
+import Timer from './Timer';
 import { initCannon, init, animate, controls } from '../game/main';
 import { Login } from './Login';
 const fontStyle = {
@@ -56,10 +56,9 @@ class App extends Component {
             width: '100vw',
             height: '100vh',
             pointerEvents: 'none'}}><h1  style={{position: "absolute", right: 500, top: 50}}> YOU ARE DEAD</h1>
-            </div>}
-            <div style={{position: "absolute", right: 0}}>
-              {this.props.time ? this.props.time + '' : console.log(this.props.time)} Seconds Left
             </div>
+          }
+          <Timer />
       </div>
     )
   }
@@ -67,8 +66,7 @@ class App extends Component {
 
 const mapStateToProps = (state) => ({
     dead: state.dead,
-    winner: state.winner,
-    time: state.timer
+    winner: state.winner
 })
 
 

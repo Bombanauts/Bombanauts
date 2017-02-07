@@ -35,12 +35,12 @@ socket.on('update_world', (data) => {
   delete data.bombs[socket.id];
   store.dispatch(updatePlayerLocations(data.players))
   store.dispatch(updateBombLocations(data.bombs))
-  if (count % 40 === 0) {
+  if (count % 30 === 0) {
     store.dispatch(setTime(data.timer))
   }
-  console.log(store.getState())
 })
   socket.on('set_winner', (winner) => {
+    console.log('This is winner ', winner)
     store.dispatch(setWinner(winner));
   })
 
@@ -69,13 +69,16 @@ socket.on('update_world', (data) => {
 
 
   socket.on('reset_world', (data) => {
-    count = 0;
-    store.dispatch(loadMap(data.map));
-    store.dispatch(updatePlayerLocations(data.players));
-    store.dispatch(updateBombLocations(data.bombs));
-    store.dispatch(revivePlayer());
-    store.dispatch(setTime(data.timer))
-    restartWorld();
+    setTimeout(() => {
+      count = 0;
+      store.dispatch(loadMap(data.map));
+      store.dispatch(updatePlayerLocations(data.players));
+      store.dispatch(updateBombLocations(data.bombs));
+      store.dispatch(revivePlayer());
+      store.dispatch(setTime(data.timer))
+      restartWorld();
+      store.dispatch(setWinner(null))
+    }, 5000)
   })
 
   socket.on('remove_player', (id) => {
