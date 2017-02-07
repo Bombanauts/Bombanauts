@@ -45,12 +45,12 @@ export const generateMap = (mapArr) => {
       const y = 2
       const z = -(k + mapArrWidth) * 4 + 100;
 
-      if (mapArr[j][k] === 2) { // Create Box
+      if (mapArr[j][k] === 2) { // CREATE BOX
         const fixedCube = new FixedCube(fixedCubeMaterial, fixedCubeTexture, fixedCubeShape, fixedCubeGeometry, x, y, z);
         fixedCube.init()
         boxes.push(fixedCube.fixedCubeBody);
         boxMeshes.push(fixedCube.fixedCubeMesh);
-      } else if (mapArr[j][k] === 1) { // Create Wall
+      } else if (mapArr[j][k] === 1) { // CREATE WALL
         const wall = new Wall(wallMaterial, wallTexture, fixedCubeShape, wallGeometry, x, y, z);
         wall.init();
         boxes.push(wall.wallBody);
@@ -61,7 +61,7 @@ export const generateMap = (mapArr) => {
         boxes.push(destroyableBox.cubeBox);
         boxMeshes.push(destroyableBox.cubeMesh);
         destroyable[`${x}_${z}`] = [true, destroyableBox]
-      } else if (mapArr[j][k] === 0) { // Grass
+      } else if (mapArr[j][k] === 0) { // GRASS
         destroyable[`${x}_${z}`] = true
       }
     }
@@ -77,84 +77,18 @@ export const roundFour = (num) => {
   return Math.round(num / 4) * 4
 }
 
-export const animateFire = (bombObjects, clock) => {
-  let isDead = false
+export const animateFire = (bombObjects, clock, dead) => {
   let elapsed = clock.getElapsedTime()
-  for (let i = 0; i < bombObjects.length; i++) {
-    const bomb = bombObjects[i]
 
-    const playerPositionX = roundFour(sphereBody.position.x)
-    const playerPositionZ = roundFour(sphereBody.position.z)
+  // HELPER FUNCTION FOR ANIMATING FIRE
 
-    if (bomb.bool) {
-      if (bomb.fire) {
-        bomb.fire.update(elapsed)
-        const firePositionX = bomb.fire.mesh.position.x
-        const firePositionZ = bomb.fire.mesh.position.z
-
-        if (firePositionX === playerPositionX &&
-          firePositionZ === playerPositionZ) {
-          isDead = true;
-          socket.emit('kill_player', {
-            id: socket.id
-          })
-          store.dispatch(killPlayer())
-        }
-      }
-
-      if (bomb.fire2) {
-        bomb.fire2.update(elapsed)
-        const fire2PositionX = bomb.fire2.mesh.position.x
-        const fire2PositionZ = bomb.fire2.mesh.position.z
-
-        if (fire2PositionX === playerPositionX &&
-          fire2PositionZ === playerPositionZ) {
-          isDead = true;
-          socket.emit('kill_player', {
-            id: socket.id
-          })
-          store.dispatch(killPlayer())
-        }
-      }
-
-      if (bomb.fire3) {
-        bomb.fire3.update(elapsed)
-        const fire3PositionX = bomb.fire3.mesh.position.x
-        const fire3PositionZ = bomb.fire3.mesh.position.z
-
-        if (fire3PositionX === playerPositionX &&
-          fire3PositionZ === playerPositionZ) {
-          isDead = true;
-          socket.emit('kill_player', {
-            id: socket.id
-          })
-          store.dispatch(killPlayer())
-        }
-      }
-
-      if (bomb.fire4) {
-        bomb.fire4.update(elapsed)
-        const fire4PositionX = bomb.fire4.mesh.position.x
-        const fire4PositionZ = bomb.fire4.mesh.position.z
-
-        if (fire4PositionX === playerPositionX &&
-          fire4PositionZ === playerPositionZ) {
-          isDead = true;
-          socket.emit('kill_player', {
-            id: socket.id
-          })
-          store.dispatch(killPlayer())
-        }
-      }
-
-      if (bomb.fire5) {
-        bomb.fire5.update(elapsed)
-        const fire5PositionX = bomb.fire5.mesh.position.x
-        const fire5PositionZ = bomb.fire5.mesh.position.z
-
-        if (fire5PositionX === playerPositionX &&
-          fire5PositionZ === playerPositionZ) {
-          isDead = true;
+  const animateSingleFire = (fire) => {
+    if (fire) {
+      fire.update(elapsed)
+      if (fire.mesh.position.x === roundFour(sphereBody.position.x) &&
+        fire.mesh.position.z === roundFour(sphereBody.position.z)) {
+        if (!dead) {
+          dead = true;
           socket.emit('kill_player', {
             id: socket.id
           })
@@ -163,7 +97,23 @@ export const animateFire = (bombObjects, clock) => {
       }
     }
   }
-  return isDead;
+
+  //RUNNING ANIMATE SINGLE FIRE FOR EVERY SQUERE AROUND THE BOMB
+
+  for (let i = 0; i < bombObjects.length; i++) {
+    if (bombObjects[i].bool) {
+      let fire = 'fire'
+      for (let k = 1; k <= 5; k++) {
+        let currentFire = fire;
+        if (k !== 1) {
+          currentFire += k
+        }
+        animateSingleFire(bombObjects[i][currentFire])
+      }
+    }
+  }
+
+  return dead;
 }
 
 export const animatePlayers = (players, playerIds, others, playerMeshes) => {
@@ -206,7 +156,7 @@ export const animateBombs = (yourBombs, yourBombMeshes, bombs, stateBombs, bombM
   }
 }
 
-export const deleteWorld = (scene, world, boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes) => {
+export const deleteWorld = (scene, world, boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes, players, playerMeshes) => {
   for (let i = 0; i < boxMeshes.length; i++) {
     scene.remove(boxMeshes[i]);
   }
@@ -226,8 +176,13 @@ export const deleteWorld = (scene, world, boxMeshes, boxes, bombs, bombMeshes, y
   for (let i = 0; i < yourBombMeshes.length; i++) {
     scene.remove(yourBombMeshes[i])
   }
+  for (let i = 0; i < playerMeshes.length; i++) {
+    scene.remove(playerMeshes[i]);
+  }
+  for (let i = 0; i < players.length; i++) {
+    world.remove(players[i]);
+  }
 }
-
 
 export const getShootDir = (projector, camera, targetVec) => {
   const vector = targetVec;

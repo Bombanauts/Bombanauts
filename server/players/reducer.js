@@ -2,8 +2,12 @@ const {
   GET_PLAYERS,
   UPDATE_PLAYERS,
   REMOVE_PLAYER,
-  KILL_PLAYER
-} = require('./constants')
+  KILL_PLAYER,
+  SET_NICKNAME
+} = require('./constants');
+
+const {updatePlayers} = require('./action-creator');
+const store = require('../store');
 
 const initialState = require('./init-state');
 
@@ -15,12 +19,22 @@ const players = (state = initialState, action) => {
       return newState[action.roomId];
     case UPDATE_PLAYERS:
       if (action.player.id) {
-        newState[action.roomId][action.player.id] = {
-          x: action.player.position.x,
-          y: action.player.position.y,
-          z: action.player.position.z,
-          dead: action.player.dead
+        let currentPlayer = newState[action.roomId][action.player.id];
+        if (!currentPlayer) {
+          newState[action.roomId][action.player.id] = {
+            x: action.player.position.x,
+            y: action.player.position.y,
+            z: action.player.position.z,
+            dead: action.player.dead
+          }
+        } else {
+          let { x, y, z } = action.player.position;
+          currentPlayer.x = x;
+          currentPlayer.y = y;
+          currentPlayer.z = z;
+          currentPlayer.dead = action.player.dead;
         }
+
       }
       return newState;
     case REMOVE_PLAYER:
@@ -28,6 +42,9 @@ const players = (state = initialState, action) => {
       return newState;
     case KILL_PLAYER:
       if (newState[action.roomId][action.id]) newState[action.roomId][action.id].dead = true;
+      return newState;
+    case SET_NICKNAME:
+      newState[action.roomId][action.id].nickname = action.nickname;
       return newState;
     default:
       return state;

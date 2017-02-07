@@ -65,7 +65,7 @@ export default class Bomb {
       this.explode()
       clearInterval(clear)
       this.bombMesh.material.color.setHex(0x000000)
-    }, 2000)
+    }, 1700)
   }
 
   explode() {

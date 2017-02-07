@@ -38,6 +38,7 @@ let bombObjects = [];
 let count = 1;
 let prevPlayerStateLength = 0;
 let dead = false;
+let nickname = '';
 let allowBomb = true;
 const dt = 1 / 60;
 let prevStateLength = 0;
@@ -167,7 +168,7 @@ export function init() {
   sphereBody.position.y = 100;
   sphereBody.position.z = 100;
   listener = new THREE.AudioListener();
-  camera.add( listener );
+  camera.add(listener);
 
   let others = store.getState().players;
   let newPlayer;
@@ -258,11 +259,12 @@ export function animate() {
             z: sphereBody.position.z
           },
           dead: dead,
-          playerBombs: yourBombs,
+          playerBombs: yourBombs
         });
       }
       requestAnimationFrame(animate);
     }, 1000 / 60) //throttled to 60 times per second
+
 
   //set player spawn after getting initial state from sockets
   if (counter === 50) {
@@ -283,11 +285,11 @@ export function animate() {
     stateBombs.push(...allBombs[key])
   }
 
-  //make new player objects if there are a different number of players than previously
   if (playerIds.length !== players.length) {
     players.forEach(body => {
       world.remove(body)
     })
+
     playerMeshes.forEach(playermesh => {
       scene.remove(playermesh)
     })
@@ -296,7 +298,7 @@ export function animate() {
     playerInstances = [];
     for (let player in others) {
       let newPlayer;
-      newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead)
+      newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, false)
       newPlayer.init()
 
       players.push(newPlayer.playerBox)
@@ -319,13 +321,13 @@ export function animate() {
   prevStateLength = stateBombs.length
 
   //animate fire with bombs
-  const isDead = animateFire(bombObjects, clock)
-  if (isDead) dead = true;
-  //updating player positions
+
+  dead = animateFire(bombObjects, clock, dead)
+    //updating player positions
   animatePlayers(players, playerIds, others, playerMeshes)
-  //animating explosion particles
+    //animating explosion particles
   animateExplosion(blocksObj)
-  //animating bomb positions
+    //animating bomb positions
   animateBombs(yourBombs, yourBombMeshes, bombs, stateBombs, bombMeshes, prevStateLength)
 
   controls.update(Date.now() - time);
@@ -336,16 +338,25 @@ export function animate() {
 
 //clear out and rebuild entire map to restart, respawn player
 export function restartWorld() {
-  deleteWorld(scene, world, boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes);
+  deleteWorld(scene, world, boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes, players, playerMeshes);
 
-  boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes = []
+  boxMeshes = [];
+  boxes = [];
+  bombs = [];
+  bombMeshes = [];
+  yourBombs = [];
+  bombObjects = [];
+  yourBombMeshes = [];
+  players = [];
+  playerMeshes = [];
+  playerInstances = [];
 
   createMap();
 
   sphereBody.position.x = spawnPositions[playerArr.indexOf(socket.id)].x;
   sphereBody.position.y = 5
   sphereBody.position.z = spawnPositions[playerArr.indexOf(socket.id)].z;
+  dead = false;
 }
 
-
-export { scene, camera, renderer, controls, light, world }
+export { scene, camera, renderer, controls, light, world, dead }

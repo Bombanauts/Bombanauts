@@ -4,11 +4,12 @@ const THREE = require('three')
 
 import store from './store';
 window.store = store;
-import { updatePlayerLocations, removePlayer } from './players/action-creator';
+import { updatePlayerLocations, removePlayer, reviveOtherPlayers } from './players/action-creator';
 import { updateBombLocations, removePlayerBombs } from './bombs/action-creator'
 import { loadMap } from './maps/action-creator';
 import { setTime, getTime } from './timer/action-creator';
 import { setWinner } from './winner/action-creator'
+import { revivePlayer } from './dead/action-creator'
 
 import { initCannon, init, animate, players, playerMeshes, world, scene, playerInstances,  resetCount, createMap, restartWorld, listener } from './game/main';
 
@@ -66,7 +67,8 @@ socket.on('update_world', (data) => {
     store.dispatch(loadMap(data.map));
     store.dispatch(updatePlayerLocations(data.players));
     store.dispatch(updateBombLocations(data.bombs));
-
+    store.dispatch(reviveOtherPlayers());
+    store.dispatch(revivePlayer());
     restartWorld();
   })
 
