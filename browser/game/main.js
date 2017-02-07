@@ -44,69 +44,69 @@ const dt = 1 / 60;
 let prevStateLength = 0;
 let counter = 0;
 const spawnPositions = [
-    { x: 11.5, y: 1.5, z: -4 },
-    { x: 12.1, y: 1.5, z: 36.4 },
-    { x: -36, y: 1.5, z: 36 },
-    { x: -36.4, y: 1.5, z: -4 },
+  { x: 11.5, y: 1.5, z: -4 },
+  { x: 12.1, y: 1.5, z: 36.4 },
+  { x: -36, y: 1.5, z: 36 },
+  { x: -36.4, y: 1.5, z: -4 },
 ]
 const bombMaterial = new THREE.MeshLambertMaterial({ color: '#000000' })
 
 
 export function initCannon() {
-    //set up our world, check for other players
-    if (socket) {
-        socket.emit('get_players', {});
-    }
-    world = new CANNON.World();
-    world.quatNormalizeSkip = 0;
-    world.quatNormalizeFast = false;
-    const solver = new CANNON.GSSolver();
-    world.defaultContactMaterial.contactEquationStiffness = 1e9;
-    world.defaultContactMaterial.contactEquationRelaxation = 4;
-    solver.iterations = 7;
-    solver.tolerance = 0.1;
-    const split = true;
-    if (split)
-        world.solver = new CANNON.SplitSolver(solver);
-    else
-        world.solver = solver;
-    world.solver.iterations = 20; // Increase solver iterations (default is 10)
-    world.solver.tolerance = 0; // Force solver to use all iterations
+  //set up our world, check for other players
+  if (socket) {
+    socket.emit('get_players', {});
+  }
+  world = new CANNON.World();
+  world.quatNormalizeSkip = 0;
+  world.quatNormalizeFast = false;
+  const solver = new CANNON.GSSolver();
+  world.defaultContactMaterial.contactEquationStiffness = 1e9;
+  world.defaultContactMaterial.contactEquationRelaxation = 4;
+  solver.iterations = 7;
+  solver.tolerance = 0.1;
+  const split = true;
+  if (split)
+    world.solver = new CANNON.SplitSolver(solver);
+  else
+    world.solver = solver;
+  world.solver.iterations = 20; // Increase solver iterations (default is 10)
+  world.solver.tolerance = 0; // Force solver to use all iterations
 
-    world.gravity.set(0, -40, 0);
-    world.broadphase = new CANNON.NaiveBroadphase();
+  world.gravity.set(0, -40, 0);
+  world.broadphase = new CANNON.NaiveBroadphase();
 
 
-    physicsMaterial = new CANNON.Material('groundMaterial');
-    // Adjust constraint equation parameters for ground/ground contact
-    const physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial, physicsMaterial, {
-        friction: 0.7,
-        restitution: 0.3,
-        contactEquationStiffness: 1e8,
-        contactEquationRelaxation: 3,
-        frictionEquationStiffness: 1e8,
-        frictionEquationRegularizationTime: 3,
-    });
+  physicsMaterial = new CANNON.Material('groundMaterial');
+  // Adjust constraint equation parameters for ground/ground contact
+  const physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial, physicsMaterial, {
+    friction: 0.7,
+    restitution: 0.3,
+    contactEquationStiffness: 1e8,
+    contactEquationRelaxation: 3,
+    frictionEquationStiffness: 1e8,
+    frictionEquationRegularizationTime: 3,
+  });
 
-    //add the contact materials to the world
-    world.addContactMaterial(physicsContactMaterial);
+  //add the contact materials to the world
+  world.addContactMaterial(physicsContactMaterial);
 
-    // Create a sphere
-    const mass = 100,
-        radius = 1.3;
-    sphereShape = new CANNON.Sphere(radius);
-    sphereBody = new CANNON.Body({ mass: mass, material: physicsMaterial });
-    sphereBody.addShape(sphereShape);
-    sphereBody.position.set(0, 5, 0);
-    sphereBody.linearDamping = 0.9;
-    world.addBody(sphereBody);
+  // Create a sphere
+  const mass = 100,
+    radius = 1.3;
+  sphereShape = new CANNON.Sphere(radius);
+  sphereBody = new CANNON.Body({ mass: mass, material: physicsMaterial });
+  sphereBody.addShape(sphereShape);
+  sphereBody.position.set(0, 5, 0);
+  sphereBody.linearDamping = 0.9;
+  world.addBody(sphereBody);
 
-    // Create a plane
-    const groundShape = new CANNON.Plane();
-    const groundBody = new CANNON.Body({ mass: 0 });
-    groundBody.addShape(groundShape);
-    groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
-    world.addBody(groundBody);
+  // Create a plane
+  const groundShape = new CANNON.Plane();
+  const groundBody = new CANNON.Body({ mass: 0 });
+  groundBody.addShape(groundShape);
+  groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
+  world.addBody(groundBody);
 }
 
 // cannon sphere(radius)
@@ -168,7 +168,7 @@ export function init() {
   sphereBody.position.y = 100;
   sphereBody.position.z = 100;
   listener = new THREE.AudioListener();
-  camera.add( listener );
+  camera.add(listener);
 
   let others = store.getState().players;
   let newPlayer;
@@ -206,97 +206,64 @@ export function init() {
           position: { x: x, y: y, z: z }
         })
 
-    for (let player in others) {
-        newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead)
-        newPlayer.init()
-        players.push(newPlayer.playerBox)
-        playerMeshes.push(newPlayer.playerMesh)
-        playerInstances.push(newPlayer)
-    }
-    prevPlayerStateLength = players.length;
+        //remove from your front end bombs array, this will update game state on update_world on next frame
+        setTimeout(() => {
+          yourBombs = yourBombs.filter((bomb) => {
+            return bomb.id !== bombInfo.id
+          })
+          yourBombMeshes = yourBombMeshes.filter(mesh => {
+            return newBomb.bombMesh.id !== mesh.id
+          })
+        }, 2000)
 
-    if (controls) {
-        window.addEventListener("click", function(e) {
-            if (controls.enabled == true && !dead && allowBomb) {
-                // get current self position to shoot
-                let x = sphereBody.position.x;
-                let y = sphereBody.position.y;
-                let z = sphereBody.position.z;
+        //add bomb and mesh to your bombs arrays
+        yourBombs.push(bombInfo)
+        bombObjects.push(newBomb)
+        yourBombMeshes.push(newBomb.bombMesh);
 
-                const newBomb = new Bomb(count++, { x: x, y: y, z: z }, bombMaterial);
-                newBomb.init()
-                allowBomb = false;
-                setTimeout(() => {
-                    allowBomb = true;
-                }, 3000)
+        // get its direction using getShootDir function
+        getShootDir(projector, camera, shootDirection);
 
-                //take relevant bomb info and emit
-                const bombInfo = { id: newBomb.id, position: newBomb.bombBody.position, created: Date.now() }
+        // give it a shoot velocity
+        newBomb.bombBody.velocity.set(shootDirection.x * shootVelo,
+          shootDirection.y * shootVelo,
+          shootDirection.z * shootVelo);
 
-                socket.emit('add_bomb', {
-                    userId: socket.id,
-                    bombId: bombInfo.id,
-                    position: { x: x, y: y, z: z }
-                })
-
-                //remove from your front end bombs array, this will update game state on update_world on next frame
-                setTimeout(() => {
-                    yourBombs = yourBombs.filter((bomb) => {
-                        return bomb.id !== bombInfo.id
-                    })
-                    yourBombMeshes = yourBombMeshes.filter(mesh => {
-                        return newBomb.bombMesh.id !== mesh.id
-                    })
-                }, 2000)
-
-                //add bomb and mesh to your bombs arrays
-                yourBombs.push(bombInfo)
-                bombObjects.push(newBomb)
-                yourBombMeshes.push(newBomb.bombMesh);
-
-                // get its direction using getShootDir function
-                getShootDir(projector, camera, shootDirection);
-
-                // give it a shoot velocity
-                newBomb.bombBody.velocity.set(shootDirection.x * shootVelo,
-                    shootDirection.y * shootVelo,
-                    shootDirection.z * shootVelo);
-
-                // shoot your bomb
-                x += shootDirection.x * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
-                y += shootDirection.y * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
-                z += shootDirection.z * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
-                newBomb.bombBody.position.set(x, y, z);
-                newBomb.bombMesh.position.set(x, y, z);
-            }
-        });
-    }
+        // shoot your bomb
+        x += shootDirection.x * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
+        y += shootDirection.y * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
+        z += shootDirection.z * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
+        newBomb.bombBody.position.set(x, y, z);
+        newBomb.bombMesh.position.set(x, y, z);
+      }
+    });
+  }
 }
 
 export function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 //animation GAME LOOP
 export function animate() {
-    counter++;
-    setTimeout(() => {
-            if (socket) {
-                socket.emit('update_world', {
-                    playerId: socket.id,
-                    playerPosition: {
-                        x: sphereBody.position.x,
-                        y: sphereBody.position.y,
-                        z: sphereBody.position.z
-                    },
-                    dead: dead,
-                    playerBombs: yourBombs
-                });
-            }
-            requestAnimationFrame(animate);
-        }, 1000 / 60) //throttled to 60 times per second
+  counter++;
+  setTimeout(() => {
+      if (socket) {
+        socket.emit('update_world', {
+          playerId: socket.id,
+          playerPosition: {
+            x: sphereBody.position.x,
+            y: sphereBody.position.y,
+            z: sphereBody.position.z
+          },
+          dead: dead,
+          playerBombs: yourBombs
+        });
+      }
+      requestAnimationFrame(animate);
+    }, 1000 / 60) //throttled to 60 times per second
 
 
   //set player spawn after getting initial state from sockets
@@ -318,7 +285,6 @@ export function animate() {
     stateBombs.push(...allBombs[key])
   }
 
-  //make new player objects if there are a different number of players than previously
   if (playerIds.length !== players.length) {
     players.forEach(body => {
       world.remove(body)
@@ -333,40 +299,55 @@ export function animate() {
       let newPlayer;
       newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead)
       newPlayer.init()
-        bombs.push(newBomb.bombBody)
-        bombObjects.push(newBomb)
-        bombMeshes.push(newBomb.bombMesh)
+
+      players.push(newPlayer.playerBox)
+      playerMeshes.push(newPlayer.playerMesh)
+      playerInstances.push(newPlayer)
     }
-    //reset previous state length
-    prevStateLength = stateBombs.length
+  }
 
-    //animate fire with bombs
+  // add new bomb if there is one
+  if (stateBombs.length > prevStateLength) {
+    const mostRecentBomb = stateBombs[stateBombs.length - 1]
+    const newBomb = new Bomb(mostRecentBomb.id, mostRecentBomb.position, bombMaterial)
+    newBomb.init()
 
-    dead = animateFire(bombObjects, clock, dead)
+    bombs.push(newBomb.bombBody)
+    bombObjects.push(newBomb)
+    bombMeshes.push(newBomb.bombMesh)
+  }
+  //reset previous state length
+  prevStateLength = stateBombs.length
+
+  //animate fire with bombs
+
+  dead = animateFire(bombObjects, clock, dead)
     //updating player positions
-    animatePlayers(players, playerIds, others, playerMeshes)
-        //animating explosion particles
-    animateExplosion(blocksObj)
-        //animating bomb positions
-    animateBombs(yourBombs, yourBombMeshes, bombs, stateBombs, bombMeshes, prevStateLength)
+  animatePlayers(players, playerIds, others, playerMeshes)
+    //animating explosion particles
+  animateExplosion(blocksObj)
+    //animating bomb positions
+  animateBombs(yourBombs, yourBombMeshes, bombs, stateBombs, bombMeshes, prevStateLength)
 
-    controls.update(Date.now() - time);
-    renderer.render(scene, camera);
-    time = Date.now();
+  controls.update(Date.now() - time);
+  renderer.render(scene, camera);
+  time = Date.now();
 }
+
+
 
 //clear out and rebuild entire map to restart, respawn player
 export function restartWorld() {
-    deleteWorld(scene, world, boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes);
+  deleteWorld(scene, world, boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes);
 
-    boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes = [];
+  boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes = [];
 
-    createMap();
+  createMap();
 
-    sphereBody.position.x = spawnPositions[playerArr.indexOf(socket.id)].x;
-    sphereBody.position.y = 5
-    sphereBody.position.z = spawnPositions[playerArr.indexOf(socket.id)].z;
-    dead = false;
+  sphereBody.position.x = spawnPositions[playerArr.indexOf(socket.id)].x;
+  sphereBody.position.y = 5
+  sphereBody.position.z = spawnPositions[playerArr.indexOf(socket.id)].z;
+  dead = false;
 }
 
-export { scene, camera, renderer, controls, light, world, dead}
+export { scene, camera, renderer, controls, light, world, dead }

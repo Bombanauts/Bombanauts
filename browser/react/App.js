@@ -51,15 +51,7 @@ class App extends Component {
     }
     return (
       <div>
-
         <Login />
-        <div id="blocker">
-          <div id="instructions">
-            <span style={fontStyle}>Click to play</span>
-            <br />
-            (W,A,S,D = Move, MOUSE = Look, CLICK = Shoot)
-          </div>
-        </div>
             { winnerId && <h1  style={{position: "absolute", right: 500}}>{winnerNickname} Won!</h1>}
           <Blocker dead={this.props.dead} />
           { this.props.dead && <div style={{ backgroundColor: '#700303',

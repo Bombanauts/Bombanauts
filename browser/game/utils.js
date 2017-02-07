@@ -14,7 +14,6 @@ export const fixedBox = {}
 export let destroyable;
 
 export const generateMap = (mapArr) => {
-
   destroyable = null;
   destroyable = {};
 
@@ -66,6 +65,7 @@ export const generateMap = (mapArr) => {
         destroyable[`${x}_${z}`] = true
       }
     }
+  }
 }
 
 export const createMap = () => {
@@ -74,108 +74,108 @@ export const createMap = () => {
 }
 
 export const roundFour = (num) => {
-    return Math.round(num / 4) * 4
+  return Math.round(num / 4) * 4
 }
 
 export const animateFire = (bombObjects, clock, dead) => {
-    let elapsed = clock.getElapsedTime()
+  let elapsed = clock.getElapsedTime()
 
-    // HELPER FUNCTION FOR ANIMATING FIRE
+  // HELPER FUNCTION FOR ANIMATING FIRE
 
-    const animateSingleFire = (fire) => {
-        if (fire) {
-            fire.update(elapsed)
-            if (fire.mesh.position.x === roundFour(sphereBody.position.x) &&
-                fire.mesh.position.z === roundFour(sphereBody.position.z)) {
-                if (!dead) {
-                    dead = true;
-                    socket.emit('kill_player', {
-                        id: socket.id
-                    })
-                    store.dispatch(killPlayer())
-                }
-            }
+  const animateSingleFire = (fire) => {
+    if (fire) {
+      fire.update(elapsed)
+      if (fire.mesh.position.x === roundFour(sphereBody.position.x) &&
+        fire.mesh.position.z === roundFour(sphereBody.position.z)) {
+        if (!dead) {
+          dead = true;
+          socket.emit('kill_player', {
+            id: socket.id
+          })
+          store.dispatch(killPlayer())
         }
+      }
     }
+  }
 
-    //RUNNING ANIMATE SINGLE FIRE FOR EVERY SQUERE AROUND THE BOMB
+  //RUNNING ANIMATE SINGLE FIRE FOR EVERY SQUERE AROUND THE BOMB
 
-    for (let i = 0; i < bombObjects.length; i++) {
-        if (bombObjects[i].bool) {
-            let fire = 'fire'
-            for (let k = 1; k <= 5; k++) {
-                let currentFire = fire;
-                if (k !== 1) {
-                    currentFire += k
-                }
-                animateSingleFire(bombObjects[i][currentFire])
-            }
+  for (let i = 0; i < bombObjects.length; i++) {
+    if (bombObjects[i].bool) {
+      let fire = 'fire'
+      for (let k = 1; k <= 5; k++) {
+        let currentFire = fire;
+        if (k !== 1) {
+          currentFire += k
         }
+        animateSingleFire(bombObjects[i][currentFire])
+      }
     }
+  }
 
-    return dead;
+  return dead;
 }
 
 export const animatePlayers = (players, playerIds, others, playerMeshes) => {
-    for (let i = 0; i < players.length; i++) {
-        if (others[playerIds[i]] && !others[playerIds[i]].dead) {
-            let { x, y, z } = others[playerIds[i]]
-            playerMeshes[i].position.set(x, y, z);
-            players[i].position.x = x;
-            players[i].position.y = y;
-            players[i].position.z = z;
-        }
+  for (let i = 0; i < players.length; i++) {
+    if (others[playerIds[i]] && !others[playerIds[i]].dead) {
+      let { x, y, z } = others[playerIds[i]]
+      playerMeshes[i].position.set(x, y, z);
+      players[i].position.x = x;
+      players[i].position.y = y;
+      players[i].position.z = z;
     }
+  }
 }
 
 export const animateExplosion = (blocksObj) => {
-    for (let block in blocksObj) {
-        if (blocksObj[block].length) {
-            for (let i = 0; i < blocksObj[block].length; i++) {
-                blocksObj[block][i].loop(block);
-            }
-        } else {
-            delete blocksObj[block]
-        }
+  for (let block in blocksObj) {
+    if (blocksObj[block].length) {
+      for (let i = 0; i < blocksObj[block].length; i++) {
+        blocksObj[block][i].loop(block);
+      }
+    } else {
+      delete blocksObj[block]
     }
+  }
 }
 
 export const animateBombs = (yourBombs, yourBombMeshes, bombs, stateBombs, bombMeshes, prevStateLength) => {
-    let indexAdd = bombs.length - stateBombs.length;
+  let indexAdd = bombs.length - stateBombs.length;
 
-    for (let i = 0; i < prevStateLength; i++) {
-        let { x, y, z } = stateBombs[i].position
-        bombs[i + indexAdd].position.x = x;
-        bombs[i + indexAdd].position.y = y;
-        bombs[i + indexAdd].position.z = z;
-        bombMeshes[i + indexAdd].position.copy(bombs[i + indexAdd].position)
-    }
+  for (let i = 0; i < prevStateLength; i++) {
+    let { x, y, z } = stateBombs[i].position
+    bombs[i + indexAdd].position.x = x;
+    bombs[i + indexAdd].position.y = y;
+    bombs[i + indexAdd].position.z = z;
+    bombMeshes[i + indexAdd].position.copy(bombs[i + indexAdd].position)
+  }
 
-    for (let i = 0; i < yourBombs.length; i++) {
-        yourBombMeshes[i].position.copy(yourBombs[i].position)
-    }
+  for (let i = 0; i < yourBombs.length; i++) {
+    yourBombMeshes[i].position.copy(yourBombs[i].position)
+  }
 }
 
 export const deleteWorld = (scene, world, boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes) => {
-    for (let i = 0; i < boxMeshes.length; i++) {
-        scene.remove(boxMeshes[i]);
-    }
-    for (let i = 0; i < boxes.length; i++) {
-        world.remove(boxes[i]);
-    }
-    for (let i = 0; i < bombs.length; i++) {
-        world.remove(bombs[i])
-    }
-    for (let i = 0; i < bombMeshes.length; i++) {
-        scene.remove(bombMeshes[i])
-    }
-    for (let i = 0; i < bombObjects.length; i++) {
-        if (bombObjects[i].clearTimeout) clearTimeout(bombObjects[i].clearTimeout)
-        if (bombObjects[i].bombBody) world.remove(bombObjects[i].bombBody)
-    }
-    for (let i = 0; i < yourBombMeshes.length; i++) {
-        scene.remove(yourBombMeshes[i])
-    }
+  for (let i = 0; i < boxMeshes.length; i++) {
+    scene.remove(boxMeshes[i]);
+  }
+  for (let i = 0; i < boxes.length; i++) {
+    world.remove(boxes[i]);
+  }
+  for (let i = 0; i < bombs.length; i++) {
+    world.remove(bombs[i])
+  }
+  for (let i = 0; i < bombMeshes.length; i++) {
+    scene.remove(bombMeshes[i])
+  }
+  for (let i = 0; i < bombObjects.length; i++) {
+    if (bombObjects[i].clearTimeout) clearTimeout(bombObjects[i].clearTimeout)
+    if (bombObjects[i].bombBody) world.remove(bombObjects[i].bombBody)
+  }
+  for (let i = 0; i < yourBombMeshes.length; i++) {
+    scene.remove(yourBombMeshes[i])
+  }
 }
 
 export const getShootDir = (projector, camera, targetVec) => {
