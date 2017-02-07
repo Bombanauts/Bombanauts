@@ -51,19 +51,21 @@ io.on('connection', (socket) => {
   console.log(chalk.blue('A new client has connected'));
   console.log(chalk.yellow('socket id: ', socket.id));
 
+  socket.on('set_nickname', (nickname) => {
+    store.dispatch(setNickname(socket.id, nickname, socket.currentRoom))
+  })
+
   socket.on('get_players', () => {
     socket.emit('get_players', store.getState().players[socket.currentRoom]);
   })
 
-  socket.on('set_nickname', (nickname) => {
-    store.dispatch(setNickname(socket.id, nickname, socket.currentRoom))
-  })
 
   socket.on('update_world', (data) => {
     store.dispatch(updatePlayers({ id: data.playerId, position: data.playerPosition, dead: data.dead, nickname: data.nickname }, socket.currentRoom));
     store.dispatch(updateBombPositions({ userId: data.playerId, bombs: data.playerBombs }, socket.currentRoom))
 
     let newState = convertStateForFrontEnd(store.getState(), socket.currentRoom)
+
     io.in(socket.currentRoom).emit('update_world', newState)
   })
 
@@ -96,6 +98,8 @@ io.on('connection', (socket) => {
         store.dispatch(setWinner(alivePlayers[0].socketId, socket.currentRoom))
       }
     }
+
+    currentState = store.getState();
     let newState = convertStateForFrontEnd(currentState, socket.currentRoom)
     io.in(socket.currentRoom).emit('set_winner', newState.winner)
     io.in(socket.currentRoom).emit('update_world', newState)
@@ -115,7 +119,7 @@ io.on('connection', (socket) => {
 
       let state = store.getState()
 
-      io.in(socket.currentRoom).emit('set_winner', store.getState().winner[socket.currentRoom].winner)
+      io.in(socket.currentRoom).emit('set_winner', store.getState().winner[socket.currentRoom])
       io.in(socket.currentRoom).emit('reset_world', {
         players: state.players[socket.currentRoom],
         bombs: {},

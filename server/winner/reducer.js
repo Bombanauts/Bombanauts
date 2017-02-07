@@ -6,7 +6,7 @@ const winner = (state = initialState, action) => {
   let newState = Object.assign({}, state);
   switch (action.type) {
     case SET_WINNER:
-      newState[action.roomId].winner = action.playerId
+      newState[action.roomId] = action.playerId
       return newState
     default:
       return newState
