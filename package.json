@@ -34,6 +34,7 @@
     "cannon": "^0.6.2",
     "express": "^4.14.0",
     "lodash": "^4.17.4",
+    "material-ui": "^0.16.7",
     "react": "^15.4.2",
     "react-countdown-clock": "^1.0.9",
     "react-dom": "^15.4.2",
