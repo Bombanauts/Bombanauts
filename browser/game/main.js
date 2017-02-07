@@ -121,57 +121,90 @@ const projector = new THREE.Projector();
 
 
 export function init() {
-    camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1500);
-    camera.position.set(0, 3, 0)
-    scene = new THREE.Scene();
-    const ambient = new THREE.AmbientLight(0xffffff);
-    scene.add(ambient);
-    light = new THREE.SpotLight(0xffffff);
-    light.position.set(10, 30, 20);
-    light.target.position.set(0, 5, 0);
-    scene.add(light);
+  camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1500);
+  camera.position.set(0, 3, 0)
+  scene = new THREE.Scene();
+  const ambient = new THREE.AmbientLight(0xffffff);
+  scene.add(ambient);
+  light = new THREE.SpotLight(0xffffff);
+  light.position.set(10, 30, 20);
+  light.target.position.set(0, 5, 0);
+  scene.add(light);
 
-    //create clock for fire animation
-    clock = new THREE.Clock()
+  //create clock for fire animation
+  clock = new THREE.Clock()
 
-    controls = new PointerLockControls(camera, sphereBody);
-    scene.add(controls.getObject());
+  controls = new PointerLockControls(camera, sphereBody);
+  scene.add(controls.getObject());
 
-    // floor
-    geometry = new THREE.PlaneBufferGeometry(125, 125, 50, 50);
-    geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
-    const texture = new THREE.TextureLoader().load('images/grass.jpeg');
-    material = new THREE.MeshLambertMaterial({ map: texture });
-    //repeat texture tiling for the floor
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.x = 20;
-    texture.repeat.y = 20;
-    mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
+  // floor
+  geometry = new THREE.PlaneBufferGeometry(125, 125, 50, 50);
+  geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
+  const texture = new THREE.TextureLoader().load('images/grass.jpeg');
+  material = new THREE.MeshLambertMaterial({ map: texture });
+  //repeat texture tiling for the floor
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.x = 20;
+  texture.repeat.y = 20;
+  mesh = new THREE.Mesh(geometry, material);
+  scene.add(mesh);
 
-    //skybox
-    const skyGeo = new THREE.SphereGeometry(1000, 32, 32);
-    const skyMaterial = new THREE.MeshBasicMaterial({ color: '#7EC0EE' });
-    const sky = new THREE.Mesh(skyGeo, skyMaterial);
-    sky.material.side = THREE.BackSide;
-    scene.add(sky);
+  //skybox
+  const skyGeo = new THREE.SphereGeometry(1000, 32, 32);
+  const skyMaterial = new THREE.MeshBasicMaterial({ color: '#7EC0EE' });
+  const sky = new THREE.Mesh(skyGeo, skyMaterial);
+  sky.material.side = THREE.BackSide;
+  scene.add(sky);
 
-    renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
-    window.addEventListener('resize', onWindowResize, false);
+  renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+  window.addEventListener('resize', onWindowResize, false);
 
-    createMap();
+  createMap();
 
-    sphereBody.position.x = 100;
-    sphereBody.position.y = 100;
-    sphereBody.position.z = 100;
-    listener = new THREE.AudioListener();
-    camera.add(listener);
+  sphereBody.position.x = 100;
+  sphereBody.position.y = 100;
+  sphereBody.position.z = 100;
+  listener = new THREE.AudioListener();
+  camera.add( listener );
 
-    let others = store.getState().players.otherPlayers;
-    let newPlayer;
+  let others = store.getState().players;
+  let newPlayer;
+
+  for (let player in others) {
+    newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead)
+    newPlayer.init()
+    players.push(newPlayer.playerBox)
+    playerMeshes.push(newPlayer.playerMesh)
+    playerInstances.push(newPlayer)
+  }
+  prevPlayerStateLength = players.length;
+
+  if (controls) {
+    window.addEventListener("click", function(e) {
+      if (controls.enabled == true && !dead && allowBomb) {
+        // get current self position to shoot
+        let x = sphereBody.position.x;
+        let y = sphereBody.position.y;
+        let z = sphereBody.position.z;
+
+        const newBomb = new Bomb(count++, { x: x, y: y, z: z }, bombMaterial);
+        newBomb.init()
+        allowBomb = false;
+        setTimeout(() => {
+          allowBomb = true;
+        }, 3000)
+
+        //take relevant bomb info and emit
+        const bombInfo = { id: newBomb.id, position: newBomb.bombBody.position, created: Date.now() }
+
+        socket.emit('add_bomb', {
+          userId: socket.id,
+          bombId: bombInfo.id,
+          position: { x: x, y: y, z: z }
+        })
 
     for (let player in others) {
         newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead)
@@ -265,53 +298,41 @@ export function animate() {
             requestAnimationFrame(animate);
         }, 1000 / 60) //throttled to 60 times per second
 
-    //set player spawn after getting initial state from sockets
-    if (counter === 50) {
-        sphereBody.position.x = spawnPositions[playerArr.indexOf(socket.id)].x;
-        sphereBody.position.y = 5
-        sphereBody.position.z = spawnPositions[playerArr.indexOf(socket.id)].z;
-    }
 
-    world.step(dt); // function that allows walking from CANNON
+  //set player spawn after getting initial state from sockets
+  if (counter === 50) {
+    sphereBody.position.x = spawnPositions[playerArr.indexOf(socket.id)].x;
+    sphereBody.position.y = 5
+    sphereBody.position.z = spawnPositions[playerArr.indexOf(socket.id)].z;
+  }
 
-    //gathering your current state
-    const state = store.getState();
-    const others = state.players.otherPlayers;
-    const playerIds = Object.keys(others)
-    const allBombs = state.bombs.allBombs;
-    const stateBombs = [];
-    for (let key in allBombs) {
-        stateBombs.push(...allBombs[key])
-    }
+  world.step(dt); // function that allows walking from CANNON
 
-    //make new player objects if there are a different number of players than previously
-    if (playerIds.length !== players.length) {
-        players.forEach(body => {
-            world.remove(body)
-        })
-        playerMeshes.forEach(playermesh => {
-            scene.remove(playermesh)
-        })
-        players = [];
-        playerMeshes = [];
-        playerInstances = [];
-        for (let player in others) {
-            let newPlayer;
-            newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead)
-            newPlayer.init()
+  //gathering your current state
+  const state = store.getState();
+  const others = state.players;
+  const playerIds = Object.keys(others)
+  const allBombs = state.bombs;
+  const stateBombs = [];
+  for (let key in allBombs) {
+    stateBombs.push(...allBombs[key])
+  }
 
-            players.push(newPlayer.playerBox)
-            playerMeshes.push(newPlayer.playerMesh)
-            playerInstances.push(newPlayer)
-        }
-    }
-
-    // add new bomb if there is one
-    if (stateBombs.length > prevStateLength) {
-        const mostRecentBomb = stateBombs[stateBombs.length - 1]
-        const newBomb = new Bomb(mostRecentBomb.id, mostRecentBomb.position, bombMaterial)
-        newBomb.init()
-
+  //make new player objects if there are a different number of players than previously
+  if (playerIds.length !== players.length) {
+    players.forEach(body => {
+      world.remove(body)
+    })
+    playerMeshes.forEach(playermesh => {
+      scene.remove(playermesh)
+    })
+    players = [];
+    playerMeshes = [];
+    playerInstances = [];
+    for (let player in others) {
+      let newPlayer;
+      newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead)
+      newPlayer.init()
         bombs.push(newBomb.bombBody)
         bombObjects.push(newBomb)
         bombMeshes.push(newBomb.bombMesh)
@@ -334,7 +355,6 @@ export function animate() {
     time = Date.now();
 }
 
-
 //clear out and rebuild entire map to restart, respawn player
 export function restartWorld() {
     deleteWorld(scene, world, boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes);
@@ -348,6 +368,5 @@ export function restartWorld() {
     sphereBody.position.z = spawnPositions[playerArr.indexOf(socket.id)].z;
     dead = false;
 }
-
 
 export { scene, camera, renderer, controls, light, world, dead}

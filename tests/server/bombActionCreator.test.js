@@ -21,31 +21,31 @@ describe('Server side bomb action creator', () => {
 
   describe('addBomb', () => {
     it('returns an object with the ADD_BOMB type', () => {
-      expect(addBomb(newBomb).type).to.equal(ADD_BOMB)
+      expect(addBomb(newBomb, 2).type).to.equal(ADD_BOMB)
     })
 
     it('returns an object with the passed in bomb object on it\'s newBomb property', () => {
-      expect(addBomb(newBomb).newBomb).to.be.deep.equal(newBomb)
+      expect(addBomb(newBomb, 2).newBomb).to.be.deep.equal(newBomb)
     })
   })
 
   describe('updateBombPositions', () => {
     it('returns an object with the UPDATE_BOMB_POSITIONS type', () => {
-      expect(updateBombPositions(newBomb).type).to.equal(UPDATE_BOMB_POSITIONS)
+      expect(updateBombPositions(newBomb, 2).type).to.equal(UPDATE_BOMB_POSITIONS)
     })
 
     it('returns an object with the passed in player id and bombs array  on it\'s bombs property', () => {
-      expect(updateBombPositions(bombPositions).bombs).to.be.deep.equal(bombPositions)
+      expect(updateBombPositions(bombPositions, 2).bombs).to.be.deep.equal(bombPositions)
     })
   })
 
   describe('removePlayerBombs', () => {
     it('returns an object with the REMOVE_PLAYER_BOMBS type', () => {
-      expect(removePlayerBombs(userId).type).to.equal(REMOVE_PLAYER_BOMBS)
+      expect(removePlayerBombs(userId, 2).type).to.equal(REMOVE_PLAYER_BOMBS)
     })
 
     it('returns an object with the passed in user ID on it\'s id property', () => {
-      expect(removePlayerBombs(userId).id).to.equal(userId)
+      expect(removePlayerBombs(userId, 2).id).to.equal(userId)
     })
   })
 })

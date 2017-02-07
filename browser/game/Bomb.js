@@ -26,6 +26,7 @@ export default class Bomb {
 
     this.init = this.init.bind(this);
     this.explode = this.explode.bind(this);
+    // this.createFire = this.createFire.bind(this);
   }
 
   init() {
@@ -86,12 +87,12 @@ export default class Bomb {
     world.remove(this.bombBody)
 
     // create Fire
-    const fireWidth = 4
-    const fireHeight = 12
-    const fireDepth = 4
-    const sliceSpacing = 0.5
 
     function createFire(x, y, z) {
+      const fireWidth = 4
+      const fireHeight = 12
+      const fireDepth = 4
+      const sliceSpacing = 0.5
       const fire = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
       fire.mesh.frustumCulled = false;
       fire.mesh.position.set(x, y, z)
