@@ -78,11 +78,10 @@ socket.on('update_world', (data) => {
 
 
   socket.on('reset_world', (data) => {
-    store.dispatch(loadMap(data.mapState.mapState));
-    store.dispatch(updatePlayerLocations(data.players));
-    store.dispatch(updateBombLocations(data.bombs.allBombs));
-
-    restartWorld();
+      store.dispatch(loadMap(data.mapState.mapState));
+      store.dispatch(updatePlayerLocations(data.players));
+      store.dispatch(updateBombLocations(data.bombs.allBombs));
+      restartWorld();
   })
 
 })

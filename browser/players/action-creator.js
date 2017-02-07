@@ -18,3 +18,4 @@ export const removePlayer = (id) => ({
   type: REMOVE_PLAYER,
   id
 });
+
