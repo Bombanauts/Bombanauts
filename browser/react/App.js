@@ -41,12 +41,8 @@ class App extends Component {
 
   render() {
     let winnerId = this.props.winner
-    // if (this.props.winner) {
-    //   winnerId = this.props.winner;
-    // }
+
     const players = store.getState().players
-    console.log('socket', socket.id)
-    console.log('winnderid', winnerId)
     let winnerNickname = '';
     if (socket.id === winnerId && winnerId) {
         winnerNickname = 'You'

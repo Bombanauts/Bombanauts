@@ -289,6 +289,7 @@ export function animate() {
     players.forEach(body => {
       world.remove(body)
     })
+
     playerMeshes.forEach(playermesh => {
       scene.remove(playermesh)
     })
@@ -297,7 +298,7 @@ export function animate() {
     playerInstances = [];
     for (let player in others) {
       let newPlayer;
-      newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead)
+      newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, false)
       newPlayer.init()
 
       players.push(newPlayer.playerBox)
@@ -335,12 +336,20 @@ export function animate() {
 }
 
 
-
 //clear out and rebuild entire map to restart, respawn player
 export function restartWorld() {
-  deleteWorld(scene, world, boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes);
+  deleteWorld(scene, world, boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes, players, playerMeshes);
 
-  boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes = [];
+  boxMeshes = [];
+  boxes = [];
+  bombs = [];
+  bombMeshes = [];
+  yourBombs = [];
+  bombObjects = [];
+  yourBombMeshes = [];
+  players = [];
+  playerMeshes = [];
+  playerInstances = [];
 
   createMap();
 

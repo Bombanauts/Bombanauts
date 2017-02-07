@@ -156,7 +156,7 @@ export const animateBombs = (yourBombs, yourBombMeshes, bombs, stateBombs, bombM
   }
 }
 
-export const deleteWorld = (scene, world, boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes) => {
+export const deleteWorld = (scene, world, boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes, players, playerMeshes) => {
   for (let i = 0; i < boxMeshes.length; i++) {
     scene.remove(boxMeshes[i]);
   }
@@ -175,6 +175,12 @@ export const deleteWorld = (scene, world, boxMeshes, boxes, bombs, bombMeshes, y
   }
   for (let i = 0; i < yourBombMeshes.length; i++) {
     scene.remove(yourBombMeshes[i])
+  }
+  for (let i = 0; i < playerMeshes.length; i++) {
+    scene.remove(playerMeshes[i]);
+  }
+  for (let i = 0; i < players.length; i++) {
+    world.remove(players[i]);
   }
 }
 
