@@ -4,7 +4,7 @@ const THREE = require('three')
 
 import store from './store';
 window.store = store;
-import { updatePlayerLocations, removePlayer, reviveOtherPlayers } from './players/action-creator';
+import { updatePlayerLocations, removePlayer } from './players/action-creator';
 import { updateBombLocations, removePlayerBombs } from './bombs/action-creator'
 import { loadMap } from './maps/action-creator';
 import { setTime, getTime } from './timer/action-creator';
@@ -24,18 +24,23 @@ socket.on('connect', function() {
     store.dispatch(updatePlayerLocations(initialData.players));
     store.dispatch(updateBombLocations(initialData.bombs))
     store.dispatch(loadMap(initialData.map))
-    store.dispatch(setTime(initialData.timer.startTime, initialData.timer.endTime))
+    store.dispatch(setTime(initialData.timer))
   })
 
+let count = 0;
 socket.on('update_world', (data) => {
+  count += 1;
   playerArr = Object.keys(data.players);
   delete data.players[socket.id];
   delete data.bombs[socket.id];
   store.dispatch(updatePlayerLocations(data.players))
   store.dispatch(updateBombLocations(data.bombs))
-  store.dispatch(setTime(data.timer.startTime, data.timer.endTime))
+  if (count % 30 === 0) {
+    store.dispatch(setTime(data.timer))
+  }
 })
   socket.on('set_winner', (winner) => {
+    console.log('This is winner ', winner)
     store.dispatch(setWinner(winner));
   })
 
@@ -64,17 +69,20 @@ socket.on('update_world', (data) => {
 
 
   socket.on('reset_world', (data) => {
-    store.dispatch(loadMap(data.map));
-    store.dispatch(updatePlayerLocations(data.players));
-    store.dispatch(updateBombLocations(data.bombs));
-    store.dispatch(reviveOtherPlayers());
-    store.dispatch(revivePlayer());
-    restartWorld();
+    setTimeout(() => {
+      count = 0;
+      store.dispatch(loadMap(data.map));
+      store.dispatch(updatePlayerLocations(data.players));
+      store.dispatch(updateBombLocations(data.bombs));
+      store.dispatch(revivePlayer());
+      store.dispatch(setTime(data.timer))
+      restartWorld();
+      store.dispatch(setWinner(null))
+    }, 5000)
   })
 
   socket.on('remove_player', (id) => {
     store.dispatch(removePlayer(id))
-
     let playerBody = world.bodies.filter((child) => {
       return child.name === id;
     })[0];

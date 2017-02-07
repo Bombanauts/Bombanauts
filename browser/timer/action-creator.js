@@ -1,14 +1,8 @@
 import {
-  SET_TIME,
-  GET_TIME
+  SET_TIME
 } from './constants';
 
-export const setTime = (time, timeLimit) => ({
+export const setTime = (time) => ({
   type: SET_TIME,
-  time,
-  timeLimit
-})
-
-export const getTime = () => ({
-  type: GET_TIME
+  time
 })

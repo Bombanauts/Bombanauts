@@ -3,10 +3,9 @@ const {
   GET_TIME
 } = require('./constants');
 
-const setTime = (time, timeLimit, roomId) => ({
+const setTime = (time, roomId) => ({
   type: SET_TIME,
   time,
-  timeLimit,
   roomId
 })
 
