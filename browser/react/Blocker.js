@@ -48,10 +48,10 @@ class Blocker extends Component {
     return (
       <div id="blocker" ref="blocker">
        { this.state.instructions && <div id="instructions" ref="instructions" onClick={this.handleClick}>
-          <span style={{ fontSize: '40px', zIndex: '999'}}>Click to play</span>
+          <span style={{ display: 'inline-block', marginBottom: '50px', fontSize: '40px', zIndex: '999'}}>Click to play</span>
           <br />
-          (W,A,S,D = Move, MOUSE = Look, CLICK = Plant Bomb)
-        </div> }
+          <span style={{ fontSize: '18px' }}>(W,A,S,D = Move, MOUSE = Look, CLICK = Plant Bomb)</span>
+        </div>}
       </div>
     )
   }
