@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import store from '../store';
 import { initCannon, init, animate } from '../game/main';
 import Blocker from './Blocker';
+import Splash from './Splash';
 
 function delay(t) {
   return new Promise(resolve => {
@@ -36,6 +37,7 @@ class App extends Component {
   render() {
     return (
       <div>
+          {!this.props.isPlaying && <Splash />}
           <Blocker dead={this.props.dead} />
           { this.props.dead && <div style={{ backgroundColor: '#700303',
             position: 'absolute',
@@ -62,7 +64,8 @@ class App extends Component {
 
 const mapStateToProps = (state) => ({
     dead: state.dead,
-    winner: state.winner
+    winner: state.winner,
+    isPlaying: state.isPlaying
 })
 
 
