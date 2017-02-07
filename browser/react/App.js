@@ -65,7 +65,7 @@ class App extends Component {
 const mapStateToProps = (state) => ({
     dead: state.dead,
     winner: state.winner,
-    isPlaying: state.isPlaying
+    isPlaying: state.isPlaying,
 })
 
 
