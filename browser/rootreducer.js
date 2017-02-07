@@ -5,7 +5,7 @@ import { map } from './maps/reducer'
 import { dead } from './dead/reducer'
 import timer from './timer/reducer'
 import winner from './winner/reducer'
-import { gameState } from './gameState/reducer'
+import { isPlaying } from './gameState/reducer'
 
 export default combineReducers({
   players,
@@ -14,5 +14,5 @@ export default combineReducers({
   dead,
   timer,
   winner,
-  gameState
+  isPlaying
 })

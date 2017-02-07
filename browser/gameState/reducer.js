@@ -1,15 +1,13 @@
 import { START_GAME } from './constants'
 
-const initialState = {
-  isPlaying: false
-}
+const initialState = false
 
-export const gameState = (state = initialState, action) => {
-  let newState = Object.assign({}, state)
+export const isPlaying = (state = initialState, action) => {
+  let newState = state
 
   switch (action.type) {
     case START_GAME:
-      newState.isPlaying = true;
+      newState = true;
       break;
     default:
       return state;
