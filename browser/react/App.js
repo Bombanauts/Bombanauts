@@ -10,6 +10,7 @@ const fontStyle = {
   'fontSize': '40px'
 }
 import Blocker from './Blocker';
+import Splash from './Splash';
 
 function delay(t) {
   return new Promise(resolve => {
@@ -52,8 +53,8 @@ class App extends Component {
     }
     return (
       <div>
-        <Login />
-            { winnerId && <h1  style={{position: "absolute", right: 500}}>{winnerNickname} Won!</h1>}
+          {!this.props.isPlaying && <Splash />}
+          { winnerId && <h1  style={{position: "absolute", right: 500}}>{winnerNickname} Won!</h1>}
           <Blocker dead={this.props.dead} />
           { this.props.dead && <div style={{ backgroundColor: '#700303',
             position: 'absolute',
@@ -82,7 +83,8 @@ class App extends Component {
 
 const mapStateToProps = (state) => ({
     dead: state.dead,
-    winner: state.winner
+    winner: state.winner,
+    isPlaying: state.isPlaying,
 })
 
 
