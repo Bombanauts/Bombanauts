@@ -27,23 +27,42 @@ class Splash extends Component {
 
   render() {
     return (
-      <div style={{ backgroundColor: 'white' }}>
-        <h1 style={{
+      <div style={{ backgroundImage: 'url("images/Splash.png")', backgroundSize: 'cover', height: '100%', width: '100%' }}>
+        <div>
+          <span style={{
               fontSize: 50,
-              position: 'absolute',
-              right: 500,
-              top: 50,
-            }}>BomberJS</h1>
-        <input  value={this.state.nickname}
-                onChange={this.updateNickname}
-                maxLength={15}
-                type="text"
-                placeholder="nickname"
-                autoFocus/>
-        <button className="Buttons"
-                type="submit"
-                onClick={this.setNickname}
-                >play</button>
+              margin: 'auto',
+              textAlign: 'center',
+              position: 'relative',
+              display: 'table',
+              top: 80
+            }}>BomberJS</span>
+          <span style={{
+              margin: 'auto',
+              textAlign: 'center',
+              position: 'relative',
+              display: 'table',
+              top: 140
+            }}>
+            <input value={this.state.nickname}
+                  onChange={this.updateNickname}
+                  maxLength={15}
+                  type="text"
+                  placeholder="nickname"
+                  autoFocus
+                  style={{
+                    textAlign: 'center',
+                    height: '30px'
+                  }} />
+          <button className="Buttons"
+                  type="submit"
+                  onClick={this.setNickname}
+                  style={{
+                    textAlign: 'center',
+                    height: '30px'
+                  }}>play</button>
+          </span>
+        </div>
       </div>
     )
   }
