@@ -57,6 +57,7 @@ class Splash extends Component {
           <button className="Buttons"
                   type="submit"
                   onClick={this.setNickname}
+                  disabled={!this.state.nickname}
                   style={{
                     textAlign: 'center',
                     height: '30px'
