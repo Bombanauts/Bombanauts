@@ -29,7 +29,7 @@ const convertStateForFrontEnd = (state, room) => {
     players: state.players[room],
     bombs: state.bombs[room],
     map: state.map[room],
-    timer: state.timer[room],
+    timer: state.timer[room].currTime,
     winner: state.winner[room]
   }
 }

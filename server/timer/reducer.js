@@ -10,9 +10,10 @@ const timer = (state = initialState, action) => {
   let newState = Object.assign({}, state);
   switch (action.type) {
     case GET_TIME:
-      return newState[action.roomId];
+      let currTime = newState[action.roomId].endTime - Date.now();
+      newState[action.roomId].currTime = currTime / 1000;
+      break;
     case SET_TIME:
-      newState[action.roomId].startTime = action.time;
       newState[action.roomId].endTime = action.time + 181000;
       break;
     default:

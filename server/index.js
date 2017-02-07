@@ -10,7 +10,7 @@ const { Maps, randomGeneration } = require('./maps/map');
 const { updatePlayers, removePlayer, killPlayer, setNickname } = require('./players/action-creator');
 const { addBomb, updateBombPositions, removePlayerBombs, removeBomb } = require('./bombs/action-creator')
 const { updateMap, loadMap } = require('./maps/action-creator')
-const { setTime } = require('./timer/action-creator')
+const { setTime, getTime} = require('./timer/action-creator')
 const { setWinner } = require('./winner/action-creator')
 const { roomName, convertStateForFrontEnd } = require('./utils')
 
@@ -39,8 +39,8 @@ io.on('connection', (socket) => {
     store.dispatch(loadMap(randomMap, socket.currentRoom))
     let currentTime = Date.now();
 
-    store.dispatch(setTime(currentTime, 180, socket.currentRoom))
-
+    store.dispatch(setTime(currentTime, socket.currentRoom))
+    store.dispatch(getTime(socket.currentRoom))
     currState = convertStateForFrontEnd(store.getState(), socket.currentRoom);
     socket.emit('initial', currState);
   } else {
@@ -63,9 +63,9 @@ io.on('connection', (socket) => {
   socket.on('update_world', (data) => {
     store.dispatch(updatePlayers({ id: data.playerId, position: data.playerPosition, dead: data.dead, nickname: data.nickname }, socket.currentRoom));
     store.dispatch(updateBombPositions({ userId: data.playerId, bombs: data.playerBombs }, socket.currentRoom))
+    store.dispatch(getTime(socket.currentRoom))
 
     let newState = convertStateForFrontEnd(store.getState(), socket.currentRoom)
-
     io.in(socket.currentRoom).emit('update_world', newState)
   })
 
@@ -115,16 +115,15 @@ io.on('connection', (socket) => {
       let currentTime = Date.now();
       store.dispatch(setWinner(null, socket.currentRoom))
       store.dispatch(loadMap(newMap, socket.currentRoom))
-      store.dispatch(setTime(currentTime, 185, socket.currentRoom))
-
+      store.dispatch(setTime(currentTime, socket.currentRoom));
+      store.dispatch(getTime(socket.currentRoom))
       let state = store.getState()
-
-      io.in(socket.currentRoom).emit('set_winner', store.getState().winner[socket.currentRoom])
+      io.in(socket.currentRoom).emit('set_winner', state.winner[socket.currentRoom])
       io.in(socket.currentRoom).emit('reset_world', {
         players: state.players[socket.currentRoom],
         bombs: {},
         map: state.map[socket.currentRoom],
-        timer: state.timer[socket.currentRoom],
+        timer: state.timer[socket.currentRoom].currTime,
         winner: null,
         dead: false
       })

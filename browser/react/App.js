@@ -31,11 +31,6 @@ class App extends Component {
       initCannon()
       init()
       animate()
-      let timer = store.getState().timer;
-      let now = Date.now();
-      this.setState({
-        time: (timer.endTime - now) / 1000
-      })
     })
   }
 
@@ -63,17 +58,7 @@ class App extends Component {
             pointerEvents: 'none'}}><h1  style={{position: "absolute", right: 500, top: 50}}> YOU ARE DEAD</h1>
             </div>}
             <div style={{position: "absolute", right: 0}}>
-             { this.state.time != 0 &&
-              <ReactCountdownClock
-                seconds={this.state.time}
-                color="#ddd"
-                alpha={0.5}
-                size={100}
-                timeFormat="hms"
-                onComplete={function(){
-                }}
-            />
-            }
+              {this.props.time ? this.props.time + '' : console.log(this.props.time)} Seconds Left
             </div>
       </div>
     )
@@ -82,7 +67,8 @@ class App extends Component {
 
 const mapStateToProps = (state) => ({
     dead: state.dead,
-    winner: state.winner
+    winner: state.winner,
+    time: state.timer
 })
 
 
