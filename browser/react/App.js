@@ -1,8 +1,14 @@
 import React, {Component} from 'react'
 import ReactCountdownClock from 'react-countdown-clock';
 import { connect } from 'react-redux';
+import socket from '../socket';
 import store from '../store';
-import { initCannon, init, animate } from '../game/main';
+
+import { initCannon, init, animate, controls } from '../game/main';
+import { Login } from './Login';
+const fontStyle = {
+  'fontSize': '40px'
+}
 import Blocker from './Blocker';
 
 function delay(t) {
@@ -34,27 +40,48 @@ class App extends Component {
   }
 
   render() {
+    const winnerId = this.props.winner.playerId;
+    const players = store.getState().players.otherPlayers
+    let winnerNickname = '';
+    if (socket.id === winnerId && winnerId) {
+        winnerNickname = 'You'
+        socket.emit('reset_world', {})
+    } else if (winnerId) {
+      winnerNickname = players[winnerId].nickname;
+    }
     return (
       <div>
+
+        <Login />
+        <div id="blocker">
+          <div id="instructions">
+            <span style={fontStyle}>Click to play</span>
+            <br />
+            (W,A,S,D = Move, MOUSE = Look, CLICK = Shoot)
+          </div>
+        </div>
+            { winnerId && <h1  style={{position: "absolute", right: 500}}>{winnerNickname} Won!</h1>}
           <Blocker dead={this.props.dead} />
           { this.props.dead && <div style={{ backgroundColor: '#700303',
             position: 'absolute',
             opacity: '0.7',
             width: '100vw',
             height: '100vh',
-            pointerEvents: 'none'}}><h1  style={{position: "absolute", right: 500}}> YOU ARE FUCKING DEAD</h1>
+            pointerEvents: 'none'}}><h1  style={{position: "absolute", right: 500, top: 50}}> YOU ARE DEAD</h1>
             </div>}
             <div style={{position: "absolute", right: 0}}>
-             { this.state.time !== 0 &&
+             { this.state.time != 0 &&
               <ReactCountdownClock
-            seconds={+this.state.time}
-            color="#ddd"
-            alpha={0.5}
-            size={100}
-            timeFormat="hms"
-            // onComplete={}
-            /> }
-          </div>
+                seconds={this.state.time}
+                color="#ddd"
+                alpha={0.5}
+                size={100}
+                timeFormat="hms"
+                onComplete={function(){
+                }}
+            />
+            }
+            </div>
       </div>
     )
   }
