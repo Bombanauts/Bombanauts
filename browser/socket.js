@@ -53,25 +53,44 @@ socket.on('update_world', (data) => {
   })
 
   socket.on('kill_player', (data) => {
-    let playerToKill = playerInstances.filter(player => {
-      return player.socketId === data.id;
-    })[0]
-    if (playerToKill) {
-      let sound = new THREE.PositionalAudio( listener );
-      const audioLoader = new THREE.AudioLoader();
-      audioLoader.load( 'sounds/die.mp3', function( buffer ) {
-        sound.setBuffer( buffer );
-        sound.setRefDistance( 10 );
-        sound.play()
-      });
-
-      playerToKill.explode()
-    }
-
     store.dispatch(announce(data.killerNickname, data.victimNickname))
     setTimeout(() => {
       store.dispatch(removeAnnouncement())
     }, 3000)
+    let playerToKill = playerInstances.filter(player => {
+      return player.socketId === data.id;
+    })[0]
+    if (playerToKill) {
+      let currentStateAnnouncement = store.getState().announcement;
+      if (currentStateAnnouncement.killer.nickname === currentStateAnnouncement.victim.nickname) {
+        let witchSound = new THREE.PositionalAudio( listener );
+        const witchAudioLoader = new THREE.AudioLoader();
+        witchAudioLoader.load( 'sounds/witch.mp3', function( buffer ) {
+          witchSound.setBuffer( buffer );
+          witchSound.setRefDistance( 10 );
+          witchSound.play()
+        });
+        let sound = new THREE.PositionalAudio( listener );
+        const audioLoader = new THREE.AudioLoader();
+        audioLoader.load( 'sounds/die.mp3', function( buffer ) {
+          sound.setBuffer( buffer );
+          sound.setRefDistance( 10 );
+          sound.play()
+        });
+
+        playerToKill.explode()
+      } else {
+        let sound = new THREE.PositionalAudio( listener );
+        const audioLoader = new THREE.AudioLoader();
+        audioLoader.load( 'sounds/die.mp3', function( buffer ) {
+          sound.setBuffer( buffer );
+          sound.setRefDistance( 10 );
+          sound.play()
+        });
+
+        playerToKill.explode()
+      }
+    }
   })
 
 
