@@ -96,3 +96,5 @@ export default class Player {
     }
   }
 }
+
+export { sprite }

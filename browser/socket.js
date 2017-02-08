@@ -12,7 +12,7 @@ import { setWinner } from './winner/action-creator'
 import { revivePlayer } from './dead/action-creator'
 
 import { initCannon, init, animate, players, playerMeshes, world, scene, playerInstances,  resetCount, createMap, restartWorld, listener } from './game/main';
-
+import { sprite } from './game/Player'
 import { pointerChecker } from './react/App';
 
 export let playerArr = [];
@@ -92,7 +92,11 @@ socket.on('update_world', (data) => {
     })[0];
 
     if (playerBody) world.remove(playerBody)
-    if (playerMesh) scene.remove(playerMesh)
+    if (playerMesh) {
+      scene.remove(playerMesh)
+      scene.remove(sprite)
+      world.remove(sprite)
+    }
   })
 })
 
