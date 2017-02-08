@@ -78,7 +78,7 @@ io.on('connection', (socket) => {
   //kill player on bomb collision
   socket.on('kill_player', (data) => {
     store.dispatch(killPlayer(data.id, socket.currentRoom))
-    io.in(socket.currentRoom).emit('kill_player', data.id)
+    io.in(socket.currentRoom).emit('kill_player', data)
     let currentState = store.getState();
     let currentPlayers = currentState.players[socket.currentRoom];
 

@@ -21,13 +21,13 @@ class Splash extends Component {
   }
 
   setNickname() {
-    this.props.start()
     socket.emit('set_nickname', this.state.nickname);
+    this.props.start()
   }
 
   render() {
     return (
-      <div style={{ backgroundImage: 'url("images/Splash.png")', backgroundSize: 'cover', height: '100%', width: '100%' }}>
+      <div style={{ backgroundImage: 'url("images/splash.png")', backgroundSize: 'cover', height: '100%', width: '100%' }}>
         <div>
           <span style={{
               fontSize: 50,

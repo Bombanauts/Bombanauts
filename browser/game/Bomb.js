@@ -9,8 +9,9 @@ import { destroyable, roundFour } from './utils'
 import { Block } from './Explosion.js'
 
 export default class Bomb {
-  constructor(id, position, material) {
+  constructor(id, position, material, userId) {
     this.id = id;
+    this.userId = userId;
     this.position = position;
     this.bool = true;
     this.clearTimeout = null;
@@ -26,7 +27,6 @@ export default class Bomb {
 
     this.init = this.init.bind(this);
     this.explode = this.explode.bind(this);
-    // this.createFire = this.createFire.bind(this);
   }
 
   init() {

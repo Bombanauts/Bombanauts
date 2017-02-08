@@ -47,7 +47,7 @@ socket.on('update_world', (data) => {
 
   socket.on('kill_player', (data) => {
     let playerToKill = playerInstances.filter(player => {
-      return player.socketId === data;
+      return player.socketId === data.id;
     })[0]
     if (playerToKill) {
       let sound = new THREE.PositionalAudio( listener );
@@ -60,6 +60,7 @@ socket.on('update_world', (data) => {
 
       playerToKill.explode()
     }
+    // store.dispatch( SOMETHING HERE TO CHANGE STATE ON A COMPONENT)
   })
 
 
