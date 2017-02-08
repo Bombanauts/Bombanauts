@@ -8,7 +8,7 @@ import { initCannon, init, animate, controls } from '../game/main';
 
 import Blocker from './Blocker';
 import Splash from './Splash';
-import { Announcer } from './Announcer';
+import Announcer from './Announcer';
 
 const fontStyle = {
   'fontSize': '40px'
@@ -49,16 +49,9 @@ class App extends Component {
       winnerNickname = players[winnerId].nickname;
     }
 
-    let killerNickname;
-    let victimNickname;
-    if (this.props.killer) {
-      killerNickname = this.props.killer.nickname
-      victimNickname = this.props.victim.nickname
-    }
-
     return (
       <div>
-          { killerNickname && <Announcer killerName={killerNickname} victimName={victimNickname} /> }
+          <Announcer  />
           {!this.props.isPlaying && <Splash />}
           { winnerId && <h1 style={{position: "absolute", right: 500 }}>{winnerNickname} Won!</h1>}
           <Blocker dead={this.props.dead} />
@@ -87,9 +80,7 @@ const mapStateToProps = (state) => {
   return {
     dead: state.dead,
     winner: state.winner,
-    isPlaying: state.isPlaying,
-    killer: state.announcement.killer,
-    victim: state.announcement.victim
+    isPlaying: state.isPlaying
   }
 }
 

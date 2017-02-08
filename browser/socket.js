@@ -39,6 +39,7 @@ socket.on('update_world', (data) => {
   store.dispatch(updateBombLocations(data.bombs))
   if (count % 30 === 0) {
     store.dispatch(setTime(data.timer))
+    count = 0;
   }
 })
   socket.on('set_winner', (winner) => {
@@ -70,13 +71,12 @@ socket.on('update_world', (data) => {
     store.dispatch(announce(data.killerNickname, data.victimNickname))
     setTimeout(() => {
       store.dispatch(removeAnnouncement())
-    }, 5000)
+    }, 3000)
   })
 
 
   socket.on('reset_world', (data) => {
     setTimeout(() => {
-      count = 0;
       store.dispatch(loadMap(data.map));
       store.dispatch(updatePlayerLocations(data.players));
       store.dispatch(updateBombLocations(data.bombs));

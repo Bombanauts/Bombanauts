@@ -56,7 +56,7 @@ export default class Player {
     // set spawn position
     playerMesh.position.set(this.x, this.y, this.z);
     playerBox.position.set(playerMesh.position.x, playerMesh.position.y, playerMesh.position.z);
-    
+
 
     if (!this.dead) {
       scene.add(playerMesh)
@@ -67,15 +67,15 @@ export default class Player {
     this.playerBox = playerBox;
 
     // ASSIGNING NICKNAME SPRITE TO PLAYER
-    if (this.nickname) {
-      name = this.nickname.length > 8 ? this.nickname.slice(0, 7) : this.nickname;
-      sprite = makeTextSprite(name, 100);
-      sprite.position.set(this.x, this.y + 2.25, this.z)
-      this.playerMesh.sprite = sprite;
-      sprite.lookAt(camera.position)
-      this.sprite = sprite;
-      scene.add(this.sprite);   
-    }
+    // if (this.nickname) {
+    //   name = this.nickname.length > 8 ? this.nickname.slice(0, 7) : this.nickname;
+    //   sprite = makeTextSprite(name, 100);
+    //   sprite.position.set(this.x, this.y + 2.25, this.z)
+    //   this.playerMesh.sprite = sprite;
+    //   sprite.lookAt(camera.position)
+    //   this.sprite = sprite;
+    //   scene.add(this.sprite);
+    // }
 
   }
 
@@ -90,7 +90,7 @@ export default class Player {
       blocksObj[this.playerMesh.id] = particles.slice();
       world.remove(this.playerBox)
       scene.remove(this.playerMesh)
-      scene.remove(this.sprite)
+      // scene.remove(this.sprite)
       this.dead = true;
       return true; //returning for knowing if socket should emit on explosion call
     }
