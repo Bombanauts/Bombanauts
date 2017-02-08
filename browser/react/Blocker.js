@@ -12,6 +12,7 @@ class Blocker extends Component {
     this.handleClick = this.handleClick.bind(this)
   }
 
+
   componentDidMount() {
     const element = document.body;
     const blocker = this.refs.blocker;
