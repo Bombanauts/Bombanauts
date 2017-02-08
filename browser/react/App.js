@@ -5,7 +5,7 @@ import socket from '../socket';
 import store from '../store';
 import Timer from './Timer';
 import { initCannon, init, animate, controls } from '../game/main';
-import { Login } from './Login';
+
 const fontStyle = {
   'fontSize': '40px'
 }
