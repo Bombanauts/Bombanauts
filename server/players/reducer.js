@@ -43,9 +43,9 @@ const players = (state = initialState, action) => {
       if (newState[action.roomId][action.id]) newState[action.roomId][action.id].dead = true;
       return newState;
     case SET_NICKNAME:
-    if (action.id) {
-      newState[action.roomId][action.id].nickname = action.nickname;
-    }
+      if (newState[action.roomId][action.id]) {
+        newState[action.roomId][action.id].nickname = action.nickname;
+      }
       return newState;
     default:
       return state;
