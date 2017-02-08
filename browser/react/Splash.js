@@ -44,7 +44,7 @@ class Splash extends Component {
               textAlign: 'center',
               position: 'relative',
               display: 'table',
-              top: 140
+              top: 80
             }}>
             <TextField
                   onChange={this.updateNickname}
