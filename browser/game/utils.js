@@ -123,7 +123,7 @@ export const animatePlayers = (players, playerIds, others, playerMeshes) => {
       let { x, y, z } = others[playerIds[i]]
       playerMeshes[i].position.set(x, y, z);
       if(playerMeshes[i].sprite) {
-        playerMeshes[i].sprite.position.set(x, y + 2.25, z); 
+        playerMeshes[i].sprite.position.set(x, y + 2.25, z);
       }
       players[i].position.x = x;
       players[i].position.y = y;
