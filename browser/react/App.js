@@ -60,7 +60,7 @@ class App extends Component {
       <div>
           { killerNickname && <Announcer killerName={killerNickname} victimName={victimNickname} /> }
           {!this.props.isPlaying && <Splash />}
-          { winnerId && <h1 style={{position: "absolute", right: 500}}>{winnerNickname} Won!</h1>}
+          { winnerId && <h1 style={{position: "absolute", left: '100%'}}>{winnerNickname} Won!</h1>}
           <Blocker dead={this.props.dead} />
           { this.props.dead && <div style={{ backgroundColor: '#700303',
             position: 'absolute',
