@@ -174,7 +174,7 @@ export function init() {
   let newPlayer;
 
   for (let player in others) {
-    newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead)
+    newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead, others[player].nickname)
     newPlayer.init()
     players.push(newPlayer.playerBox)
     playerMeshes.push(newPlayer.playerMesh)
@@ -190,7 +190,7 @@ export function init() {
         let y = sphereBody.position.y;
         let z = sphereBody.position.z;
 
-        const newBomb = new Bomb(count++, { x: x, y: y, z: z }, bombMaterial);
+        const newBomb = new Bomb(count++, { x: x, y: y, z: z }, bombMaterial, socket.id);
         newBomb.init()
         allowBomb = false;
         setTimeout(() => {
@@ -281,8 +281,13 @@ export function animate() {
   const playerIds = Object.keys(others)
   const allBombs = state.bombs;
   const stateBombs = [];
+
   for (let key in allBombs) {
-    stateBombs.push(...allBombs[key])
+    let userBombs = allBombs[key].map((bomb) => {
+      bomb.userId = key
+      return bomb
+    })
+    stateBombs.push(...userBombs)
   }
 
   if (playerIds.length !== players.length) {
@@ -298,9 +303,8 @@ export function animate() {
     playerInstances = [];
     for (let player in others) {
       let newPlayer;
-      newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, false)
+      newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, false, others[player].nickname)
       newPlayer.init()
-
       players.push(newPlayer.playerBox)
       playerMeshes.push(newPlayer.playerMesh)
       playerInstances.push(newPlayer)
@@ -310,7 +314,7 @@ export function animate() {
   // add new bomb if there is one
   if (stateBombs.length > prevStateLength) {
     const mostRecentBomb = stateBombs[stateBombs.length - 1]
-    const newBomb = new Bomb(mostRecentBomb.id, mostRecentBomb.position, bombMaterial)
+    const newBomb = new Bomb(mostRecentBomb.id, mostRecentBomb.position, bombMaterial, mostRecentBomb.userId)
     newBomb.init()
 
     bombs.push(newBomb.bombBody)

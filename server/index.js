@@ -59,7 +59,6 @@ io.on('connection', (socket) => {
         socket.emit('get_players', store.getState().players[socket.currentRoom]);
     })
 
-
     socket.on('update_world', (data) => {
         store.dispatch(updatePlayers({ id: data.playerId, position: data.playerPosition, dead: data.dead, nickname: data.nickname }, socket.currentRoom));
         store.dispatch(updateBombPositions({ userId: data.playerId, bombs: data.playerBombs }, socket.currentRoom))
@@ -83,7 +82,7 @@ io.on('connection', (socket) => {
     socket.on('kill_player', (data) => {
 
         store.dispatch(killPlayer(data.id, socket.currentRoom))
-        io.in(socket.currentRoom).emit('kill_player', data.id)
+        io.in(socket.currentRoom).emit('kill_player', data)
         let currentState = store.getState();
         let currentPlayers = currentState.players[socket.currentRoom];
 

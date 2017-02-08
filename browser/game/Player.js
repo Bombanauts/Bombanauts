@@ -12,7 +12,7 @@ const PointerLockControls = require('./PointerLockControls')
 let geometry, material, shape, playerMesh, controls, color, playerBox;
 
 export default class Player {
-  constructor(socketId, x, y, z, dead) {
+  constructor(socketId, x, y, z, dead, nickname) {
     this.x = x;
     this.y = y;
     this.z = z;
@@ -21,6 +21,7 @@ export default class Player {
     this.socketId = socketId;
     this.dead = dead;
     this.material;
+    this.nickname = nickname;
 
     this.init = this.init.bind(this)
   }

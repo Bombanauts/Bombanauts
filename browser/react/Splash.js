@@ -21,8 +21,8 @@ class Splash extends Component {
   }
 
   setNickname() {
-    this.props.start()
     socket.emit('set_nickname', this.state.nickname);
+    this.props.start()
   }
 
   render() {
