@@ -34,7 +34,6 @@ const players = (state = initialState, action) => {
           currentPlayer.z = z;
           currentPlayer.dead = action.player.dead;
         }
-
       }
       return newState;
     case REMOVE_PLAYER:
@@ -44,7 +43,9 @@ const players = (state = initialState, action) => {
       if (newState[action.roomId][action.id]) newState[action.roomId][action.id].dead = true;
       return newState;
     case SET_NICKNAME:
+    if (action.id) {
       newState[action.roomId][action.id].nickname = action.nickname;
+    }
       return newState;
     default:
       return state;

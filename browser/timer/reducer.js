@@ -3,20 +3,14 @@ import {
   GET_TIME
 } from './constants';
 
-const initialState = {
-  startTime: '',
-  endTime: ''
-};
+const initialState = 180;
 
 
 const timer = (state = initialState, action) => {
-  let newState = Object.assign({}, state);
+  let newState = state;
   switch (action.type) {
-    case GET_TIME:
-      return newState.timer;
     case SET_TIME:
-      newState.startTime = action.time;
-      newState.endTime = action.timeLimit;
+      newState = action.time;
       return newState;
     default:
       return newState;
