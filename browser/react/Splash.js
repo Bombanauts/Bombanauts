@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import socket from '../socket';
 import { startGame } from '../gameState/action-creator';
+import { initCannon, init, animate } from '../game/main';
 
 class Splash extends Component {
   constructor(props) {

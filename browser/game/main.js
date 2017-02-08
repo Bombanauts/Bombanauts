@@ -302,12 +302,16 @@ export function animate() {
     playerMeshes = [];
     playerInstances = [];
     for (let player in others) {
-      let newPlayer;
-      newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, false, others[player].nickname)
-      newPlayer.init()
-      players.push(newPlayer.playerBox)
-      playerMeshes.push(newPlayer.playerMesh)
-      playerInstances.push(newPlayer)
+      // CHECKING IF PLAYER HAS NICKNAME BEFORE CREATING NEW PLAYER
+      if (others[player].nickname) {
+        let newPlayer;
+        newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, false)
+        newPlayer.init()
+  
+        players.push(newPlayer.playerBox)
+        playerMeshes.push(newPlayer.playerMesh)
+        playerInstances.push(newPlayer)
+      }
     }
   }
 
