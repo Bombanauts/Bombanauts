@@ -7,10 +7,11 @@ export const announcement = (state = initialState, action) => {
 
   switch (action.type) {
     case ANNOUNCE_KILL:
-      newState[action.killer] = action.victim;
+      newState.killer = action.killer;
+      newState.victim = action.victim;
       break;
     case REMOVE_ANNOUNCEMENT:
-      return initialState;
+      return {};
     default:
       return state;
   }
