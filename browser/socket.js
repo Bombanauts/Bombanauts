@@ -15,6 +15,8 @@ import { initCannon, init, animate, players, playerMeshes, world, scene, playerI
 import { sprite } from './game/Player'
 import { pointerChecker } from './react/App';
 
+import { announce, removeAnnouncement } from './announcer/action-creator';
+
 export let playerArr = [];
 let playerToKillName = '';
 
@@ -40,7 +42,6 @@ socket.on('update_world', (data) => {
   }
 })
   socket.on('set_winner', (winner) => {
-    console.log('This is winner ', winner)
     store.dispatch(setWinner(winner));
   })
 
@@ -65,7 +66,11 @@ socket.on('update_world', (data) => {
 
       playerToKill.explode()
     }
-    // store.dispatch( SOMETHING HERE TO CHANGE STATE ON A COMPONENT)
+
+    store.dispatch(announce(data.killerNickname, data.victimNickname))
+    setTimeout(() => {
+      store.dispatch(removeAnnouncement())
+    }, 5000)
   })
 
 

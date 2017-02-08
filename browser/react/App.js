@@ -6,11 +6,13 @@ import store from '../store';
 import Timer from './Timer';
 import { initCannon, init, animate, controls } from '../game/main';
 
+import Blocker from './Blocker';
+import Splash from './Splash';
+import { Announcer } from './Announcer';
+
 const fontStyle = {
   'fontSize': '40px'
 }
-import Blocker from './Blocker';
-import Splash from './Splash';
 
 function delay(t) {
   return new Promise(resolve => {
@@ -46,17 +48,33 @@ class App extends Component {
     } else if (winnerId) {
       winnerNickname = players[winnerId].nickname;
     }
+
+    let killerNickname;
+    let victimNickname;
+    if (this.props.killer) {
+      killerNickname = this.props.killer.nickname
+      victimNickname = this.props.victim.nickname
+    }
+
     return (
       <div>
+          { killerNickname && <Announcer killerName={killerNickname} victimName={victimNickname} /> }
           {!this.props.isPlaying && <Splash />}
-          { winnerId && <h1  style={{position: "absolute", right: 500}}>{winnerNickname} Won!</h1>}
+          { winnerId && <h1 style={{position: "absolute", right: 500 }}>{winnerNickname} Won!</h1>}
           <Blocker dead={this.props.dead} />
           { this.props.dead && <div style={{ backgroundColor: '#700303',
             position: 'absolute',
             opacity: '0.7',
             width: '100vw',
             height: '100vh',
-            pointerEvents: 'none'}}><h1  style={{position: "absolute", right: 500, top: 50}}> YOU ARE DEAD</h1>
+            pointerEvents: 'none'}}>
+              <span style={{
+              fontSize: 50,
+              margin: 'auto',
+              textAlign: 'center',
+              position: 'relative',
+              display: 'table',
+              top: 60}}>YOU DIED!</span>
             </div>
           }
           <Timer />
@@ -65,11 +83,15 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state) => {
+  return {
     dead: state.dead,
     winner: state.winner,
     isPlaying: state.isPlaying,
-})
+    killer: state.announcement.killer,
+    victim: state.announcement.victim
+  }
+}
 
 
 export default connect(mapStateToProps)(App);

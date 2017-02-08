@@ -6,6 +6,7 @@ import { dead } from './dead/reducer'
 import timer from './timer/reducer'
 import winner from './winner/reducer'
 import { isPlaying } from './gameState/reducer'
+import { announcement } from './announcer/reducer'
 
 export default combineReducers({
   players,
@@ -14,5 +15,6 @@ export default combineReducers({
   dead,
   timer,
   winner,
-  isPlaying
+  isPlaying,
+  announcement
 })
