@@ -3,9 +3,9 @@ import ReactCountdownClock from 'react-countdown-clock';
 import { connect } from 'react-redux';
 import socket from '../socket';
 import store from '../store';
-
+import Timer from './Timer';
 import { initCannon, init, animate, controls } from '../game/main';
-import { Login } from './Login';
+
 const fontStyle = {
   'fontSize': '40px'
 }
@@ -32,11 +32,6 @@ class App extends Component {
       initCannon()
       init()
       animate()
-      let timer = store.getState().timer;
-      let now = Date.now();
-      this.setState({
-        time: (timer.endTime - now) / 1000
-      })
     })
   }
 
@@ -62,20 +57,9 @@ class App extends Component {
             width: '100vw',
             height: '100vh',
             pointerEvents: 'none'}}><h1  style={{position: "absolute", right: 500, top: 50}}> YOU ARE DEAD</h1>
-            </div>}
-            <div style={{position: "absolute", right: 0}}>
-             { this.state.time != 0 &&
-              <ReactCountdownClock
-                seconds={this.state.time}
-                color="#ddd"
-                alpha={0.5}
-                size={100}
-                timeFormat="hms"
-                onComplete={function(){
-                }}
-            />
-            }
             </div>
+          }
+          <Timer />
       </div>
     )
   }

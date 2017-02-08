@@ -82,7 +82,7 @@ export const animateFire = (bombObjects, clock, dead) => {
 
   // HELPER FUNCTION FOR ANIMATING FIRE
 
-  const animateSingleFire = (fire) => {
+  const animateSingleFire = (fire, bombUserId) => {
     if (fire) {
       fire.update(elapsed)
       if (fire.mesh.position.x === roundFour(sphereBody.position.x) &&
@@ -90,7 +90,8 @@ export const animateFire = (bombObjects, clock, dead) => {
         if (!dead) {
           dead = true;
           socket.emit('kill_player', {
-            id: socket.id
+            id: socket.id,
+            killedBy: bombUserId
           })
           store.dispatch(killPlayer())
         }
@@ -108,7 +109,7 @@ export const animateFire = (bombObjects, clock, dead) => {
         if (k !== 1) {
           currentFire += k
         }
-        animateSingleFire(bombObjects[i][currentFire])
+        animateSingleFire(bombObjects[i][currentFire], bombObjects[i].userId)
       }
     }
   }
