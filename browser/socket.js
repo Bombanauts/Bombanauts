@@ -10,14 +10,16 @@ import { loadMap } from './maps/action-creator';
 import { setTime, getTime } from './timer/action-creator';
 import { setWinner } from './winner/action-creator'
 import { revivePlayer } from './dead/action-creator'
+import {
+  setName,
+  setScore
+} from './ownInfo/action-creator'
 
 import { initCannon, init, animate, players, playerMeshes, world, scene, playerInstances,  resetCount, createMap, restartWorld, listener } from './game/main';
 
 import { pointerChecker } from './react/App';
 
 export let playerArr = [];
-let playerToKillName = '';
-
 
 socket.on('connect', function() {
   socket.on('initial', (initialData) => {
@@ -31,6 +33,10 @@ let count = 0;
 socket.on('update_world', (data) => {
   count += 1;
   playerArr = Object.keys(data.players);
+  if (data.players[socket.id]) {
+    store.dispatch(setScore(data.players[socket.id].score));
+    store.dispatch(setName(data.players[socket.id].nickname));
+  }
   delete data.players[socket.id];
   delete data.bombs[socket.id];
   store.dispatch(updatePlayerLocations(data.players))
@@ -40,7 +46,6 @@ socket.on('update_world', (data) => {
   }
 })
   socket.on('set_winner', (winner) => {
-    console.log('This is winner ', winner)
     store.dispatch(setWinner(winner));
   })
 
