@@ -346,6 +346,7 @@ export function animate() {
 
 //clear out and rebuild entire map to restart, respawn player
 export function restartWorld() {
+  console.log('playermeshes', playerMeshes)
   deleteWorld(scene, world, boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes, players, playerMeshes);
 
   boxMeshes = [];
@@ -358,6 +359,7 @@ export function restartWorld() {
   players = [];
   playerMeshes = [];
   playerInstances = [];
+
 
   createMap();
 

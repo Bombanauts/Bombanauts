@@ -73,8 +73,8 @@ export default class Player {
       sprite.position.set(this.x, this.y + 2.25, this.z)
       this.playerMesh.sprite = sprite;
       sprite.lookAt(camera.position)
-      this.sprite = sprite;
-      scene.add(this.sprite);   
+      // this.sprite = sprite;
+      scene.add(this.playerMesh.sprite);   
     }
 
   }
@@ -89,8 +89,8 @@ export default class Player {
       }
       blocksObj[this.playerMesh.id] = particles.slice();
       world.remove(this.playerBox)
+      scene.remove(this.playerMesh.sprite)
       scene.remove(this.playerMesh)
-      scene.remove(this.sprite)
       this.dead = true;
       return true; //returning for knowing if socket should emit on explosion call
     }

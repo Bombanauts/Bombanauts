@@ -181,6 +181,8 @@ export const deleteWorld = (scene, world, boxMeshes, boxes, bombs, bombMeshes, y
     scene.remove(yourBombMeshes[i])
   }
   for (let i = 0; i < playerMeshes.length; i++) {
+    // scene.remove(playerMeshes[i].sprite)
+    playerMeshes[i].remove(playerMeshes[i].sprite)
     scene.remove(playerMeshes[i]);
   }
   for (let i = 0; i < players.length; i++) {
