@@ -9,6 +9,7 @@ import { initCannon, init, animate, controls } from '../game/main';
 import Blocker from './Blocker';
 import Splash from './Splash';
 import Announcer from './Announcer';
+import Chat from './Chat';
 
 const fontStyle = {
   'fontSize': '40px'
@@ -51,6 +52,7 @@ class App extends Component {
 
     return (
       <div>
+          <Chat />
           <Announcer  />
           {!this.props.isPlaying && <Splash />}
           { winnerId && <h1 style={{position: "absolute", right: 500 }}>{winnerNickname} Won!</h1>}

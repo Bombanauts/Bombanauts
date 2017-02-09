@@ -1,7 +1,7 @@
 // we need this socket object to send messages to our server
 const socket = io('/')
 const THREE = require('three')
-
+window.socket = socket
 import store from './store';
 window.store = store;
 import { updatePlayerLocations, removePlayer } from './players/action-creator';
