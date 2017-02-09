@@ -7,6 +7,7 @@ import timer from './timer/reducer'
 import winner from './winner/reducer'
 import { isPlaying } from './gameState/reducer'
 import { announcement } from './announcer/reducer'
+import { isChatting } from './chat/reducer'
 
 export default combineReducers({
   players,
@@ -16,5 +17,6 @@ export default combineReducers({
   timer,
   winner,
   isPlaying,
-  announcement
+  announcement,
+  isChatting
 })
