@@ -122,6 +122,9 @@ export const animatePlayers = (players, playerIds, others, playerMeshes) => {
     if (others[playerIds[i]] && !others[playerIds[i]].dead) {
       let { x, y, z } = others[playerIds[i]]
       playerMeshes[i].position.set(x, y, z);
+      // // if(playerMeshes[i].sprite) {
+      //   playerMeshes[i].sprite.position.set(x, y + 2.25, z);
+      // }
       players[i].position.x = x;
       players[i].position.y = y;
       players[i].position.z = z;
@@ -198,3 +201,30 @@ export const delay = (time) => {
     setTimeout(resolve, time)
   })
 }
+
+
+// CREATING TEXT SPRITE FOR PLAYER
+// export const makeTextSprite = (message, fontsize) => {
+//   let ctx, texture, sprite, spriteMaterial,
+//       canvas = document.createElement('canvas');
+
+//   ctx = canvas.getContext('2d');
+
+//   let metrics = ctx.measureText(message);
+//   let textWidth = metrics.width;
+
+//   ctx.textAlign = 'center';
+//   ctx.textBaseline = 'middle';
+
+//   ctx.font = 'Bold ' + fontsize + 'px Helvetica';
+//   ctx.fillStyle = 'rgba(255,255,255,1)';
+//   ctx.fillText(message, canvas.width / 2, fontsize);
+
+//   texture = new THREE.Texture(canvas);
+//   texture.minFilter = THREE.LinearFilter; // NearestFilter;
+//   texture.needsUpdate = true;
+
+//   spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+//   sprite = new THREE.Sprite(spriteMaterial);
+//   return sprite;
+// };

@@ -9,13 +9,14 @@ import { initCannon, init, animate, controls } from '../game/main';
 
 import { delay } from '../game/utils';
 
+import Blocker from './Blocker';
+import Splash from './Splash';
+import Announcer from './Announcer';
+import { Scores } from './Scores';
+
 const fontStyle = {
   'fontSize': '40px'
 }
-
-import Blocker from './Blocker';
-import Splash from './Splash';
-import { Scores } from './Scores';
 
 class App extends Component {
   constructor(props) {
@@ -45,8 +46,10 @@ class App extends Component {
     } else if (winnerId) {
       winnerNickname = players[winnerId].nickname;
     }
+
     return (
       <div>
+          <Announcer  />
           {!this.props.isPlaying && <Splash />}
           { winnerId &&
             (<div>
@@ -61,7 +64,14 @@ class App extends Component {
             opacity: '0.7',
             width: '100vw',
             height: '100vh',
-            pointerEvents: 'none'}}><h1  style={{position: "absolute", right: 500, top: 50}}> YOU ARE DEAD</h1>
+            pointerEvents: 'none'}}>
+              <span style={{
+              fontSize: 50,
+              margin: 'auto',
+              textAlign: 'center',
+              position: 'relative',
+              display: 'table',
+              top: 60}}>YOU DIED!</span>
             </div>
           }
           <Timer />
@@ -70,11 +80,13 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state) => {
+  return {
     dead: state.dead,
     winner: state.winner,
-    isPlaying: state.isPlaying,
-})
+    isPlaying: state.isPlaying
+  }
+}
 
 
 export default connect(mapStateToProps)(App);

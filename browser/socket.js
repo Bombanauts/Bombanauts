@@ -16,8 +16,10 @@ import {
 } from './ownInfo/action-creator'
 
 import { initCannon, init, animate, players, playerMeshes, world, scene, playerInstances,  resetCount, createMap, restartWorld, listener } from './game/main';
-
+import { sprite } from './game/Player'
 import { pointerChecker } from './react/App';
+
+import { announce, removeAnnouncement } from './announcer/action-creator';
 
 export let playerArr = [];
 
@@ -43,6 +45,7 @@ socket.on('update_world', (data) => {
   store.dispatch(updateBombLocations(data.bombs))
   if (count % 30 === 0) {
     store.dispatch(setTime(data.timer))
+    count = 0;
   }
 })
   socket.on('set_winner', (winner) => {
@@ -56,27 +59,49 @@ socket.on('update_world', (data) => {
   })
 
   socket.on('kill_player', (data) => {
+    store.dispatch(announce(data.killerNickname, data.victimNickname))
+    setTimeout(() => {
+      store.dispatch(removeAnnouncement())
+    }, 3000)
     let playerToKill = playerInstances.filter(player => {
       return player.socketId === data.id;
     })[0]
     if (playerToKill) {
-      let sound = new THREE.PositionalAudio( listener );
-      const audioLoader = new THREE.AudioLoader();
-      audioLoader.load( 'sounds/die.mp3', function( buffer ) {
-        sound.setBuffer( buffer );
-        sound.setRefDistance( 10 );
-        sound.play()
-      });
+      let currentStateAnnouncement = store.getState().announcement;
+      if (currentStateAnnouncement.killer.nickname === currentStateAnnouncement.victim.nickname) {
+        let witchSound = new THREE.PositionalAudio( listener );
+        const witchAudioLoader = new THREE.AudioLoader();
+        witchAudioLoader.load( 'sounds/witch.mp3', function( buffer ) {
+          witchSound.setBuffer( buffer );
+          witchSound.setRefDistance( 10 );
+          witchSound.play()
+        });
+        let sound = new THREE.PositionalAudio( listener );
+        const audioLoader = new THREE.AudioLoader();
+        audioLoader.load( 'sounds/die.mp3', function( buffer ) {
+          sound.setBuffer( buffer );
+          sound.setRefDistance( 10 );
+          sound.play()
+        });
 
-      playerToKill.explode()
+        playerToKill.explode()
+      } else {
+        let sound = new THREE.PositionalAudio( listener );
+        const audioLoader = new THREE.AudioLoader();
+        audioLoader.load( 'sounds/die.mp3', function( buffer ) {
+          sound.setBuffer( buffer );
+          sound.setRefDistance( 10 );
+          sound.play()
+        });
+
+        playerToKill.explode()
+      }
     }
-    // store.dispatch( SOMETHING HERE TO CHANGE STATE ON A COMPONENT)
   })
 
 
   socket.on('reset_world', (data) => {
     setTimeout(() => {
-      count = 0;
       store.dispatch(loadMap(data.map));
       store.dispatch(updatePlayerLocations(data.players));
       store.dispatch(updateBombLocations(data.bombs));
@@ -97,7 +122,11 @@ socket.on('update_world', (data) => {
     })[0];
 
     if (playerBody) world.remove(playerBody)
-    if (playerMesh) scene.remove(playerMesh)
+    if (playerMesh) {
+      scene.remove(playerMesh)
+      scene.remove(sprite)
+      world.remove(sprite)
+    }
   })
 })
 

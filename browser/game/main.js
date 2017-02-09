@@ -45,8 +45,8 @@ let prevStateLength = 0;
 let counter = 0;
 const spawnPositions = [
   { x: 11.5, y: 1.5, z: -4 },
-  { x: 12.1, y: 1.5, z: 36.4 },
   { x: -36, y: 1.5, z: 36 },
+  { x: 12.1, y: 1.5, z: 36.4 },
   { x: -36.4, y: 1.5, z: -4 },
 ]
 const bombMaterial = new THREE.MeshLambertMaterial({ color: '#000000' })
@@ -182,61 +182,70 @@ export function init() {
   }
   prevPlayerStateLength = players.length;
 
-  if (controls) {
-    window.addEventListener("click", function(e) {
-      if (controls.enabled == true && !dead && allowBomb) {
-        // get current self position to shoot
-        let x = sphereBody.position.x;
-        let y = sphereBody.position.y;
-        let z = sphereBody.position.z;
+  function shootBomb(velocity) {
+    if (controls.enabled == true && !dead && allowBomb) {
+      // get current self position to shoot
+      let x = sphereBody.position.x;
+      let y = sphereBody.position.y;
+      let z = sphereBody.position.z;
 
-        const newBomb = new Bomb(count++, { x: x, y: y, z: z }, bombMaterial, socket.id);
-        newBomb.init()
-        allowBomb = false;
-        setTimeout(() => {
-          allowBomb = true;
-        }, 3000)
+      const newBomb = new Bomb(count++, { x: x, y: y, z: z }, bombMaterial, socket.id);
+      newBomb.init()
+      allowBomb = false;
+      setTimeout(() => {
+        allowBomb = true;
+      }, 3000)
 
-        //take relevant bomb info and emit
-        const bombInfo = { id: newBomb.id, position: newBomb.bombBody.position, created: Date.now() }
+      //take relevant bomb info and emit
+      const bombInfo = { id: newBomb.id, position: newBomb.bombBody.position, created: Date.now() }
 
-        socket.emit('add_bomb', {
-          userId: socket.id,
-          bombId: bombInfo.id,
-          position: { x: x, y: y, z: z }
+      socket.emit('add_bomb', {
+        userId: socket.id,
+        bombId: bombInfo.id,
+        position: { x: x, y: y, z: z }
+      })
+
+      //remove from your front end bombs array, this will update game state on update_world on next frame
+      setTimeout(() => {
+        yourBombs = yourBombs.filter((bomb) => {
+          return bomb.id !== bombInfo.id
         })
+        yourBombMeshes = yourBombMeshes.filter(mesh => {
+          return newBomb.bombMesh.id !== mesh.id
+        })
+      }, 1800)
 
-        //remove from your front end bombs array, this will update game state on update_world on next frame
-        setTimeout(() => {
-          yourBombs = yourBombs.filter((bomb) => {
-            return bomb.id !== bombInfo.id
-          })
-          yourBombMeshes = yourBombMeshes.filter(mesh => {
-            return newBomb.bombMesh.id !== mesh.id
-          })
-        }, 2000)
+      //add bomb and mesh to your bombs arrays
+      yourBombs.push(bombInfo)
+      bombObjects.push(newBomb)
+      yourBombMeshes.push(newBomb.bombMesh);
 
-        //add bomb and mesh to your bombs arrays
-        yourBombs.push(bombInfo)
-        bombObjects.push(newBomb)
-        yourBombMeshes.push(newBomb.bombMesh);
+      // get its direction using getShootDir function
+      getShootDir(projector, camera, shootDirection);
 
-        // get its direction using getShootDir function
-        getShootDir(projector, camera, shootDirection);
+      // give it a shoot velocity
+      newBomb.bombBody.velocity.set(shootDirection.x * velocity,
+        shootDirection.y * velocity,
+        shootDirection.z * velocity);
 
-        // give it a shoot velocity
-        newBomb.bombBody.velocity.set(shootDirection.x * shootVelo,
-          shootDirection.y * shootVelo,
-          shootDirection.z * shootVelo);
+      // shoot your bomb
+      x += shootDirection.x * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
+      y += shootDirection.y * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
+      z += shootDirection.z * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
+      newBomb.bombBody.position.set(x, y, z);
+      newBomb.bombMesh.position.set(x, y, z);
+    }
+  }
 
-        // shoot your bomb
-        x += shootDirection.x * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
-        y += shootDirection.y * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
-        z += shootDirection.z * (sphereShape.radius * 1.02 + newBomb.bombShape.radius);
-        newBomb.bombBody.position.set(x, y, z);
-        newBomb.bombMesh.position.set(x, y, z);
+  if (controls) {
+    window.addEventListener('click', function(e) {
+      shootBomb(8)
+    })
+    window.addEventListener('keydown', function(event) {
+      if (event.keyCode === 32) {
+        shootBomb(40)
       }
-    });
+    })
   }
 }
 
@@ -302,12 +311,16 @@ export function animate() {
     playerMeshes = [];
     playerInstances = [];
     for (let player in others) {
-      let newPlayer;
-      newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, false, others[player].nickname)
-      newPlayer.init()
-      players.push(newPlayer.playerBox)
-      playerMeshes.push(newPlayer.playerMesh)
-      playerInstances.push(newPlayer)
+      // CHECKING IF PLAYER HAS NICKNAME BEFORE CREATING NEW PLAYER
+      if (others[player].nickname) {
+        let newPlayer;
+        newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, false)
+        newPlayer.init()
+
+        players.push(newPlayer.playerBox)
+        playerMeshes.push(newPlayer.playerMesh)
+        playerInstances.push(newPlayer)
+      }
     }
   }
 

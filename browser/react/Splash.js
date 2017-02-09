@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import socket from '../socket';
 import { startGame } from '../gameState/action-creator';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField'
 
 class Splash extends Component {
   constructor(props) {
@@ -42,26 +44,23 @@ class Splash extends Component {
               textAlign: 'center',
               position: 'relative',
               display: 'table',
-              top: 140
+              top: 80
             }}>
-            <input value={this.state.nickname}
+            <TextField
                   onChange={this.updateNickname}
                   maxLength={15}
-                  type="text"
-                  placeholder="nickname"
-                  autoFocus
-                  style={{
-                    textAlign: 'center',
-                    height: '30px'
-                  }} />
-          <button className="Buttons"
-                  type="submit"
+                  hintText="nickname"
+                  floatingLabelText="nickname"
+                  floatingLabelStyle={{ color: '#00B303' }}
+                  underlineFocusStyle={{ borderColor: '#00B303'}}
+                  />
+            <RaisedButton
+                  backgroundColor="#00B303"
                   onClick={this.setNickname}
                   disabled={!this.state.nickname}
-                  style={{
-                    textAlign: 'center',
-                    height: '30px'
-                  }}>play</button>
+                  label='Play'
+                  style={{ display: 'block' }}
+                   />
           </span>
         </div>
       </div>

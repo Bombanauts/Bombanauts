@@ -10,7 +10,7 @@ export class Timer extends Component {
   render() {
     return (
       <div style={{position: "absolute", right: 0}}>
-        {this.props.time ? Math.round(this.props.time) + '' : console.log(this.props.time + 5)} Seconds Left
+        {this.props.time ? Math.round(this.props.time) + '' : '' } Seconds Left
       </div>
     )
   }

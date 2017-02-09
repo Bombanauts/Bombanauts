@@ -1,4 +1,4 @@
-import { KILL_PLAYER, REVIVE_PLAYER } from './action-creator.js'
+import { KILL_PLAYER, REVIVE_PLAYER, ANNOUNCE_KILL } from './action-creator.js'
 
 let initialState = false;
 

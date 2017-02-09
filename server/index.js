@@ -126,9 +126,14 @@ io.on('connection', (socket) => {
             store.dispatch(decrementScore(data.killedBy, room))
         }
 
-        io.in(room).emit('kill_player', data)
         let currentState = store.getState();
         let currentPlayers = currentState.players[room];
+        let killerNickname = currentPlayers[data.killedBy]
+        let victimNickname = currentPlayers[data.id];
+
+        data.killerNickname = killerNickname;
+        data.victimNickname = victimNickname;
+        io.in(room).emit('kill_player', data)
 
         if (currentPlayers) {
             let currentPlayersIds = Object.keys(currentPlayers)
