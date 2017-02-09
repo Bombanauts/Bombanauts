@@ -4,7 +4,7 @@ const THREE = require('three')
 const CANNON = require('cannon')
 
 import { scene, world, camera, blockCount, blocksObj, listener } from './main'
-import { VolumetricFire } from './ParticleEngine';
+import { VolumetricFire } from './ParticleEngine'
 import { destroyable, roundFour } from './utils'
 import { Block } from './Explosion.js'
 
@@ -64,7 +64,7 @@ export default class Bomb {
     this.clearTimeout = setTimeout(() => {
       this.explode()
       clearInterval(clear)
-      this.bombMesh.material.color.setHex(0x000000)
+      this.bombMesh.material = this.material;
     }, 1700)
   }
 
