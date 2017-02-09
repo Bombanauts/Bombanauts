@@ -13,6 +13,7 @@ import Blocker from './Blocker';
 import Splash from './Splash';
 import Announcer from './Announcer';
 import { Scores } from './Scores';
+import Chat from './Chat';
 
 const fontStyle = {
   'fontSize': '40px'
@@ -49,6 +50,7 @@ class App extends Component {
 
     return (
       <div>
+          <Chat />
           <Announcer  />
           {!this.props.isPlaying && <Splash />}
           { winnerId &&

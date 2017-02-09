@@ -180,6 +180,10 @@ io.on('connection', (socket) => {
         io.in(socket.currentRoom).emit('remove_player', socket.id)
         console.log('socket id ' + socket.id + ' has disconnected. : (');
     })
+
+    socket.on('new_message', (message) => {
+        io.in(socket.currentRoom).emit('new_message', message)
+    })
 })
 
 app.use(express.static(path.join(__dirname, '..', 'public', 'assets')));

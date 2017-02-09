@@ -52,6 +52,7 @@ class Splash extends Component {
               top: 80
             }}>
             <TextField
+                  id="nickname"
                   onChange={this.updateNickname}
                   onKeyDown={this.handleEnterKey}
                   maxLength={15}

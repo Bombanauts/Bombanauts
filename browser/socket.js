@@ -16,9 +16,10 @@ import {
 } from './redux/players/action-creator';
 
 //BOMBS
-import {
-    updateBombLocations
-} from './redux/bombs/action-creator';
+import { updateBombLocations } from './redux/bombs/action-creator';
+
+// CHAT
+import { receiveMessage } from './redux/chat/action-creator';
 
 //MAPS
 import { loadMap } from './redux/maps/action-creator';
@@ -171,6 +172,11 @@ socket.on('connect', function() {
             world.remove(sprite)
         }
     })
+
+  socket.on('new_message', (message) => {
+    store.dispatch(receiveMessage(message))
+  })
+
 })
 
 export default socket

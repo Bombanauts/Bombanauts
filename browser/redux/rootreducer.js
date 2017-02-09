@@ -8,6 +8,7 @@ import winner from './winner/reducer'
 import { isPlaying } from './gameState/reducer'
 import { ownInfo } from './ownInfo/reducer'
 import { announcement } from './announcer/reducer'
+import { chat } from './chat/reducer'
 
 export default combineReducers({
   players,
@@ -18,5 +19,6 @@ export default combineReducers({
   winner,
   isPlaying,
   ownInfo,
-  announcement
+  announcement,
+  chat
 })
