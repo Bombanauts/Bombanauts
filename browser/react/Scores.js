@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import store from '../store';
+import store from '../redux/store';
 import { delay } from '../game/utils';
 
 export class Scores extends Component {

@@ -1,15 +1,23 @@
-import store from '../store'
+import store from '../redux/store'
+
 import socket from '../socket'
 
-import { scene, world, bombObjects, blockCount, blocksObj, listener, camera } from './main'
-import { destroyable, roundFour, makeTextSprite } from './utils'
+import {
+  scene,
+  world,
+  blockCount,
+  blocksObj
+} from './main'
+
 import { Block } from './Explosion'
 
-const THREE = require('three')
-const CANNON = require('cannon')
-const PointerLockControls = require('./PointerLockControls')
+//THREE.JS
+import * as THREE from 'three';
 
-let geometry, material, shape, playerMesh, controls, color, playerBox, name, sprite;
+//CANNON.JS
+import * as CANNON from 'cannon';
+
+let playerMesh, playerBox, sprite;
 export default class Player {
   constructor(socketId, x, y, z, dead, nickname) {
     this.x = x;
@@ -66,17 +74,6 @@ export default class Player {
     this.playerMesh = playerMesh;
     this.playerBox = playerBox;
 
-    // ASSIGNING NICKNAME SPRITE TO PLAYER
-    // if (this.nickname) {
-    //   name = this.nickname.length > 8 ? this.nickname.slice(0, 7) : this.nickname;
-    //   sprite = makeTextSprite(name, 100);
-    //   sprite.position.set(this.x, this.y + 2.25, this.z)
-    //   this.playerMesh.sprite = sprite;
-    //   sprite.lookAt(camera.position)
-    //   this.sprite = sprite;
-    //   scene.add(this.sprite);
-    // }
-
   }
 
   explode() {
@@ -90,7 +87,7 @@ export default class Player {
       blocksObj[this.playerMesh.id] = particles.slice();
       world.remove(this.playerBox)
       scene.remove(this.playerMesh)
-      // scene.remove(this.sprite)
+
       this.dead = true;
       return true; //returning for knowing if socket should emit on explosion call
     }

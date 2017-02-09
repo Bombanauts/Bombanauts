@@ -21,12 +21,6 @@ module.exports = {
   //     mangle: false
   //   })
   // ],
-  // plugins: [
-  //       new webpack.ProvidePlugin({
-  //           $: "jquery",
-  //           jQuery: "jquery"
-  //       })
-  //   ],
   module: {
     loaders: [
       {

@@ -7,7 +7,8 @@
  * https://www.iusb.edu/math-compsci/_prior-thesis/YVanzine_thesis.pdf
  */
 
-const THREE = require('three')
+//THREE.JS
+import * as THREE from 'three';
 
 const vs = [
 

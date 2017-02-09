@@ -1,6 +1,8 @@
+//THREE.JS
+import * as THREE from 'three';
 
-const THREE = require('three')
-const CANNON = require('cannon')
+//CANNON.JS
+import * as CANNON from 'cannon';
 
 import { scene, world } from './main';
 

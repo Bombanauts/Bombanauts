@@ -1,13 +1,26 @@
-import { boxes, boxMeshes, bombObjects, sphereBody } from './main'
+import {
+  boxes,
+  boxMeshes,
+  sphereBody
+} from './main'
+
 import socket from '../socket'
-import { killPlayer } from '../dead/action-creator'
-import store from '../store'
+
+import { killPlayer } from '../redux/dead/action-creator'
+
+import store from '../redux/store'
+
 import DestroyableCube from './Cube'
+
 import Wall from './Wall'
+
 import FixedCube from './FixedCube'
 
-const THREE = require('three');
-const CANNON = require('cannon');
+//THREE.JS
+import * as THREE from 'three';
+
+//CANNON.JS
+import * as CANNON from 'cannon';
 
 export const boundary = {}
 export const fixedBox = {}

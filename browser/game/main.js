@@ -1,23 +1,39 @@
-const THREE = require('three')
-const CANNON = require('cannon')
-import store from '../store';
-import socket, { playerArr } from '../socket';
+//THREE.JS
+import * as THREE from 'three';
+
+//CANNON.JS
+import * as CANNON from 'cannon';
+
+//REDUX STORE
+import store from '../redux/store';
+
+//SOCKETS
+import socket,
+{ playerArr } from '../socket';
+
 
 import { PointerLockControls } from './PointerLockControls';
-import Player from './Player'
-import Bomb from './Bomb'
-import { killPlayer } from '../dead/action-creator'
-import { Particle, Block } from './Explosion.js';
 
-import { generateMap, roundFour, animateFire, animatePlayers, animateExplosion, animateBombs, deleteWorld, createMap, getShootDir } from './utils';
+import Player from './Player'
+
+import Bomb from './Bomb'
+
+import {
+  animateFire,
+  animatePlayers,
+  animateExplosion,
+  animateBombs,
+  deleteWorld,
+  createMap,
+  getShootDir
+} from './utils';
 
 let sphereShape, world, physicsMaterial;
 let camera, scene, renderer, light;
 let geometry, material, mesh;
 let controls, time = Date.now();
 let clock;
-const SCREEN_WIDTH = window.innerWidth;
-const SCREEN_HEIGHT = window.innerHeight;
+
 
 export let listener;
 export let sphereBody;
