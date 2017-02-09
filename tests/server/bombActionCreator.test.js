@@ -2,7 +2,7 @@ const { expect } = require('chai')
 const { ADD_BOMB, UPDATE_BOMB_POSITIONS, REMOVE_PLAYER_BOMBS } = require('../../server/bombs/constants')
 const { addBomb, updateBombPositions, removePlayerBombs } = require('../../server/bombs/action-creator')
 
-describe('Server side bomb action creator', () => {
+describe('Back end bomb action creators', () => {
   const newBomb = {
     userID: 1234,
     position: {

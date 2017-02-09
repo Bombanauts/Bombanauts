@@ -1,53 +1,20 @@
 <html>
   <head>
     <title>BomberJS</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
-    <script src="socket.io/socket.io.js" defer async></script>
-    <script src="bundle.js" defer async></script>
     <link rel="icon" href="images/favicon.ico" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- SOCKETS -->
+    <script src="socket.io/socket.io.js" defer async></script>
+
+    <!-- WEBPACK BUNDLE -->
+    <script src="bundle.js" defer async></script>
+
+    <!-- GOOGLE FONTS -->
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
-     <style>
-            html, body {
-                width: 100%;
-                height: 100%;
-            }
-            body {
-                background-color: #ffffff;
-                margin: 0;
-                overflow: hidden;
-                font-family: 'Press Start 2P', cursive;
-            }
-            #blocker {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0,0,0,0.5);
-            }
-            #instructions {
-                width: 100%;
-                height: 100%;
-                display: -webkit-box;
-                display: -moz-box;
-                display: box;
-                -webkit-box-orient: horizontal;
-                -moz-box-orient: horizontal;
-                box-orient: horizontal;
-                -webkit-box-pack: center;
-                -moz-box-pack: center;
-                box-pack: center;
-                -webkit-box-align: center;
-                -moz-box-align: center;
-                box-align: center;
-                color: #ffffff;
-                text-align: center;
-                cursor: pointer;
-            }
-        </style>
+
   </head>
   <body>
+    <!-- MAIN APP NODE -->
     <div id="app"></div>
-    <div>
   </body>
 </html>

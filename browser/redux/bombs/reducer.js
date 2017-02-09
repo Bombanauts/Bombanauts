@@ -15,7 +15,7 @@ export const bombs = (state = initialState, action) => {
       return newState;
     case REMOVE_PLAYER_BOMBS:
       newState = Object.assign({}, state)
-      delete newState.allBombs[action.id]
+      delete newState[action.id]
       return newState;
     default:
       return state;

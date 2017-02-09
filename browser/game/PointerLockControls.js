@@ -1,5 +1,8 @@
-const THREE = require('three')
-const CANNON = require('cannon')
+//THREE.JS
+import * as THREE from 'three';
+
+//CANNON.JS
+import * as CANNON from 'cannon';
 
 export const PointerLockControls = function(camera, cannonBody) {
 

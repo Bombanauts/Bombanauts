@@ -1,13 +1,26 @@
-import { boxes, boxMeshes, bombObjects, sphereBody } from './main'
+import {
+  boxes,
+  boxMeshes,
+  sphereBody
+} from './main'
+
 import socket from '../socket'
-import { killPlayer } from '../dead/action-creator'
-import store from '../store'
+
+import { killPlayer } from '../redux/dead/action-creator'
+
+import store from '../redux/store'
+
 import DestroyableCube from './Cube'
+
 import Wall from './Wall'
+
 import FixedCube from './FixedCube'
 
-const THREE = require('three');
-const CANNON = require('cannon');
+//THREE.JS
+import * as THREE from 'three';
+
+//CANNON.JS
+import * as CANNON from 'cannon';
 
 export const boundary = {}
 export const fixedBox = {}
@@ -25,11 +38,11 @@ export const generateMap = (mapArr) => {
   const crateMaterial = new THREE.MeshLambertMaterial({ map: crateTexture });
 
   // WALL
-  const wallTexture = new THREE.TextureLoader().load('images/brick_wall.png');
+  const wallTexture = new THREE.TextureLoader().load('images/brick.png');
   const wallMaterial = new THREE.MeshLambertMaterial({ map: wallTexture });
 
   // FIXED CUBE
-  const fixedCubeTexture = new THREE.TextureLoader().load('images/stone.png');
+  const fixedCubeTexture = new THREE.TextureLoader().load('images/Tileable1b.png');
   const fixedCubeMaterial = new THREE.MeshLambertMaterial({ map: fixedCubeTexture });
 
   // PHYSICS BODY AND SHAPE FOR CRATE, WALL, FIXED CUBE
@@ -194,6 +207,12 @@ export const getShootDir = (projector, camera, targetVec) => {
   projector.unprojectVector(vector, camera);
   const ray = new THREE.Ray(sphereBody.position, vector.sub(sphereBody.position).normalize());
   targetVec.copy(ray.direction);
+}
+
+export const delay = (time) => {
+  return new Promise(resolve => {
+    setTimeout(resolve, time)
+  })
 }
 
 
