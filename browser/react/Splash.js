@@ -14,6 +14,7 @@ class Splash extends Component {
     }
     this.updateNickname = this.updateNickname.bind(this)
     this.setNickname = this.setNickname.bind(this)
+    this.handleEnterKey = this.handleEnterKey.bind(this)
   }
 
   updateNickname(event) {
@@ -25,6 +26,10 @@ class Splash extends Component {
   setNickname() {
     socket.emit('set_nickname', this.state.nickname);
     this.props.start()
+  }
+
+  handleEnterKey(evt) {
+    if (evt.keyCode === 13) this.setNickname()
   }
 
   render() {
@@ -48,6 +53,7 @@ class Splash extends Component {
             }}>
             <TextField
                   onChange={this.updateNickname}
+                  onKeyDown={this.handleEnterKey}
                   maxLength={15}
                   hintText="nickname"
                   floatingLabelText="nickname"
@@ -55,9 +61,9 @@ class Splash extends Component {
                   underlineFocusStyle={{ borderColor: '#00B303'}}
                   />
             <RaisedButton
-                  backgroundColor="#00B303"
-                  onClick={this.setNickname}
                   disabled={!this.state.nickname}
+                  onClick={this.setNickname}
+                  backgroundColor="#00B303"
                   label='Play'
                   style={{ display: 'block' }}
                    />
