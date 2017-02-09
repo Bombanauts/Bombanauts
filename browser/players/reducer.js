@@ -2,7 +2,7 @@ import {
   UPDATE_PLAYER_LOCATIONS,
   ADD_PLAYER,
   REMOVE_PLAYER
-} from './constants';
+} from './constants'
 
 const initialState = {};
 
