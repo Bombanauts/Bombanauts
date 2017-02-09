@@ -15,8 +15,6 @@ class Chat extends Component {
 
     this.submitMessage = this.submitMessage.bind(this)
     this.handleMessageChange = this.handleMessageChange.bind(this)
-    this.closeChat = this.closeChat.bind(this)
-    this.openChat = this.openChat.bind(this)
   }
 
   componentDidMount() {
@@ -33,6 +31,11 @@ class Chat extends Component {
   componentDidUpdate() {
     // set focus to chat box
     if (this.props.isChatting) this.refs.chat.focus()
+
+    // CONSIDER THE FADE OUT MESSAGES
+    // setTimeout(() => {
+    //   if (!this.props.isChatting) this.props.stopChat()
+    // }, 5000)
   }
 
 
@@ -48,20 +51,15 @@ class Chat extends Component {
     this.setState({ message: evt.target.value })
   }
 
-  closeChat() {
-    this.setState({ open: false })
-  }
-
-  openChat() {
-    this.setState({ open: true })
-  }
-
   render() {
+    const lastFiveMessages = this.props.lastFiveMessages.map((message, idx) => {
+        return (<h1 key={`${idx}`}>{message}</h1>)
+    })
+
     if (this.props.isChatting) {
       return (
         <div>
-          <div>
-          </div>
+          {lastFiveMessages}
           <TextField
             id="chat"
             ref="chat"
@@ -73,15 +71,19 @@ class Chat extends Component {
       )
     } else {
       return (
-        <h1>CHAT IS CLOSED NOW</h1>
+        <div>
+          {lastFiveMessages}
+          <h1>CHAT IS CLOSED NOW</h1>
+        </div>
       )
     }
   }
 }
 
 const mapStateToProps = (state) => ({
-  isChatting: state.isChatting,
-  isPlaying: state.isPlaying
+  isChatting: state.chat.isChatting,
+  isPlaying: state.isPlaying,
+  lastFiveMessages: state.chat.lastFiveMessages
 })
 
 const mapDispatchToProps = (dispatch) => ({

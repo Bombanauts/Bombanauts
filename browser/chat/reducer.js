@@ -1,13 +1,26 @@
-import { START_CHAT, STOP_CHAT } from './constants';
+import { START_CHAT, STOP_CHAT, RECEIVE_MESSAGE } from './constants';
 
-const initialState = false;
+const initialState = {
+  isChatting: false,
+  lastFiveMessages: []
+};
 
-export const isChatting = (state = initialState, action) => {
-  switch(action.type) {
+export const chat = (state = initialState, action) => {
+  let newState = Object.assign({}, state)
+  const newChat = Array.from(newState.lastFiveMessages)
+
+  switch (action.type) {
     case START_CHAT:
-      return true;
+      newState.isChatting = true
+      return newState;
     case STOP_CHAT:
-      return false;
+      newState.isChatting = false
+      return newState;
+    case RECEIVE_MESSAGE:
+      if (newChat.length > 0 && newChat.length > 5) newChat.shift()
+      newChat.push(action.message)
+      newState.lastFiveMessages = newChat
+      return newState;
     default:
       return state;
   }

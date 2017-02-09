@@ -1,4 +1,4 @@
-import { START_CHAT, STOP_CHAT } from './constants';
+import { START_CHAT, STOP_CHAT, RECEIVE_MESSAGE } from './constants';
 
 export const startChat = () => {
   return {
@@ -9,5 +9,12 @@ export const startChat = () => {
 export const stopChat = () => {
   return {
     type: STOP_CHAT
+  }
+}
+
+export const receiveMessage = (message) => {
+  return {
+    type: RECEIVE_MESSAGE,
+    message
   }
 }

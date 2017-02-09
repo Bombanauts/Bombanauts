@@ -16,7 +16,7 @@ import { sprite } from './game/Player'
 import { pointerChecker } from './react/App';
 
 import { announce, removeAnnouncement } from './announcer/action-creator';
-import { startChat, stopChat } from './chat/action-creator';
+import { startChat, stopChat, receiveMessage } from './chat/action-creator';
 
 export let playerArr = [];
 let playerToKillName = '';
@@ -126,8 +126,7 @@ socket.on('update_world', (data) => {
 
   socket.on('new_message', (message) => {
     console.log(message)
-    store.dispatch(startChat())
-    // store.dispatch(stopChat())
+    store.dispatch(receiveMessage(message))
   })
 })
 
