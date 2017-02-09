@@ -35,7 +35,7 @@ describe('Back end player reducer', () => {
       testStore.dispatch({ type: UPDATE_PLAYERS, player: { id: 10, position: { x: 1, y: 2, z: 3 }, dead: false }, nickname: 'sam', roomId: room })
 
       expect(testStore.getState()[room]).to.be.deep.equal({
-        '10': { x: 1, y: 2, z: 3, dead: false }
+        '10': { x: 1, y: 2, z: 3, dead: false, nickname: '', score: 0 }
       })
     })
   })
@@ -45,7 +45,7 @@ describe('Back end player reducer', () => {
       testStore.dispatch({ type: UPDATE_PLAYERS, player: { id: 10, position: { x: 4, y: 5, z: 6 }, dead: true }, nickname: 'sam', roomId: room })
 
       expect(testStore.getState()[room]).to.be.deep.equal({
-        '10': { x: 4, y: 5, z: 6, dead: true }
+        '10': { x: 4, y: 5, z: 6, dead: true , nickname: '', score: 0}
       })
     })
 
@@ -53,8 +53,8 @@ describe('Back end player reducer', () => {
       testStore.dispatch({ type: UPDATE_PLAYERS, player: { id: 11, position: { x: 1, y: 2, z: 3 }, dead: false }, nickname: 'damon', roomId: room })
 
       expect(testStore.getState()[room]).to.be.deep.equal({
-        '10': { x: 4, y: 5, z: 6, dead: true },
-        '11': { x: 1, y: 2, z: 3, dead: false}
+        '10': { x: 4, y: 5, z: 6, dead: true, nickname: '', score: 0 },
+        '11': { x: 1, y: 2, z: 3, dead: false, nickname: '', score: 0 }
       })
     })
   })
@@ -67,8 +67,8 @@ describe('Back end player reducer', () => {
       testStore.dispatch({ type: SET_NICKNAME, id: 11, nickname: 'damon', roomId: room})
 
       expect(testStore.getState()[room]).to.be.deep.equal({
-        '10': { x: 4, y: 5, z: 6, dead: true, nickname: 'sam' },
-        '11': { x: 1, y: 2, z: 3, dead: false, nickname: 'damon'}
+        '10': { x: 4, y: 5, z: 6, dead: true, nickname: 'sam', score: 0 },
+        '11': { x: 1, y: 2, z: 3, dead: false, nickname: 'damon', score: 0}
       })
     })
   })
@@ -79,7 +79,7 @@ describe('Back end player reducer', () => {
       testStore.dispatch({ type: REMOVE_PLAYER, id: 10, roomId: room })
 
       expect(testStore.getState()[room]).to.be.deep.equal({
-        '11': { x: 1, y: 2, z: 3, dead: false, nickname: 'damon'}
+        '11': { x: 1, y: 2, z: 3, dead: false, nickname: 'damon', score: 0 }
       })
     })
   })
@@ -93,11 +93,11 @@ describe('Back end player reducer', () => {
       testStore.dispatch({ type: UPDATE_PLAYERS, player: { id: 10, position: { x: 4, y: 5, z: 6 }, dead: true }, nickname: 'sam', roomId: roomB })
 
       expect(testStore.getState()[roomB]).to.be.deep.equal({
-        '10': { x: 4, y: 5, z: 6, dead: true }
+        '10': { x: 4, y: 5, z: 6, dead: true, nickname: '', score: 0 }
       })
 
       expect(testStore.getState()[room]).to.be.deep.equal({
-        '11': { x: 1, y: 2, z: 3, dead: false, nickname: 'damon'}
+        '11': { x: 1, y: 2, z: 3, dead: false, nickname: 'damon', score: 0 }
       })
     })
   })
