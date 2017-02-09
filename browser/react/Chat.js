@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import TextField from 'material-ui/TextField'
+import TextField from 'material-ui/TextField';
+import { connect } from 'react-redux';
 
-export default class Chat extends Component {
+class Chat extends Component {
   constructor(props) {
     super(props)
 
@@ -36,14 +37,32 @@ export default class Chat extends Component {
   }
 
   render() {
-    return (
-      <div>
-        <TextField
-          onChange={this.handleMessageChange}
-          onKeyDown={this.submitMessage}
-          value={this.state.message}
-          />
-      </div>
-    )
+    console.log('PROPS INSIDE CHAT', this.props)
+    if (this.props.isChatting) {
+      return (
+        <div>
+          <div>
+          </div>
+          <TextField
+            onChange={this.handleMessageChange}
+            onKeyDown={this.submitMessage}
+            value={this.state.message}
+            />
+        </div>
+      )
+    } else {
+      return (
+        <div></div>
+      )
+    }
   }
 }
+
+const mapStateToProps = (state) => ({
+  isChatting: state.isChatting,
+  isPlaying: state.isPlaying
+})
+
+const mapDispatchToProps = (dispatch) => {}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Chat)

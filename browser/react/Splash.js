@@ -24,6 +24,12 @@ class Splash extends Component {
 
   setNickname() {
     socket.emit('set_nickname', this.state.nickname);
+
+    // enable chat start on enter key press
+    window.addEventListener('keydown', (evt) => {
+      if (evt.keyCode === 13) console.log('KEY PRESSED AFTER SETTING NICKNAME')
+    }, false)
+
     this.props.start()
   }
 
