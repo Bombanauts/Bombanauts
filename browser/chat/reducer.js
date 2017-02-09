@@ -1,4 +1,4 @@
-import { START_CHAT, STOP_CHAT, RECEIVE_MESSAGE } from './constants';
+import { START_CHAT, STOP_CHAT, RECEIVE_MESSAGE, SHOW_CHAT } from './constants';
 
 const initialState = {
   isChatting: false,
@@ -17,7 +17,7 @@ export const chat = (state = initialState, action) => {
       newState.isChatting = false
       return newState;
     case RECEIVE_MESSAGE:
-      if (newChat.length > 0 && newChat.length > 5) newChat.shift()
+      if (newChat.length > 0 && newChat.length > 3) newChat.shift()
       newChat.push(action.message)
       newState.lastFiveMessages = newChat
       return newState;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import { connect } from 'react-redux';
-import { startChat, stopChat } from '../chat/action-creator';
+import { startChat, stopChat, showChatHistory } from '../chat/action-creator';
 import socket from '../socket';
 
 class Chat extends Component {
@@ -10,7 +10,7 @@ class Chat extends Component {
 
     this.state = {
       message: '',
-      open: false
+      chatHistory: true
     }
 
     this.submitMessage = this.submitMessage.bind(this)
@@ -31,13 +31,7 @@ class Chat extends Component {
   componentDidUpdate() {
     // set focus to chat box
     if (this.props.isChatting) this.refs.chat.focus()
-
-    // CONSIDER THE FADE OUT MESSAGES
-    // setTimeout(() => {
-    //   if (!this.props.isChatting) this.props.stopChat()
-    // }, 5000)
   }
-
 
   submitMessage(evt) {
     if (evt.keyCode === 13) {
@@ -56,27 +50,18 @@ class Chat extends Component {
         return (<h1 key={`${idx}`}>{message}</h1>)
     })
 
-    if (this.props.isChatting) {
-      return (
-        <div>
-          {lastFiveMessages}
-          <TextField
-            id="chat"
-            ref="chat"
-            onChange={this.handleMessageChange}
-            onKeyDown={this.submitMessage}
-            value={this.state.message}
-            />
-        </div>
-      )
-    } else {
-      return (
-        <div>
-          {lastFiveMessages}
-          <h1>CHAT IS CLOSED NOW</h1>
-        </div>
-      )
-    }
+    return (
+      <div>
+        {lastFiveMessages}
+         {this.props.isChatting && <TextField
+          id="chat"
+          ref="chat"
+          onChange={this.handleMessageChange}
+          onKeyDown={this.submitMessage}
+          value={this.state.message}
+          />}
+      </div>
+    )
   }
 }
 

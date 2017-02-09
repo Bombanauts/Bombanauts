@@ -137,7 +137,6 @@ io.on('connection', (socket) => {
     })
 
     socket.on('new_message', (message) => {
-        console.log(message)
         io.in(socket.currentRoom).emit('new_message', message)
     })
 })

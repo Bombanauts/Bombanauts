@@ -1,4 +1,4 @@
-import { START_CHAT, STOP_CHAT, RECEIVE_MESSAGE } from './constants';
+import { START_CHAT, STOP_CHAT, RECEIVE_MESSAGE, SHOW_CHAT } from './constants';
 
 export const startChat = () => {
   return {
