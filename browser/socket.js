@@ -122,6 +122,10 @@ socket.on('update_world', (data) => {
       world.remove(sprite)
     }
   })
+
+  socket.on('new_message', (message) => {
+    console.log(message)
+  })
 })
 
 export default socket
