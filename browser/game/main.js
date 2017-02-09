@@ -49,7 +49,11 @@ const spawnPositions = [
   { x: 12.1, y: 1.5, z: 36.4 },
   { x: -36.4, y: 1.5, z: -4 },
 ]
-const bombMaterial = new THREE.MeshLambertMaterial({ color: '#000000' })
+const bombMaterial = new THREE.MeshPhongMaterial({
+  color: 0x000000,
+  specular: 0x050505,
+  shininess: 100
+})
 
 
 export function initCannon() {
@@ -140,7 +144,7 @@ export function init() {
   // floor
   geometry = new THREE.PlaneBufferGeometry(125, 125, 50, 50);
   geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
-  const texture = new THREE.TextureLoader().load('images/grass.jpeg');
+  const texture = new THREE.TextureLoader().load('images/grass.png');
   material = new THREE.MeshLambertMaterial({ map: texture });
   //repeat texture tiling for the floor
   texture.wrapS = THREE.RepeatWrapping;
@@ -152,7 +156,7 @@ export function init() {
 
   //skybox
   const skyGeo = new THREE.SphereGeometry(1000, 32, 32);
-  const skyMaterial = new THREE.MeshBasicMaterial({ color: '#7EC0EE' });
+  const skyMaterial = new THREE.MeshBasicMaterial({ color: '#00bfff' });
   const sky = new THREE.Mesh(skyGeo, skyMaterial);
   sky.material.side = THREE.BackSide;
   scene.add(sky);
@@ -247,6 +251,96 @@ export function init() {
       }
     })
   }
+
+  //request animation frame won't run on inactive tab, so moved this logic to set interval so if a user has the game running in an inactive tab they will still be receiving gamestate from the server and updating their game accordingly
+  setInterval(() => {
+    if (socket) {
+      socket.emit('update_world', {
+        playerId: socket.id,
+        playerPosition: {
+          x: sphereBody.position.x,
+          y: sphereBody.position.y,
+          z: sphereBody.position.z
+        },
+        dead: dead,
+        playerBombs: yourBombs
+      });
+    }
+    counter++;
+
+    //set player spawn after getting initial state from sockets
+    if (counter === 50) {
+      sphereBody.position.x = spawnPositions[playerArr.indexOf(socket.id)].x;
+      sphereBody.position.y = 5
+      sphereBody.position.z = spawnPositions[playerArr.indexOf(socket.id)].z;
+    }
+
+    world.step(dt); // function that allows walking from CANNON
+
+    //gathering your current state
+    const state = store.getState();
+    const others = state.players;
+    const playerIds = Object.keys(others)
+    const allBombs = state.bombs;
+    const stateBombs = [];
+
+    for (let key in allBombs) {
+      let userBombs = allBombs[key].map((bomb) => {
+        bomb.userId = key
+        return bomb
+      })
+      stateBombs.push(...userBombs)
+    }
+
+    if (playerIds.length !== players.length) {
+      players.forEach(body => {
+        world.remove(body)
+      })
+
+      playerMeshes.forEach(playermesh => {
+        scene.remove(playermesh)
+      })
+      players = [];
+      playerMeshes = [];
+      playerInstances = [];
+      for (let player in others) {
+        // CHECKING IF PLAYER HAS NICKNAME BEFORE CREATING NEW PLAYER
+        if (others[player].nickname) {
+          let newPlayer;
+          newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, false)
+          newPlayer.init()
+
+          players.push(newPlayer.playerBox)
+          playerMeshes.push(newPlayer.playerMesh)
+          playerInstances.push(newPlayer)
+        }
+      }
+    }
+
+    // add new bomb if there is one
+    if (stateBombs.length > prevStateLength) {
+      const mostRecentBomb = stateBombs[stateBombs.length - 1]
+      const newBomb = new Bomb(mostRecentBomb.id, mostRecentBomb.position, bombMaterial, mostRecentBomb.userId)
+      newBomb.init()
+
+      bombs.push(newBomb.bombBody)
+      bombObjects.push(newBomb)
+      bombMeshes.push(newBomb.bombMesh)
+    }
+    //reset previous state length
+    prevStateLength = stateBombs.length
+
+    //animate fire with bombs
+
+    dead = animateFire(bombObjects, clock, dead)
+      //updating player positions
+    animatePlayers(players, playerIds, others, playerMeshes)
+      //animating explosion particles
+    animateExplosion(blocksObj)
+      //animating bomb positions
+    animateBombs(yourBombs, yourBombMeshes, bombs, stateBombs, bombMeshes, prevStateLength)
+
+  }, 1000 / 60)
 }
 
 export function onWindowResize() {
@@ -257,95 +351,9 @@ export function onWindowResize() {
 
 //animation GAME LOOP
 export function animate() {
-  counter++;
   setTimeout(() => {
-      if (socket) {
-        socket.emit('update_world', {
-          playerId: socket.id,
-          playerPosition: {
-            x: sphereBody.position.x,
-            y: sphereBody.position.y,
-            z: sphereBody.position.z
-          },
-          dead: dead,
-          playerBombs: yourBombs
-        });
-      }
-      requestAnimationFrame(animate);
-    }, 1000 / 60) //throttled to 60 times per second
-
-
-  //set player spawn after getting initial state from sockets
-  if (counter === 50) {
-    sphereBody.position.x = spawnPositions[playerArr.indexOf(socket.id)].x;
-    sphereBody.position.y = 5
-    sphereBody.position.z = spawnPositions[playerArr.indexOf(socket.id)].z;
-  }
-
-  world.step(dt); // function that allows walking from CANNON
-
-  //gathering your current state
-  const state = store.getState();
-  const others = state.players;
-  const playerIds = Object.keys(others)
-  const allBombs = state.bombs;
-  const stateBombs = [];
-
-  for (let key in allBombs) {
-    let userBombs = allBombs[key].map((bomb) => {
-      bomb.userId = key
-      return bomb
-    })
-    stateBombs.push(...userBombs)
-  }
-
-  if (playerIds.length !== players.length) {
-    players.forEach(body => {
-      world.remove(body)
-    })
-
-    playerMeshes.forEach(playermesh => {
-      scene.remove(playermesh)
-    })
-    players = [];
-    playerMeshes = [];
-    playerInstances = [];
-    for (let player in others) {
-      // CHECKING IF PLAYER HAS NICKNAME BEFORE CREATING NEW PLAYER
-      if (others[player].nickname) {
-        let newPlayer;
-        newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, false)
-        newPlayer.init()
-
-        players.push(newPlayer.playerBox)
-        playerMeshes.push(newPlayer.playerMesh)
-        playerInstances.push(newPlayer)
-      }
-    }
-  }
-
-  // add new bomb if there is one
-  if (stateBombs.length > prevStateLength) {
-    const mostRecentBomb = stateBombs[stateBombs.length - 1]
-    const newBomb = new Bomb(mostRecentBomb.id, mostRecentBomb.position, bombMaterial, mostRecentBomb.userId)
-    newBomb.init()
-
-    bombs.push(newBomb.bombBody)
-    bombObjects.push(newBomb)
-    bombMeshes.push(newBomb.bombMesh)
-  }
-  //reset previous state length
-  prevStateLength = stateBombs.length
-
-  //animate fire with bombs
-
-  dead = animateFire(bombObjects, clock, dead)
-    //updating player positions
-  animatePlayers(players, playerIds, others, playerMeshes)
-    //animating explosion particles
-  animateExplosion(blocksObj)
-    //animating bomb positions
-  animateBombs(yourBombs, yourBombMeshes, bombs, stateBombs, bombMeshes, prevStateLength)
+    requestAnimationFrame(animate);
+  }, 1000 / 60) //throttled to 60 times per second
 
   controls.update(Date.now() - time);
   renderer.render(scene, camera);
@@ -375,5 +383,6 @@ export function restartWorld() {
   sphereBody.position.z = spawnPositions[playerArr.indexOf(socket.id)].z;
   dead = false;
 }
+
 
 export { scene, camera, renderer, controls, light, world, dead }

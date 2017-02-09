@@ -25,11 +25,11 @@ export const generateMap = (mapArr) => {
   const crateMaterial = new THREE.MeshLambertMaterial({ map: crateTexture });
 
   // WALL
-  const wallTexture = new THREE.TextureLoader().load('images/brick_wall.png');
+  const wallTexture = new THREE.TextureLoader().load('images/brick.png');
   const wallMaterial = new THREE.MeshLambertMaterial({ map: wallTexture });
 
   // FIXED CUBE
-  const fixedCubeTexture = new THREE.TextureLoader().load('images/stone.png');
+  const fixedCubeTexture = new THREE.TextureLoader().load('images/Tileable1b.png');
   const fixedCubeMaterial = new THREE.MeshLambertMaterial({ map: fixedCubeTexture });
 
   // PHYSICS BODY AND SHAPE FOR CRATE, WALL, FIXED CUBE
