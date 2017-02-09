@@ -3,7 +3,9 @@ const {
   UPDATE_PLAYERS,
   REMOVE_PLAYER,
   KILL_PLAYER,
-  SET_NICKNAME
+  SET_NICKNAME,
+  INCREMENT_SCORE,
+  DECREMENT_SCORE
 } = require('./constants');
 
 const getPlayers = (roomId) => ({
@@ -37,10 +39,24 @@ const setNickname = (id, nickname, roomId) => ({
   roomId
 })
 
+const incrementScore = (id, roomId) => ({
+  type: INCREMENT_SCORE,
+  id,
+  roomId
+})
+
+const decrementScore = (id, roomId) => ({
+  type: DECREMENT_SCORE,
+  id,
+  roomId
+})
+
 module.exports = {
   getPlayers,
   updatePlayers,
   removePlayer,
   killPlayer,
-  setNickname
+  setNickname,
+  incrementScore,
+  decrementScore
 }

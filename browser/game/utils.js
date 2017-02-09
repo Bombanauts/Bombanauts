@@ -196,6 +196,12 @@ export const getShootDir = (projector, camera, targetVec) => {
   targetVec.copy(ray.direction);
 }
 
+export const delay = (time) => {
+  return new Promise(resolve => {
+    setTimeout(resolve, time)
+  })
+}
+
 
 // CREATING TEXT SPRITE FOR PLAYER
 // export const makeTextSprite = (message, fontsize) => {

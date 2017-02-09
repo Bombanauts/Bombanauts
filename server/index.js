@@ -6,13 +6,50 @@ const port = process.env.PORT || 1337;
 const express = require('express');
 const app = express();
 const socketio = require('socket.io');
-const { Maps, randomGeneration } = require('./maps/map');
-const { updatePlayers, removePlayer, killPlayer, setNickname } = require('./players/action-creator');
-const { addBomb, updateBombPositions, removePlayerBombs, removeBomb } = require('./bombs/action-creator')
-const { updateMap, loadMap } = require('./maps/action-creator')
-const { setTime, getTime } = require('./timer/action-creator')
+//MAPS
+const {
+    Maps,
+    randomGeneration
+} = require('./maps/map');
+
+const {
+    updateMap,
+    loadMap
+} = require('./maps/action-creator')
+
+//PLAYERS
+const {
+    updatePlayers,
+    removePlayer,
+    killPlayer,
+    setNickname,
+    incrementScore,
+    decrementScore
+} = require('./players/action-creator');
+
+//BOMBS
+const {
+    addBomb,
+    updateBombPositions,
+    removePlayerBombs,
+    removeBomb
+} = require('./bombs/action-creator')
+
+//TIMER
+const {
+    setTime,
+    getTime
+} = require('./timer/action-creator')
+
+//WINNER
 const { setWinner } = require('./winner/action-creator')
-const { roomName, convertStateForFrontEnd, resetWorld } = require('./utils')
+
+//UTILS
+const {
+    roomName,
+    convertStateForFrontEnd,
+    resetWorld
+} = require('./utils')
 
 const store = require('./store')
 const worldNames = require('./world-names')
@@ -80,15 +117,23 @@ io.on('connection', (socket) => {
 
     //kill player on bomb collision
     socket.on('kill_player', (data) => {
+        let room = socket.currentRoom;
+        store.dispatch(killPlayer(data.id, room))
+
+        if(data.id !== data.killedBy) {
+            store.dispatch(incrementScore(data.killedBy, room))
+        } else {
+            store.dispatch(decrementScore(data.killedBy, room))
+        }
+
         let currentState = store.getState();
-        let currentPlayers = currentState.players[socket.currentRoom];
+        let currentPlayers = currentState.players[room];
         let killerNickname = currentPlayers[data.killedBy]
         let victimNickname = currentPlayers[data.id];
 
         data.killerNickname = killerNickname;
         data.victimNickname = victimNickname;
-        store.dispatch(killPlayer(data.id, socket.currentRoom))
-        io.in(socket.currentRoom).emit('kill_player', data)
+        io.in(room).emit('kill_player', data)
 
         if (currentPlayers) {
             let currentPlayersIds = Object.keys(currentPlayers)
@@ -103,14 +148,14 @@ io.on('connection', (socket) => {
             }
 
             if (currentPlayersLength > 1 && alivePlayers.length === 1) {
-                store.dispatch(setWinner(alivePlayers[0].socketId, socket.currentRoom))
+                store.dispatch(setWinner(alivePlayers[0].socketId, room))
             }
         }
 
         currentState = store.getState();
-        let newState = convertStateForFrontEnd(currentState, socket.currentRoom)
-        io.in(socket.currentRoom).emit('set_winner', newState.winner)
-        io.in(socket.currentRoom).emit('update_world', newState)
+        let newState = convertStateForFrontEnd(currentState, room)
+        io.in(room).emit('set_winner', newState.winner)
+        io.in(room).emit('update_world', newState)
     })
 
     socket.on('destroy_cube', (data) => {
