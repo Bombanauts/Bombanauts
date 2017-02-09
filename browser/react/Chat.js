@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import { connect } from 'react-redux';
-import { startChat, stopChat, showChatHistory } from '../chat/action-creator';
+import { startChat, stopChat } from '../chat/action-creator';
 import socket from '../socket';
 
 class Chat extends Component {
@@ -52,8 +52,8 @@ class Chat extends Component {
     return (
       <div style={{fontSize: 5,
                   position: 'absolute',
-                  bottom: '1%',
-                  marginLeft: '1%'}}>
+                  bottom: '5%',
+                  marginLeft: '2%'}}>
         {lastFiveMessages}
          {this.props.isChatting && <TextField
           id="chat"
@@ -62,7 +62,7 @@ class Chat extends Component {
           onKeyDown={this.submitMessage}
           value={this.state.message}
           underlineFocusStyle={{ borderColor: '#000000'}}
-          style={{ fontSize: 10 }}
+          style={{ fontSize: 15 }}
           />}
       </div>
     )
