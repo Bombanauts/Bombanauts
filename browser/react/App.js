@@ -4,19 +4,18 @@ import { connect } from 'react-redux';
 import socket from '../socket';
 import store from '../store';
 import Timer from './Timer';
+
 import { initCannon, init, animate, controls } from '../game/main';
+
+import { delay } from '../game/utils';
 
 const fontStyle = {
   'fontSize': '40px'
 }
+
 import Blocker from './Blocker';
 import Splash from './Splash';
-
-function delay(t) {
-  return new Promise(resolve => {
-    setTimeout(resolve, t)
-  })
-}
+import { Scores } from './Scores';
 
 class App extends Component {
   constructor(props) {
@@ -49,7 +48,13 @@ class App extends Component {
     return (
       <div>
           {!this.props.isPlaying && <Splash />}
-          { winnerId && <h1  style={{position: "absolute", right: 500}}>{winnerNickname} Won!</h1>}
+          { winnerId &&
+            (<div>
+               <h1  style={{position: "absolute", right: 500}}>{winnerNickname} Won!</h1>
+               <Scores />
+             </div>
+            )
+          }
           <Blocker dead={this.props.dead} />
           { this.props.dead && <div style={{ backgroundColor: '#700303',
             position: 'absolute',

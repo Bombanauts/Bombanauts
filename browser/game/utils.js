@@ -192,3 +192,9 @@ export const getShootDir = (projector, camera, targetVec) => {
   const ray = new THREE.Ray(sphereBody.position, vector.sub(sphereBody.position).normalize());
   targetVec.copy(ray.direction);
 }
+
+export const delay = (time) => {
+  return new Promise(resolve => {
+    setTimeout(resolve, time)
+  })
+}
