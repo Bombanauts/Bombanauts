@@ -9,8 +9,7 @@ class Chat extends Component {
     super(props)
 
     this.state = {
-      message: '',
-      chatHistory: true
+      message: ''
     }
 
     this.submitMessage = this.submitMessage.bind(this)
@@ -51,7 +50,10 @@ class Chat extends Component {
     })
 
     return (
-      <div>
+      <div style={{fontSize: 5,
+                  position: 'absolute',
+                  bottom: '1%',
+                  marginLeft: '1%'}}>
         {lastFiveMessages}
          {this.props.isChatting && <TextField
           id="chat"
@@ -59,6 +61,8 @@ class Chat extends Component {
           onChange={this.handleMessageChange}
           onKeyDown={this.submitMessage}
           value={this.state.message}
+          underlineFocusStyle={{ borderColor: '#000000'}}
+          style={{ fontSize: 10 }}
           />}
       </div>
     )
