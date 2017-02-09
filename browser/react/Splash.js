@@ -4,6 +4,7 @@ import socket from '../socket';
 import { startGame } from '../gameState/action-creator';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField'
+import { startChat } from '../chat/action-creator';
 
 class Splash extends Component {
   constructor(props) {
@@ -24,12 +25,6 @@ class Splash extends Component {
 
   setNickname() {
     socket.emit('set_nickname', this.state.nickname);
-
-    // enable chat start on enter key press
-    window.addEventListener('keydown', (evt) => {
-      if (evt.keyCode === 13) console.log('KEY PRESSED AFTER SETTING NICKNAME')
-    }, false)
-
     this.props.start()
   }
 
@@ -53,6 +48,7 @@ class Splash extends Component {
               top: 80
             }}>
             <TextField
+                  id="nickname"
                   onChange={this.updateNickname}
                   maxLength={15}
                   hintText="nickname"
