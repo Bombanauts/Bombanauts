@@ -56,6 +56,8 @@ class Blocker extends Component {
           <br />
           <br />
           <br />
+          <br />
+          <br />
 
           <span style={{ fontSize: '24px'}}> Tips: </span>
           <br />
