@@ -1,8 +1,7 @@
 import {
   UPDATE_PLAYER_LOCATIONS,
   ADD_PLAYER,
-  REMOVE_PLAYER,
-  SET_NICKNAME
+  REMOVE_PLAYER
 } from './constants'
 
 const initialState = {};
