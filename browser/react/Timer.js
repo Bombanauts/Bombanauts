@@ -8,17 +8,23 @@ export class Timer extends Component {
   }
 
   render() {
-    return (
-      <div style={{position: "absolute", right: 0}}>
-        {this.props.time ? ( minuteConvert(this.props.time) + ' Left' ) : '' }
-      </div>
-    )
+    if (this.props.isPlaying) {
+      return (
+        <div className='timer'>
+          {this.props.time ? ( minuteConvert(this.props.time)) : '' }
+        </div>
+      )
+    }
+    else {
+      return null;
+    }
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    time: state.timer
+    time: state.timer,
+    isPlaying: state.isPlaying
   }
 }
 
