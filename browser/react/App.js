@@ -51,7 +51,7 @@ class App extends Component {
     return (
       <div>
           {this.props.isPlaying && <Chat />}
-          <Announcer  />
+          {this.props.isPlaying && <Announcer  />}
           {!this.props.isPlaying && <Splash />}
           { winnerId &&
             (<div>
