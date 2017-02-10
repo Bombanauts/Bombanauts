@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import socket from '../socket';
 import { startGame } from '../redux/gameState/action-creator';
 import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField'
+import TextField from 'material-ui/TextField';
+import MuteButton from './MuteButton';
 
 class Splash extends Component {
   constructor(props) {
@@ -61,6 +62,7 @@ class Splash extends Component {
                    />
             </div>
           </div>
+          <MuteButton />
           <img id='bomberman' src='/images/bomberman.gif'></img>
       </div>
     )

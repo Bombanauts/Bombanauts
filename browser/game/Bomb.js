@@ -7,6 +7,7 @@ import { scene, world, camera, blockCount, blocksObj, listener } from './main'
 import { VolumetricFire } from './ParticleEngine'
 import { destroyable, roundFour } from './utils'
 import { Block } from './Explosion.js'
+import store from '../redux/store'
 
 export default class Bomb {
   constructor(id, position, material, userId) {
@@ -30,13 +31,17 @@ export default class Bomb {
   }
 
   init() {
-    let explosionSound = new THREE.PositionalAudio( listener );
-    const explosionLoader = new THREE.AudioLoader();
-    explosionLoader.load( 'sounds/explosion.mp3', function( buffer ) {
-      explosionSound.setBuffer( buffer );
-      explosionSound.setRefDistance( 10 );
-      explosionSound.play()
-    });
+    const sound = store.getState().sound
+
+    if (sound) {
+      let explosionSound = new THREE.PositionalAudio( listener );
+      const explosionLoader = new THREE.AudioLoader();
+      explosionLoader.load( 'sounds/explosion.mp3', function( buffer ) {
+        explosionSound.setBuffer( buffer );
+        explosionSound.setRefDistance( 10 );
+        explosionSound.play()
+      });
+    }
 
     this.bombShape = new CANNON.Sphere(1.5);
 
