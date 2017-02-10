@@ -38,7 +38,10 @@ export class Scores extends Component {
           <li><strong>Score:</strong></li>
             {
               playersRows.length && playersRows.map( (playersRow, index) => {
-                return <li key={`${index}`}>{`${playersRow.nickname}:   ${playersRow.score}`}</li>
+                return <div>
+                  <li key={`${index}`}>{`${playersRow.nickname}:   ${playersRow.score}`}</li>
+                  <hr />
+                  </div>
               })
             }
           </ul>
