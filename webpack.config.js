@@ -39,7 +39,7 @@ module.exports = {
       {
             // I want to uglify with mangling only app files, not thirdparty libs
             test: /.*\/App\/.*\.js$/,
-            exclude: /.spec.js/, // excluding .spec files
+            exclude: /.test.js/, // excluding .test files
             loader: "uglify"
       }
     ]
