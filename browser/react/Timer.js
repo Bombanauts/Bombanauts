@@ -26,14 +26,14 @@ const mapStateToProps = (state) => {
 const minuteConvert = (num) => {
   let minutes = Math.floor(num / 60) || 0;
   minutes = minutes.toString()
-  let seconds = num - minutes * 60;
+  let seconds = Math.floor(num - minutes * 60);
 
   if (seconds < 10) {
     seconds = '0' + seconds.toString()
   } else {
     seconds = seconds.toString()
   }
-  return `${minutes}:${Math.floor(seconds)}`
+  return `${minutes}:${seconds}`
 }
 
 
