@@ -50,9 +50,24 @@ class Blocker extends Component {
        { this.state.instructions && <div id="instructions" ref="instructions" onClick={this.handleClick}>
           <span style={{ display: 'inline-block', marginBottom: '50px', fontSize: '40px', zIndex: '999'}}>Click to play</span>
           <br />
-          <span style={{ fontSize: '18px' }}>(W,A,S,D = Move, MOUSE = Look, CLICK = Plant Bomb, SPACE = Throw Bomb)</span>
+          <span style={{ fontSize: '24px' }}>(W,A,S,D = Move, MOUSE = Look, CLICK = Plant Bomb, SPACE = Throw Bomb)</span>
           <br />
-          <span style={{ fontSize: '18px' }}>(ENTER = Open Chat, ` = Close Chat, ESC = Instructions)</span>
+          <br />
+          <br />
+
+          <span style={{ fontSize: '24px'}}> Tips: </span>
+          <br />
+          <br />
+            <span style={{ fontSize: '20px'}}>Be careful not to kill yourself!</span>
+            <br />
+            <br />
+            <span style={{ fontSize: '20px'}}>You cannot throw bombs over blocks.</span>
+            <br />
+            <br />
+            <span style={{ fontSize: '20px'}}>You can throw your bombs at other players' bombs to move them.</span>
+            <br />
+          <br />
+          <span style={{ fontSize: '24px' }}>(ENTER = Open Chat, ` = Close Chat, ESC = Instructions)</span>
         </div>}
       </div>
     )
