@@ -3,6 +3,7 @@ import TextField from 'material-ui/TextField';
 import { connect } from 'react-redux';
 import { startChat, stopChat } from '../redux/chat/action-creator';
 import socket from '../socket';
+import { controls } from '../game/main';
 
 class Chat extends Component {
   constructor(props) {
@@ -20,10 +21,15 @@ class Chat extends Component {
     // enable chat start/close on enter key press
     window.addEventListener('keydown', (evt) => {
       // enter to start chat
-      if (evt.keyCode === 13) this.props.startChat()
-
+      if (evt.keyCode === 13) {
+        this.props.startChat()
+        controls.enabled = false;
+      }
       // back tick to stop chat
-      if (evt.keyCode === 192) this.props.stopChat()
+      if (evt.keyCode === 192) {
+        this.props.stopChat()
+        controls.enabled = true;
+      }
     }, false)
   }
 
@@ -34,7 +40,11 @@ class Chat extends Component {
 
   submitMessage(evt) {
     if (evt.keyCode === 13 && this.state.message.length > 0) {
-      socket.emit('new_message', this.state.message)
+      controls.enabled = true;
+      socket.emit('new_message', {
+        id: socket.id,
+        message: this.state.message
+      })
       this.setState({ message: '' })
       this.props.stopChat()
     }
