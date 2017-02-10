@@ -1,0 +1,33 @@
+#title {
+  font-size: 100;
+  margin: auto;
+  text-align: center;
+  position: relative;
+  display: table;
+  top: 100;
+  letter-spacing: 5px;
+  color: #9CC1AF;
+  font-weight: 300;
+}
+
+#name {
+  margin: auto;
+  text-align: center;
+  position: relative;
+  display: table;
+  top: 80;
+}
+
+#backgroundimage {
+  background-image: url("/images/background.jpg");
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+}
+
+#bomberman {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+}
+
