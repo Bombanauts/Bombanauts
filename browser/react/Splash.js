@@ -14,7 +14,7 @@ class Splash extends Component {
     }
     this.updateNickname = this.updateNickname.bind(this)
     this.setNickname = this.setNickname.bind(this)
-    this.handleEnterKey = this.handleEnterKey.bind(this)
+    // this.handleEnterKey = this.handleEnterKey.bind(this)
   }
 
   updateNickname(event) {
@@ -28,9 +28,10 @@ class Splash extends Component {
     this.props.start()
   }
 
-  handleEnterKey(evt) {
-    if (evt.keyCode === 13) this.setNickname()
-  }
+  // press enter to set nickname
+  // handleEnterKey(evt) {
+  //   if (evt.keyCode === 13) this.setNickname()
+  // }
 
   render() {
     return (
@@ -54,7 +55,7 @@ class Splash extends Component {
             <TextField
                   id="nickname"
                   onChange={this.updateNickname}
-                  onKeyDown={this.handleEnterKey}
+                  // onKeyDown={this.handleEnterKey}
                   maxLength={15}
                   hintText="nickname"
                   floatingLabelText="nickname"

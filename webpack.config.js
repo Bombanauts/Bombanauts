@@ -43,5 +43,8 @@ module.exports = {
             loader: "uglify"
       }
     ]
+  },
+  stats: {
+    warnings: false
   }
 };
