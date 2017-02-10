@@ -15,12 +15,12 @@ module.exports = {
   resolve: {
     extensions: ['', '.js', '.jsx', '.scss']
   },
-  // plugins: [
-  //   new webpack.optimize.UglifyJsPlugin({
-  //     sourceMap: false,
-  //     mangle: false
-  //   })
-  // ],
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: false,
+      mangle: false
+    })
+  ],
   module: {
     loaders: [
       {
