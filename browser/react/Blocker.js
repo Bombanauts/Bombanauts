@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { controls } from '../game/main';
+import MuteButton from './MuteButton';
 
 class Blocker extends Component {
   constructor(props) {
@@ -54,6 +55,7 @@ class Blocker extends Component {
           <br />
           <span style={{ fontSize: '18px' }}>(ENTER = Open Chat, ` = Close Chat, ESC = Instructions)</span>
         </div>}
+        <MuteButton />
       </div>
     )
   }

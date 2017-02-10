@@ -4,8 +4,7 @@ import socket from '../socket';
 import { startGame } from '../redux/gameState/action-creator';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import { muteSound, unmuteSound } from '../redux/sound/action-creator';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import MuteButton from './MuteButton';
 
 class Splash extends Component {
   constructor(props) {
@@ -73,24 +72,14 @@ class Splash extends Component {
                    />
           </span>
         </div>
-        <RaisedButton
-            label={this.props.sound ? 'MUTE' : 'UNMUTE' }
-            style={{ position: 'absolute', left: '5%', bottom: '5%' }}
-            onClick={() => this.props.sound ? this.props.muteSound() : this.props.unmuteSound()}
-            />
+        <MuteButton />
       </div>
     )
   }
 }
 
-const mapStateToProps = (state) => ({
-  sound: state.sound
-})
-
 const mapDispatchToProps = (dispatch) => ({
-  start: () => dispatch(startGame()),
-  muteSound: () => dispatch(muteSound()),
-  unmuteSound: () => dispatch(unmuteSound())
+  start: () => dispatch(startGame())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Splash)
+export default connect(null, mapDispatchToProps)(Splash)
