@@ -1,6 +1,6 @@
-const { expect } = require('chai')
-const { START_CHAT, STOP_CHAT } = require('../../browser/redux/chat/constants')
-const { startChat, stopChat } = require('../../browser/redux/chat/action-creator')
+import { expect } from 'chai'
+import { START_CHAT, STOP_CHAT } from '../../browser/redux/chat/constants'
+import { startChat, stopChat } from '../../browser/redux/chat/action-creator'
 
 describe('Chat System action creators', () => {
   describe('startChat action creator', () => {

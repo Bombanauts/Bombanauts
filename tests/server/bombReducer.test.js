@@ -1,8 +1,8 @@
-const { expect } = require('chai')
-const { createStore } = require('redux')
-const { ADD_BOMB, UPDATE_BOMB_POSITIONS, REMOVE_PLAYER_BOMBS } = require('../../server/bombs/constants')
-const bombReducer = require('../../server/bombs/reducer')
-const initialState = require('../../server/bombs/init-state')
+import { expect } from 'chai'
+import { createStore } from 'redux'
+import { ADD_BOMB, UPDATE_BOMB_POSITIONS, REMOVE_PLAYER_BOMBS } from '../../server/bombs/constants'
+import bombReducer from '../../server/bombs/reducer'
+import initialState from '../../server/bombs/init-state'
 
 describe('Back end bomb reducer', () => {
   let testStore;

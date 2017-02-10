@@ -1,6 +1,6 @@
-const { expect } = require('chai')
-const { ADD_BOMB, UPDATE_BOMB_POSITIONS, REMOVE_PLAYER_BOMBS } = require('../../server/bombs/constants')
-const { addBomb, updateBombPositions, removePlayerBombs } = require('../../server/bombs/action-creator')
+import { expect } from 'chai'
+import { ADD_BOMB, UPDATE_BOMB_POSITIONS, REMOVE_PLAYER_BOMBS } from '../../server/bombs/constants'
+import { addBomb, updateBombPositions, removePlayerBombs } from '../../server/bombs/action-creator'
 
 describe('Back end bomb action creators', () => {
   const newBomb = {

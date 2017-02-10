@@ -1,14 +1,8 @@
-import React from 'react'
-import { createStore } from 'redux'
-import chai, { expect } from 'chai'
 
-import {
-  updatePlayerLocations,
-  addPlayer,
-  removePlayer
-} from '../../browser/players/action-creator'
-import { players } from '../../browser/players/reducer'
-import * as types from '../../browser/players/constants'
+import { createStore } from 'redux'
+import { expect } from 'chai'
+import { players } from '../../browser/redux/players/reducer'
+import * as types from '../../browser/redux/players/constants'
 
 describe('Front end player reducer', () => {
   let testStore;
