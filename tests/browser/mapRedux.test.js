@@ -68,7 +68,6 @@ describe('Front end map reducer', () => {
         type: types.GENERATE_MAP,
        	map
       })
-      console.log(testStore.getState())
       expect(testStore.getState()).to.be.deep.equal(map)
     })
 
