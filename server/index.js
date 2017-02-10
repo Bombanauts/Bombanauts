@@ -195,7 +195,13 @@ io.on('connection', (socket) => {
     let currentState = store.getState();
     let room = socket.currentRoom;
     let currentPlayers = currentState.players[room];
-    let playerNickname = currentPlayers[data.id].nickname
+    let playerNickname;
+    if (currentPlayers[data.id] && currentPlayers[data.id].nickname) {
+      playerNickname = currentPlayers[data.id].nickname
+    }
+    else {
+      playerNickname = ''
+    }
     io.in(socket.currentRoom).emit('new_message', `${playerNickname} : ${data.message}`)
   })
 })
