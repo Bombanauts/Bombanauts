@@ -1,0 +1,16 @@
+#scores {
+  position: absolute;
+  top: 50;
+  font-size: 150%;
+  /*background-color: rgba(155, 155, 155, 0.5);*/
+}
+
+#scoreslist {
+  list-style: none;
+}
+
+#winner {
+  position: absolute;
+  right: 500;
+  font-size: 300%;
+}

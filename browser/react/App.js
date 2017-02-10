@@ -35,7 +35,7 @@ class App extends Component {
       animate()
     })
   }
- 
+
   render() {
     let winnerId = this.props.winner
 
@@ -55,7 +55,7 @@ class App extends Component {
           {!this.props.isPlaying && <Splash />}
           { winnerId &&
             (<div>
-               <h1  style={{position: "absolute", right: 500}}>{winnerNickname} Won!</h1>
+               <h1 id='winner'>{winnerNickname} wins!</h1>
                <Scores />
              </div>
             )
@@ -73,7 +73,7 @@ class App extends Component {
               textAlign: 'center',
               position: 'relative',
               display: 'table',
-              top: 60}}>YOU DIED!</span>
+              top: 60}}>You died.</span>
             </div>
           }
           <Timer />
