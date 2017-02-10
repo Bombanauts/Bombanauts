@@ -57,7 +57,7 @@ class Splash extends Component {
                   backgroundColor="#cc2d2d"
                   disabledBackgroundColor='#D5D1D0'
                   label="Play"
-                  style={{ display: 'block', 'color': '#D5D1D0' }}
+                  style={{ display: 'block', borderColor: 'none'}}
                    />
             </div>
           </div>
