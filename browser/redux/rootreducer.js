@@ -9,6 +9,7 @@ import { isPlaying } from './gameState/reducer'
 import { ownInfo } from './ownInfo/reducer'
 import { announcement } from './announcer/reducer'
 import { chat } from './chat/reducer'
+import { sound } from './sound/reducer'
 
 export default combineReducers({
   players,
@@ -20,5 +21,6 @@ export default combineReducers({
   isPlaying,
   ownInfo,
   announcement,
-  chat
+  chat,
+  sound
 })
