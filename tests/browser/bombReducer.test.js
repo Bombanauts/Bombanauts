@@ -1,10 +1,8 @@
-import React from 'react'
 import { createStore } from 'redux'
-import chai, { expect } from 'chai'
-
-import { updateBombLocations, removePlayerBombs } from '../../browser/bombs/action-creator'
-import { bombs } from '../../browser/bombs/reducer'
-import * as types from '../../browser/bombs/constants'
+import { expect } from 'chai'
+import { updateBombLocations, removePlayerBombs } from '../../browser/redux/bombs/action-creator'
+import { bombs } from '../../browser/redux/bombs/reducer'
+import * as types from '../../browser/redux/bombs/constants'
 
 describe('Front end bomb reducer', () => {
   let testStore;

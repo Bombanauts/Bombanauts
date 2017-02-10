@@ -1,14 +1,14 @@
-const { expect } = require('chai')
-const { createStore } = require('redux')
-const {
+import { expect } from 'chai'
+import { createStore } from 'redux'
+import {
   GET_PLAYERS,
   UPDATE_PLAYERS,
   REMOVE_PLAYER,
   KILL_PLAYER,
   SET_NICKNAME
-} = require('../../server/players/constants')
-const playerReducer = require('../../server/players/reducer')
-const initialState = require('../../server/players/init-state')
+} from '../../server/players/constants'
+import playerReducer from '../../server/players/reducer'
+import initialState from '../../server/players/init-state'
 
 describe('Back end player reducer', () => {
   let testStore;

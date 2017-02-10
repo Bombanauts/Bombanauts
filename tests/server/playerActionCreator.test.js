@@ -1,18 +1,18 @@
-const { expect } = require('chai');
-const {
+import { expect } from 'chai';
+import {
   GET_PLAYERS,
   UPDATE_PLAYERS,
   REMOVE_PLAYER,
   KILL_PLAYER,
   SET_NICKNAME
-} = require('../../server/players/constants');
-const {
+} from '../../server/players/constants';
+import {
   getPlayers,
   updatePlayers,
   removePlayer,
   killPlayer,
   setNickname
-} = require('../../server/players/action-creator');
+} from '../../server/players/action-creator';
 
 describe('Back end player action creators', () => {
 
