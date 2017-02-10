@@ -33,7 +33,7 @@ class Chat extends Component {
   }
 
   submitMessage(evt) {
-    if (evt.keyCode === 13) {
+    if (evt.keyCode === 13 && this.state.message.length > 0) {
       socket.emit('new_message', this.state.message)
       this.setState({ message: '' })
       this.props.stopChat()
@@ -46,11 +46,11 @@ class Chat extends Component {
 
   render() {
     const lastFiveMessages = this.props.lastFiveMessages.map((message, idx) => {
-        return (<h1 key={`${idx}`}>{message}</h1>)
+        return (<h1 key={`${idx}`} style={{ fontSize: 15, color: '#ffffff' }}>{message}</h1>)
     })
 
     return (
-      <div style={{fontSize: 5,
+      <div style={{
                   position: 'absolute',
                   bottom: '5%',
                   marginLeft: '2%'}}>
@@ -61,8 +61,8 @@ class Chat extends Component {
           onChange={this.handleMessageChange}
           onKeyDown={this.submitMessage}
           value={this.state.message}
-          underlineFocusStyle={{ borderColor: '#000000'}}
-          style={{ fontSize: 15 }}
+          underlineFocusStyle={{ borderColor: '#ffffff'}}
+          inputStyle={{ fontSize: 15, color: '#ffffff' }}
           />}
       </div>
     )
