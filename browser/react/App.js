@@ -42,10 +42,10 @@ class App extends Component {
     const players = store.getState().players
     let winnerNickname = '';
     if (socket.id === winnerId && winnerId) {
-        winnerNickname = 'You'
+        winnerNickname = 'You win!'
         socket.emit('reset_world', {})
     } else if (winnerId) {
-      winnerNickname = players[winnerId].nickname;
+      winnerNickname = players[winnerId].nickname + ' wins!';
     }
 
     return (
@@ -55,7 +55,7 @@ class App extends Component {
           {!this.props.isPlaying && <Splash />}
           { winnerId &&
             (<div>
-               <h1 id='winner'>{winnerNickname} wins!</h1>
+               <h1 id='winner' className='center'>{winnerNickname}</h1>
                <Scores />
              </div>
             )

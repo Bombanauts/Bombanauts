@@ -19,16 +19,8 @@ export class Announcer extends Component {
       return (
         <div>
         { killerName === victimName ?
-          <h1 style={{
-                  fontSize: 25,
-                  position: 'absolute',
-                  top: 120,
-                  marginLeft: '30%' }}>{killerName} committed suicide.</h1> :
-          <h1 style={{
-                  fontSize: 25,
-                  position: 'absolute',
-                  top: 120,
-                  marginLeft: '30%' }}>{killerName} killed {victimName}.</h1> }
+          <h1 className='center' id='announcer'>{killerName} committed suicide.</h1> :
+          <h1 className='center' id='announcer'>{killerName} killed {victimName}.</h1> }
         </div>
       )
     }
