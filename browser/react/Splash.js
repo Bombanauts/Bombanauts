@@ -35,41 +35,31 @@ class Splash extends Component {
 
   render() {
     return (
-      <div style={{ backgroundImage: 'url("images/splash.png")', backgroundSize: 'cover', height: '100%', width: '100%' }}>
+      <div id='backgroundimage'>
         <div>
-          <span style={{
-              fontSize: 50,
-              margin: 'auto',
-              textAlign: 'center',
-              position: 'relative',
-              display: 'table',
-              top: 80
-            }}>BomberJS</span>
-          <span style={{
-              margin: 'auto',
-              textAlign: 'center',
-              position: 'relative',
-              display: 'table',
-              top: 80
-            }}>
+          <h1 id='title'>BomberJS</h1>
+          <div id='name'>
             <TextField
                   id="nickname"
                   onChange={this.updateNickname}
                   // onKeyDown={this.handleEnterKey}
                   maxLength={15}
-                  hintText="nickname"
-                  floatingLabelText="nickname"
-                  floatingLabelStyle={{ color: '#00B303' }}
-                  underlineFocusStyle={{ borderColor: '#00B303'}}
+                  hintText="Nickname"
+                  floatingLabelText="Nickname"
+                  floatingLabelStyle={{ color: '#cc2d2d' }}
+                  underlineFocusStyle={{ borderColor: '#cc2d2d'}}
+                  inputStyle={{ color: '#D5D1D0' }}
                   />
             <RaisedButton
                   disabled={!this.state.nickname}
                   onClick={this.setNickname}
-                  backgroundColor="#00B303"
+                  backgroundColor="#cc2d2d"
+                  disabledBackgroundColor='#cc2d2d'
                   label='Play'
-                  style={{ display: 'block' }}
+                  style={{ display: 'block', 'color': '#D5D1D0' }}
                    />
-          </span>
+          </div>
+          <img id='bomberman' src='/images/bomberman.gif'></img>
         </div>
       </div>
     )
