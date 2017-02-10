@@ -3,20 +3,14 @@ import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import { muteSound, unmuteSound } from '../redux/sound/action-creator';
 
-class MuteButton extends Component {
-  constructor(props) {
-    super(props)
-  }
-
-  render() {
-    return (
-      <RaisedButton
-            label={this.props.sound ? 'MUTE' : 'UNMUTE' }
-            style={{ position: 'absolute', left: '5%', bottom: '5%' }}
-            onClick={() => this.props.sound ? this.props.muteSound() : this.props.unmuteSound()}
-            />
-    )
-  }
+const MuteButton = (props) => {
+  return (
+    <RaisedButton
+          label={props.sound ? 'MUTE' : 'UNMUTE' }
+          style={{ position: 'absolute', left: '5%', bottom: '5%' }}
+          onClick={() => props.sound ? props.muteSound() : props.unmuteSound()}
+          />
+  )
 }
 
 const mapStateToProps = (state) => ({
