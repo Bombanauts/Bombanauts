@@ -35,7 +35,7 @@ class App extends Component {
       animate()
     })
   }
- 
+
   render() {
     let winnerId = this.props.winner
 
@@ -89,6 +89,5 @@ const mapStateToProps = (state) => {
     isPlaying: state.isPlaying
   }
 }
-
 
 export default connect(mapStateToProps)(App);

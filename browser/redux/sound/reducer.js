@@ -1,5 +1,4 @@
 import { MUTE, UNMUTE } from './constants';
-import { unmuteSound, muteSound } from './action-creator';
 
 const initialState = true;
 

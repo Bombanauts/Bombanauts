@@ -109,36 +109,31 @@ socket.on('connect', function() {
         let playerToKill = playerInstances.filter(player => {
             return player.socketId === data.id;
         })[0]
+
         if (playerToKill) {
-            let currentStateAnnouncement = store.getState().announcement;
-            if (currentStateAnnouncement.killer.nickname === currentStateAnnouncement.victim.nickname) {
-                let witchSound = new THREE.PositionalAudio(listener);
-                const witchAudioLoader = new THREE.AudioLoader();
-                witchAudioLoader.load('sounds/witch.mp3', function(buffer) {
-                    witchSound.setBuffer(buffer);
-                    witchSound.setRefDistance(10);
-                    witchSound.play()
-                });
-                let sound = new THREE.PositionalAudio(listener);
+            let state = store.getState();
+            let currentStateAnnouncement = state.announcement;
+            let sound = state.sound
+            if (sound) {
+                const positionalAudio = new THREE.PositionalAudio(listener);
                 const audioLoader = new THREE.AudioLoader();
-                audioLoader.load('sounds/die.mp3', function(buffer) {
-                    sound.setBuffer(buffer);
-                    sound.setRefDistance(10);
-                    sound.play()
-                });
 
-                playerToKill.explode()
-            } else {
-                let sound = new THREE.PositionalAudio(listener);
-                const audioLoader = new THREE.AudioLoader();
-                audioLoader.load('sounds/die.mp3', function(buffer) {
-                    sound.setBuffer(buffer);
-                    sound.setRefDistance(10);
-                    sound.play()
-                });
+                if (currentStateAnnouncement.killer.nickname === currentStateAnnouncement.victim.nickname) {
+                    audioLoader.load('sounds/witch.mp3', function(buffer) {
+                        positionalAudio.setBuffer(buffer);
+                        positionalAudio.setRefDistance(10);
+                        positionalAudio.play()
+                    });
+                }
 
-                playerToKill.explode()
+                audioLoader.load('sounds/die.mp3', function(buffer) {
+                    positionalAudio.setBuffer(buffer);
+                    positionalAudio.setRefDistance(10);
+                    positionalAudio.play()
+                });
             }
+
+            playerToKill.explode()
         }
     })
 
