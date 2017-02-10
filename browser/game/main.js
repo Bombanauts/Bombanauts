@@ -194,11 +194,13 @@ export function init() {
   let newPlayer;
 
   for (let player in others) {
-    newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead, others[player].nickname)
-    newPlayer.init()
-    players.push(newPlayer.playerBox)
-    playerMeshes.push(newPlayer.playerMesh)
-    playerInstances.push(newPlayer)
+    if (others[player].nickname) {
+      newPlayer = new Player(player, others[player].x, others[player].y, others[player].z, others[player].dead, others[player].nickname)
+      newPlayer.init()
+      players.push(newPlayer.playerBox)
+      playerMeshes.push(newPlayer.playerMesh)
+      playerInstances.push(newPlayer)
+    }
   }
   prevPlayerStateLength = players.length;
 

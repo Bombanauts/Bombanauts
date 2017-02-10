@@ -36,43 +36,34 @@ class Splash extends Component {
 
   render() {
     return (
-      <div style={{ backgroundImage: 'url("images/splash.png")', backgroundSize: 'cover', height: '100%', width: '100%' }}>
-        <div>
-          <span style={{
-              fontSize: 50,
-              margin: 'auto',
-              textAlign: 'center',
-              position: 'relative',
-              display: 'table',
-              top: 80
-            }}>BomberJS</span>
-          <span style={{
-              margin: 'auto',
-              textAlign: 'center',
-              position: 'relative',
-              display: 'table',
-              top: 80
-            }}>
-            <TextField
+      <div id='backgroundimage'>
+          <div id="name" className="center">
+            <h1 id="title">Bombanauts</h1>
+            <div id="nickname-form">
+              <TextField
                   id="nickname"
                   onChange={this.updateNickname}
                   // onKeyDown={this.handleEnterKey}
                   maxLength={15}
-                  hintText="nickname"
-                  floatingLabelText="nickname"
-                  floatingLabelStyle={{ color: '#00B303' }}
-                  underlineFocusStyle={{ borderColor: '#00B303'}}
+                  hintText="Nickname"
+                  hintStyle={{color: '#D5D1D0'}}
+                  floatingLabelText="Nickname"
+                  floatingLabelStyle={{ color: '#cc2d2d' }}
+                  underlineFocusStyle={{ borderColor: '#cc2d2d'}}
+                  inputStyle={{ color: '#D5D1D0' }}
                   />
-            <RaisedButton
+              <RaisedButton
                   disabled={!this.state.nickname}
                   onClick={this.setNickname}
-                  backgroundColor="#00B303"
-                  label='Play'
-                  style={{ display: 'block' }}
+                  backgroundColor="#cc2d2d"
+                  disabledBackgroundColor='#D5D1D0'
+                  label="Play"
+                  style={{ display: 'block', borderColor: 'none'}}
                    />
-          </span>
-        </div>
-        <MuteButton />
+            </div>
+          </div>
+          <MuteButton />
+          <img id='bomberman' src='/images/bomberman.gif'></img>
       </div>
     )
   }

@@ -1,0 +1,41 @@
+.center {
+  margin-top: 0;
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  transform: translate(-50%, -50%);
+}
+
+#title {
+  margin-bottom: 0;
+  font-size: 100;
+  letter-spacing: 5px;
+  color: #D5D1D0;
+  font-weight: 300;
+}
+
+#nickname-form {
+  padding-top: 5px;
+  margin: auto;
+  width: 43.6%;
+}
+
+#backgroundimage {
+    background:
+    -webkit-linear-gradient(rgba(156, 0, 0, 0), rgba(156, 0, 0, 0.5)), url(/images/background.jpg);
+    background:
+    -o-linear-gradient(rgba(156, 0, 0, 0), rgba(156, 0, 0, 0.5)), url(/images/background.jpg);
+    background:
+    linear-gradient(rgba(156, 0, 0, 0), rgba(156, 0, 0, 0.5)), url(/images/background.jpg);
+    line: rgba(39, 62, 84, 0.11);
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+}
+
+#bomberman {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+}
+
