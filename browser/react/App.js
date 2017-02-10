@@ -12,8 +12,8 @@ import { delay } from '../game/utils';
 import Blocker from './Blocker';
 import Splash from './Splash';
 import Announcer from './Announcer';
-import { Scores } from './Scores';
 import Chat from './Chat';
+import WinCondition from './WinCondition';
 
 const fontStyle = {
   'fontSize': '40px'
@@ -37,29 +37,12 @@ class App extends Component {
   }
 
   render() {
-    let winnerId = this.props.winner
-
-    const players = store.getState().players
-    let winnerNickname = '';
-    if (socket.id === winnerId && winnerId) {
-        winnerNickname = 'You'
-        socket.emit('reset_world', {})
-    } else if (winnerId) {
-      winnerNickname = players[winnerId].nickname;
-    }
-
     return (
       <div>
           <Chat />
           <Announcer  />
           {!this.props.isPlaying && <Splash />}
-          { winnerId &&
-            (<div>
-               <h1  style={{position: "absolute", right: 500}}>{winnerNickname} Won!</h1>
-               <Scores />
-             </div>
-            )
-          }
+          { this.props.winner && <WinCondition winner={this.props.winner} /> }
           <Blocker dead={this.props.dead} />
           { this.props.dead && <div style={{ backgroundColor: '#700303',
             position: 'absolute',
