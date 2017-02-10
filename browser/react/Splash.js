@@ -36,31 +36,32 @@ class Splash extends Component {
   render() {
     return (
       <div id='backgroundimage'>
-        <div>
-          <h1 id='title'>BomberJS</h1>
-          <div id='name'>
-            <TextField
+          <div id="name" className="center">
+            <h1 id="title">Bombanauts</h1>
+            <div id="nickname-form">
+              <TextField
                   id="nickname"
                   onChange={this.updateNickname}
                   // onKeyDown={this.handleEnterKey}
                   maxLength={15}
                   hintText="Nickname"
+                  hintStyle={{color: '#D5D1D0'}}
                   floatingLabelText="Nickname"
                   floatingLabelStyle={{ color: '#cc2d2d' }}
                   underlineFocusStyle={{ borderColor: '#cc2d2d'}}
                   inputStyle={{ color: '#D5D1D0' }}
                   />
-            <RaisedButton
+              <RaisedButton
                   disabled={!this.state.nickname}
                   onClick={this.setNickname}
                   backgroundColor="#cc2d2d"
-                  disabledBackgroundColor='#cc2d2d'
-                  label='Play'
+                  disabledBackgroundColor='#D5D1D0'
+                  label="Play"
                   style={{ display: 'block', 'color': '#D5D1D0' }}
                    />
+            </div>
           </div>
           <img id='bomberman' src='/images/bomberman.gif'></img>
-        </div>
       </div>
     )
   }
