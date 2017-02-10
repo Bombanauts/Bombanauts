@@ -51,6 +51,8 @@ class Blocker extends Component {
           <span style={{ display: 'inline-block', marginBottom: '50px', fontSize: '40px', zIndex: '999'}}>Click to play</span>
           <br />
           <span style={{ fontSize: '18px' }}>(W,A,S,D = Move, MOUSE = Look, CLICK = Plant Bomb, SPACE = Throw Bomb)</span>
+          <br />
+          <span style={{ fontSize: '18px' }}>(ENTER = Open Chat, ` = Close Chat, ESC = Instructions)</span>
         </div>}
       </div>
     )
