@@ -34,7 +34,10 @@ class Chat extends Component {
 
   submitMessage(evt) {
     if (evt.keyCode === 13 && this.state.message.length > 0) {
-      socket.emit('new_message', this.state.message)
+      socket.emit('new_message', {
+        id: socket.id,
+        message: this.state.message
+      })
       this.setState({ message: '' })
       this.props.stopChat()
     }

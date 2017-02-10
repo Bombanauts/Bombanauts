@@ -181,8 +181,12 @@ io.on('connection', (socket) => {
         console.log('socket id ' + socket.id + ' has disconnected. : (');
     })
 
-    socket.on('new_message', (message) => {
-        io.in(socket.currentRoom).emit('new_message', message)
+    socket.on('new_message', (data) => {
+        let currentState = store.getState();
+        let room = socket.currentRoom;
+        let currentPlayers = currentState.players[room];
+        let playerNickname = currentPlayers[data.id].nickname
+        io.in(socket.currentRoom).emit('new_message', `${playerNickname} : ${data.message}`)
     })
 })
 
