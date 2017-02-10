@@ -4,7 +4,6 @@ import socket from '../socket';
 import { startGame } from '../redux/gameState/action-creator';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField'
-import { setNickname } from '../redux/players/action-creator'
 
 class Splash extends Component {
   constructor(props) {
