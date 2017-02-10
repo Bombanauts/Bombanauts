@@ -35,7 +35,7 @@ class App extends Component {
       animate()
     })
   }
-
+ 
   render() {
     let winnerId = this.props.winner
 
