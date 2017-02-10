@@ -15,7 +15,6 @@ describe('Front end winner action creator', () => {
         type: types.SET_WINNER,
         playerId
       }
-
       expect(setWinner(playerId)).to.be.deep.equal(expectedAction)
     })
   })
@@ -42,7 +41,5 @@ describe('Front end winner reducer', () => {
       console.log(winner)
       expect(testStore.getState()).to.be.deep.equal(playerId)
     })
-
   })
-
 })

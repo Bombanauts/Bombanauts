@@ -16,7 +16,6 @@ describe('Front end dead action creator', () => {
       const expectedAction = {
         type: KILL_PLAYER
       }
-
       expect(killPlayer()).to.be.deep.equal(expectedAction)
     })
   })
@@ -36,7 +35,6 @@ describe('Front end dead reducer', () => {
   beforeEach('Create testing store from reducer', () => {
     testStore = createStore(dead);
   })
-
   it('has an initial state of an false', () => {
     expect(testStore.getState()).to.be.deep.equal(false);
   })
@@ -59,7 +57,5 @@ describe('Front end dead reducer', () => {
       })
       expect(testStore.getState()).to.be.deep.equal(false)
     })
-
   })
-
 })

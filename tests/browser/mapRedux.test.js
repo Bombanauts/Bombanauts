@@ -78,55 +78,7 @@ describe('Front end map reducer', () => {
         type: types.GENERATE_MAP,
         map
       })
-
       expect(testStore.getState()).to.not.be.equal(firstState)
     })
   })
-
-  // describe('REMOVE_PLAYER_BOMBS', () => {
-  //   it('removes the specified player\'s bombs', () => {
-  //     const id = 'UidDcC7s6X6QrYr2AAAB'
-  //     const bomb = {
-  //       [id]: [{ position: { x: 1, y: 1, z: 1 } }]
-  //     }
-
-  //     testStore.dispatch({
-  //       type: types.UPDATE_BOMB_LOCATIONS,
-  //       allBombs: bomb
-  //     })
-  //     testStore.dispatch({
-  //       type: types.REMOVE_PLAYER_BOMBS,
-  //       id
-  //     })
-
-  //     expect(testStore.getState()).to.be.deep.equal({})
-  //   })
-
-  //   it('does not remove other player\'s bombs', () => {
-  //     const id = 'UidDcC7s6X6QrYr2AAAB'
-  //     const idB = 'lndasklasnd'
-  //     const bomb = {
-  //       [id]: [{ position: { x: 1, y: 1, z: 1 } }]
-  //     }
-  //     const bombB = {
-  //       [idB]: [{ position: { x: 1, y: 1, z: 1 } }]
-  //     }
-
-  //     testStore.dispatch({
-  //       type: types.UPDATE_BOMB_LOCATIONS,
-  //       allBombs: bomb
-  //     })
-  //     testStore.dispatch({
-  //       type: types.UPDATE_BOMB_LOCATIONS,
-  //       allBombs: bombB
-  //     })
-  //     testStore.dispatch({
-  //       type: types.REMOVE_PLAYER_BOMBS,
-  //       id: idB
-  //     })
-
-  //     expect(testStore.getState()).to.be.deep.equal(bomb)
-  //   })
-  // })
-
 })
