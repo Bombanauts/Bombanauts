@@ -1,10 +1,14 @@
+import * as THREE from 'three'
+import * as CANNON from 'cannon'
 
-const THREE = require('three')
-const CANNON = require('cannon')
+import { scene,
+world,
+blockCount,
+blocksObj
+}
+from './main'
 
-import { scene, world, blockCount, blocksObj } from './main';
-
-import { Block } from './Explosion.js';
+import { Block } from './Explosion.js'
 
 export default class DestroyableCube {
   constructor(material, texture, fixedCubeShape, fixedCubeGeometry, x, y, z, j, k) {

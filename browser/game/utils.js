@@ -1,3 +1,6 @@
+import * as THREE from 'three'
+import * as CANNON from 'cannon'
+
 import {
   boxes,
   boxMeshes,
@@ -7,20 +10,11 @@ import {
 import socket from '../socket'
 
 import { killPlayer } from '../redux/dead/action-creator'
-
 import store from '../redux/store'
 
 import DestroyableCube from './Cube'
-
 import Wall from './Wall'
-
 import FixedCube from './FixedCube'
-
-//THREE.JS
-import * as THREE from 'three';
-
-//CANNON.JS
-import * as CANNON from 'cannon';
 
 export const boundary = {}
 export const fixedBox = {}

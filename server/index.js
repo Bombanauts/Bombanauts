@@ -5,8 +5,7 @@ const server = http.createServer();
 const port = process.env.PORT || 1337;
 const express = require('express');
 const app = express();
-const socketio = require('socket.io');
-//MAPS
+const socketio = require('socket.io')
 const {
   Maps,
   randomGeneration
@@ -16,8 +15,6 @@ const {
   updateMap,
   loadMap
 } = require('./maps/action-creator')
-
-//PLAYERS
 const {
   updatePlayers,
   removePlayer,
@@ -26,25 +23,17 @@ const {
   incrementScore,
   decrementScore
 } = require('./players/action-creator');
-
-//BOMBS
 const {
   addBomb,
   updateBombPositions,
   removePlayerBombs,
   removeBomb
 } = require('./bombs/action-creator')
-
-//TIMER
 const {
   setTime,
   getTime
 } = require('./timer/action-creator')
-
-//WINNER
 const { setWinner } = require('./winner/action-creator')
-
-//UTILS
 const {
   roomName,
   convertStateForFrontEnd,
@@ -60,8 +49,9 @@ server.on('request', app);
 // it into our HTTP server
 const io = socketio(server)
 
-//  use socket server as an event emitter in order to listen for new connctions
+//  use socket server as an event emitter in order to listen for new connections
 io.on('connection', (socket) => {
+    //manage which room the connected socket is joining (4 sockets max to a room)
   delete socket.adapter.rooms[socket.id]
   let rooms = io.sockets.adapter.rooms;
   let { currentRoomName, createdRoom } = roomName(socket, rooms)
@@ -72,6 +62,7 @@ io.on('connection', (socket) => {
   let currState;
 
   if (createdRoom) {
+    //initial setup for a new room
     let randomMap = randomGeneration(Maps)
     store.dispatch(loadMap(randomMap, socket.currentRoom))
     let currentTime = Date.now();
@@ -81,6 +72,7 @@ io.on('connection', (socket) => {
     currState = convertStateForFrontEnd(store.getState(), socket.currentRoom);
     socket.emit('initial', currState);
   } else {
+    //joining a room
     currState = convertStateForFrontEnd(store.getState(), socket.currentRoom);
     socket.emit('initial', currState);
   }
@@ -96,12 +88,15 @@ io.on('connection', (socket) => {
     socket.emit('get_players', store.getState().players[socket.currentRoom]);
   })
 
+  //the primary socket emission, used 60x a second to update all player and bomb data
   socket.on('update_world', (data) => {
     store.dispatch(updatePlayers({ id: data.playerId, position: data.playerPosition, dead: data.dead, nickname: data.nickname }, socket.currentRoom));
     store.dispatch(updateBombPositions({ userId: data.playerId, bombs: data.playerBombs }, socket.currentRoom))
     store.dispatch(getTime(socket.currentRoom))
 
     let newState = convertStateForFrontEnd(store.getState(), socket.currentRoom)
+
+    //restart the world if the timer hits 0
     if (newState.timer <= 0) {
       resetWorld(Maps, socket.currentRoom, io)
     } else {
@@ -147,6 +142,7 @@ io.on('connection', (socket) => {
         }
       }
 
+      //win conditions for if only one player is left alive, or if a solo player dies
       if (currentPlayersLength >= 1 && alivePlayers.length <= 1) {
         if (alivePlayers[0]) store.dispatch(setWinner(alivePlayers[0].socketId, room))
         else {
@@ -168,10 +164,27 @@ io.on('connection', (socket) => {
     io.in(room).emit('update_world', newState)
   })
 
+  //chat messages
+  socket.on('new_message', (data) => {
+    let currentState = store.getState();
+    let room = socket.currentRoom;
+    let currentPlayers = currentState.players[room];
+    let playerNickname;
+    if (currentPlayers[data.id] && currentPlayers[data.id].nickname) {
+      playerNickname = currentPlayers[data.id].nickname
+    }
+    else {
+      playerNickname = ''
+    }
+    io.in(socket.currentRoom).emit('new_message', `${playerNickname} : ${data.message}`)
+  })
+
+  //change the map on the state when a crate is destroyed
   socket.on('destroy_cube', (data) => {
     store.dispatch(updateMap(data, socket.currentRoom))
   })
 
+  //restart the entire world on game end
   socket.on('reset_world', (data) => {
     resetWorld(Maps, socket.currentRoom, io)
   })
@@ -189,20 +202,6 @@ io.on('connection', (socket) => {
     }
     io.in(socket.currentRoom).emit('remove_player', socket.id)
     console.log('socket id ' + socket.id + ' has disconnected. : (');
-  })
-
-  socket.on('new_message', (data) => {
-    let currentState = store.getState();
-    let room = socket.currentRoom;
-    let currentPlayers = currentState.players[room];
-    let playerNickname;
-    if (currentPlayers[data.id] && currentPlayers[data.id].nickname) {
-      playerNickname = currentPlayers[data.id].nickname
-    }
-    else {
-      playerNickname = ''
-    }
-    io.in(socket.currentRoom).emit('new_message', `${playerNickname} : ${data.message}`)
   })
 })
 

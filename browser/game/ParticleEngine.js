@@ -7,8 +7,7 @@
  * https://www.iusb.edu/math-compsci/_prior-thesis/YVanzine_thesis.pdf
  */
 
-//THREE.JS
-import * as THREE from 'three';
+import * as THREE from 'three'
 
 const vs = [
 
@@ -384,7 +383,8 @@ VolumetricFire.prototype.slice = function() {
     while (expirations.top().priority >= sliceDistance) {
       let edge = expirations.pop().object;
       if (edge.expired) {
-        continue; }
+        continue;
+      }
       if (
         edge.endIndex !== activeEdges[edge.prev].endIndex &&
         edge.endIndex !== activeEdges[edge.next].endIndex

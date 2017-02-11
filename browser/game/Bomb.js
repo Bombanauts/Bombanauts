@@ -3,9 +3,20 @@ import socket from '../socket'
 const THREE = require('three')
 const CANNON = require('cannon')
 
-import { scene, world, camera, blockCount, blocksObj, listener } from './main'
+import {
+  scene,
+  world,
+  camera,
+  blockCount,
+  blocksObj,
+  listener
+} from './main'
+
 import { VolumetricFire } from './ParticleEngine'
-import { destroyable, roundFour } from './utils'
+import {
+  destroyable,
+  roundFour
+} from './utils'
 import { Block } from './Explosion.js'
 import store from '../redux/store'
 
@@ -58,6 +69,7 @@ export default class Bomb {
 
     let colorBool = false;
 
+    //flashing bomb color before detonation
     let clear;
     setTimeout(() => {
       clear = setInterval(() => {
@@ -66,6 +78,7 @@ export default class Bomb {
       colorBool = !colorBool;
     }, 100)}, 800)
 
+    //explode the bomb after 1.7 seconds
     this.clearTimeout = setTimeout(() => {
       this.explode()
       clearInterval(clear)
@@ -92,7 +105,6 @@ export default class Bomb {
     world.remove(this.bombBody)
 
     // create Fire
-
     function createFire(x, y, z) {
       const fireWidth = 4
       const fireHeight = 12
@@ -111,6 +123,7 @@ export default class Bomb {
     const top = `${x}_${z + 4}`;
     const bottom = `${x}_${z - 4}`;
 
+    //check if wooden crates are destroyed, emit to the server to update map on explosion
     if (destroyable[middle]) {
       this.fire = createFire(x, y, z)
       if (destroyable[middle].length) {
@@ -173,6 +186,7 @@ export default class Bomb {
 
     VolumetricFire.texturePath = '../../public/assets/images';
 
+    //remove fire from the scene
     setTimeout(() => {
       if (this.fire) scene.remove(this.fire.mesh)
       if (this.fire2) scene.remove(this.fire2.mesh)
