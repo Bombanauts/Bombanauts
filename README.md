@@ -7,6 +7,14 @@
 
 <img src="/public/assets/images/explosion.png" width=100%>
 
+### Gameplay
+Players spawn in the 4 different corners and must destroy crates to get to each other and fight till the last one is standing or the timer runs out. Each map is randomly generated for a unique game every time!
+
+### Architecture
+Bombanauts is built using [Three.js](https://threejs.org/) for 3D rendering and [Cannon.js](http://www.cannonjs.org/) as its physics engine, with [Node.js](https://nodejs.org/en/) and [Socket.io](http://socket.io/) to handle server-client interaction, dual [Redux](http://redux.js.org/) stores to handle game state on both the client and server sides, and [React.js](https://facebook.github.io/react/) for front end interfaces.
+
+The server handles the master game state, and emits all bomb and player location data down to each player, as well as game logic and win conditions. Physics and rendering operations are then handled on the client side, with client side socket emissions for kills and destroying crates that update the master game state on the server.
+
 ### How Do I Play?
 Your goal is to blow up the other players before they blow you up! Destroy crates to get to the other players and show no mercy!
 
@@ -27,18 +35,15 @@ Your goal is to blow up the other players before they blow you up! Destroy crate
 
 **Move** the mouse to look around
 
-### Gameplay
-Players spawn in the 4 different corners and must destroy crates to get to each other and fight till the last one is standing or the timer runs out. Each map is randomly generated for a unique game every time!
 
 ### Tips and Tricks
 - Be careful! You can kill yourself!
 - If you aim carefully you can throw a bomb around a corner!
-- You cannot throw bombs over walls, boxes, or boulders
-- You have a strong throwing arm. Throw bombs at other bombs to bounce them away
-- Bombs can bounce off of everything! (including other players and bombs!)
-- The explosions are big so they tell other players where you might be
-- Throwing bombs will give you more distance
-- Planting bombs will give you more control over where they go
+- You cannot throw bombs over walls, boxes, or boulders.
+- You have a strong throwing arm. Throw bombs at other bombs to bounce them away.
+- Bombs can bounce off of everything! (including other players and bombs!).
+- The explosions from your bombs may give away your location to other players.
+- Throwing bombs allows for distance, but planting bombs will give you more precision over where they are placed.
 
 ### Installation
 If you want to play locally or modify our game we encourage it!
