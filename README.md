@@ -1,1 +1,1 @@
-# BombermanJS
+# Bombanauts
