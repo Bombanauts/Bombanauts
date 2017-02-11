@@ -5,7 +5,7 @@
 ### Introduction
 [Bombanauts](http://bomberjs.herokuapp.com/), inspired by the original [Bomberman](https://en.wikipedia.org/wiki/Bomberman) game, is a 3D multiplayer online battle arena (MOBA) game where players can throw bombs at each other, make boxes explode, and even other players! Bombs explode into a cross of fire down the aisles destroying crates that stand in their way. The flames do not spawn on stones or walls. When the flames make contact with the wooden boxes (and players :smiling_imp:) they explode!
 
-<img src="/public/assets/images/explosion.png" width=100%>
+<img src="/public/assets/images/explosions.png" width=100%>
 
 ### Gameplay
 Players spawn in the 4 different corners and must destroy crates to get to each other and fight till the last one is standing or the timer runs out. Each map is randomly generated for a unique game every time!
