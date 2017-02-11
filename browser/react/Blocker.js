@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
-import { controls } from '../game/main';
-import MuteButton from './MuteButton';
+import React, { Component } from 'react'
+import { controls } from '../game/main'
+import MuteButton from './MuteButton'
 
 class Blocker extends Component {
   constructor(props) {
     super(props)
-
     this.state = {
       instructions: true
     }
@@ -18,21 +17,21 @@ class Blocker extends Component {
     const blocker = this.refs.blocker;
     const instructions = this.refs.instructions;
 
-    const pointerlockchange = ( event ) => {
-        if ( document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element ) {
-            controls.enabled = true;
-            blocker.style.display = 'none';
-        } else { // this is where we get the exit screen
-            controls.enabled = false;
-            blocker.style.display = '-webkit-box';
-            blocker.style.display = '-moz-box';
-            blocker.style.display = 'box';
-            instructions.style.display = '';
-            this.setState({ instructions: true })
-        }
+    const pointerlockchange = (event) => {
+      if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
+        controls.enabled = true;
+        blocker.style.display = 'none';
+      } else { // this is where we get the exit screen
+        controls.enabled = false;
+        blocker.style.display = '-webkit-box';
+        blocker.style.display = '-moz-box';
+        blocker.style.display = 'box';
+        instructions.style.display = '';
+        this.setState({ instructions: true })
+      }
     }
 
-    document.addEventListener( 'pointerlockchange', pointerlockchange, false );
+    document.addEventListener('pointerlockchange', pointerlockchange, false);
   }
 
   handleClick(evt) {

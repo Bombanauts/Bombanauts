@@ -1,3 +1,6 @@
+import * as THREE from 'three'
+import * as CANNON from 'cannon'
+
 import store from '../redux/store'
 
 import socket from '../socket'
@@ -11,11 +14,6 @@ import {
 
 import { Block } from './Explosion'
 
-//THREE.JS
-import * as THREE from 'three';
-
-//CANNON.JS
-import * as CANNON from 'cannon';
 
 let playerMesh, playerBox, sprite;
 export default class Player {
@@ -65,7 +63,7 @@ export default class Player {
     playerMesh.position.set(this.x, this.y, this.z);
     playerBox.position.set(playerMesh.position.x, playerMesh.position.y, playerMesh.position.z);
 
-
+    //add player mesh and body to the world and scene
     if (!this.dead) {
       scene.add(playerMesh)
       world.add(playerBox)
@@ -73,7 +71,6 @@ export default class Player {
 
     this.playerMesh = playerMesh;
     this.playerBox = playerBox;
-
   }
 
   explode() {

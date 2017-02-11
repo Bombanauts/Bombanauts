@@ -1,11 +1,7 @@
-//THREE.JS
-import * as THREE from 'three';
-
-//CANNON.JS
-import * as CANNON from 'cannon';
+import * as THREE from 'three'
+import * as CANNON from 'cannon'
 
 export const PointerLockControls = function(camera, cannonBody) {
-
   const eyeYPos = 2; // eyes are 2 meters above the ground
   const velocityFactor = 0.3;
   const jumpVelocity = 20;
@@ -42,7 +38,6 @@ export const PointerLockControls = function(camera, cannonBody) {
   const velocity = cannonBody.velocity;
   const PI_2 = Math.PI / 2;
 
-  // maybe fix this later to use ray caster instead of yawObject
   const onMouseMove = function(event) {
     if (scope.enabled === false) return;
 
@@ -75,7 +70,6 @@ export const PointerLockControls = function(camera, cannonBody) {
       case 68: // d
         moveRight = true;
         break;
-
     }
   };
 
@@ -100,9 +94,7 @@ export const PointerLockControls = function(camera, cannonBody) {
       case 68: // d
         moveRight = false;
         break;
-
     }
-
   };
 
   document.addEventListener('mousemove', onMouseMove, false);
@@ -160,4 +152,3 @@ export const PointerLockControls = function(camera, cannonBody) {
     yawObject.position.copy(cannonBody.position);
   };
 };
-

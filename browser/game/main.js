@@ -1,23 +1,14 @@
-//THREE.JS
-import * as THREE from 'three';
+import * as THREE from 'three'
+import * as CANNON from 'cannon'
 
-//CANNON.JS
-import * as CANNON from 'cannon';
+import store from '../redux/store'
 
-//REDUX STORE
-import store from '../redux/store';
+import socket, { playerArr } from '../socket'
 
-//SOCKETS
-import socket,
-{ playerArr } from '../socket';
-
-
-import { PointerLockControls } from './PointerLockControls';
+import { PointerLockControls } from './PointerLockControls'
 
 import Player from './Player'
-
 import Bomb from './Bomb'
-
 import {
   animateFire,
   animatePlayers,
@@ -26,7 +17,7 @@ import {
   deleteWorld,
   createMap,
   getShootDir
-} from './utils';
+} from './utils'
 
 let sphereShape, world, physicsMaterial;
 let camera, scene, renderer, light;
@@ -402,5 +393,12 @@ export function restartWorld() {
   dead = false;
 }
 
-
-export { scene, camera, renderer, controls, light, world, dead }
+export {
+  scene,
+  camera,
+  renderer,
+  controls,
+  light,
+  world,
+  dead
+}
