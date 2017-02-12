@@ -42,7 +42,6 @@ export default class Bomb {
   }
 
   init() {
-
     /*----- BOMB EXPLOSION SOUND EFFECT -----*/
     const sound = store.getState().sound
 
