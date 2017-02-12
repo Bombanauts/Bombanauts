@@ -20,12 +20,12 @@ export default class Wall {
     }
 
     init() {
-    // creating wall
+    /*----- CREATE WALL -----*/
     const wallBody = new CANNON.Body({ mass: 0 });
     wallBody.addShape(this.fixedCubeShape)
     const wallMesh = new THREE.Mesh( this.fixedCubeGeometry, this.material );
 
-    // set spawn position
+    /*----- SET SPAWN POSITION -----*/
     wallMesh.position.set(this.x, this.y, this.z);
     wallBody.position.set(this.x, this.y, this.z);
 

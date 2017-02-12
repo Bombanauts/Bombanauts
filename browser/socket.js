@@ -37,7 +37,7 @@ import { revivePlayer } from './redux/dead/action-creator'
 export let playerArr = [];
 let count = 0;
 
-//MAKING CONNECTION TO THE SERVER
+/*----- MAKE CONNECTION TO THE SERVER -----*/
 socket.on('connect', function() {
   socket.on('initial', (initialData) => {
     store.dispatch(updatePlayerLocations(initialData.players));
@@ -46,7 +46,7 @@ socket.on('connect', function() {
     store.dispatch(setTime(initialData.timer))
   })
 
-  //UPDATING WORLD 60 TIMES PER SECOND
+  /*----- UPDATES WORLD 60 TIMES/SEC -----*/
   socket.on('update_world', (data) => {
     count += 1;
     playerArr = Object.keys(data.players);
@@ -64,19 +64,19 @@ socket.on('connect', function() {
     }
   })
 
-  //SETTING WINNER
+  /*----- SETS WINNER -----*/
   socket.on('set_winner', (winner) => {
     store.dispatch(setWinner(winner));
   })
 
-  //TRACKING POSITIONS OF THE BOMBS
+  /*----- TRACKING POSITIONS OF THE BOMBS -----*/
   socket.on('update_bomb_positions', (data) => {
     delete data[socket.id];
 
     store.dispatch(updateBombLocations(data))
   })
 
-  //KILLING PLAYER, TRACKING WHO KILLED WHO
+  /*----- KILLING PLAYER, TRACKING WHO KILLED WHO -----*/
   socket.on('kill_player', (data) => {
     store.dispatch(announce(data.killerNickname, data.victimNickname))
     setTimeout(() => {
@@ -113,7 +113,7 @@ socket.on('connect', function() {
     }
   })
 
-  //RESTARTING WORLD WHEN TIMER REACH 0 OR WHEN ONE PLAYER LEFT
+  /* RESTARTS WORLD WHEN TIMER HITS 0 OR WHEN ONE PLAYER LEFT */
   socket.on('reset_world', (data) => {
     setTimeout(() => {
       store.dispatch(loadMap(data.map));
@@ -126,7 +126,7 @@ socket.on('connect', function() {
     }, 5000)
   })
 
-  //REMOVING PLAYER'S PHISICAL BODY AND VISUAL BODY
+  /*----- REMOVES PLAYER'S PHISICAL BODY & VISUAL BODY -----*/
   socket.on('remove_player', (id) => {
     store.dispatch(removePlayer(id))
     let playerBody = world.bodies.filter((child) => {

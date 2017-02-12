@@ -27,12 +27,12 @@ export default class DestroyableCube {
   }
 
   init() {
-    // creating player
+    /*----- CREATE PLAYER -----*/
     const cubeBox = new CANNON.Body({ mass: 0 });
     cubeBox.addShape(this.fixedCubeShape)
     const cubeMesh = new THREE.Mesh(this.fixedCubeGeometry, this.material);
 
-    // set spawn position
+    /*----- SETS SPAWN POSITION -----*/
     cubeMesh.position.set(this.x, this.y, this.z);
     cubeBox.position.set(cubeMesh.position.x, cubeMesh.position.y, cubeMesh.position.z);
 
@@ -55,7 +55,8 @@ export default class DestroyableCube {
       world.remove(this.cubeBox)
       scene.remove(this.cubeMesh)
       this.exploded = true;
-      return true; //returning for knowing if socket should emit on explosion call
+      /*----- RETURNS IF SOCKET SHOULD EMIT ON EXPLOSION CALL -----*/
+      return true;
     }
   }
 }

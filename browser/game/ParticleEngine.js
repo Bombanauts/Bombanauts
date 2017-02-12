@@ -1,4 +1,4 @@
-/**
+/*
  * @author yomotsu / http://yomotsu.net
  * ported from http://webgl-fire.appspot.com/html/fire.html
  *
@@ -42,10 +42,10 @@ const fs = [
   'uniform sampler2D nzw;',
   'const float modulus = 61.0;  // Value used in pregenerated noise texture.',
 
-  /**
+  /*
    * Modified noise function.
    * @see http://www.csee.umbc.edu/~olano/papers/index.html#mNoise
-   **/
+   */
   'float mnoise ( vec3 pos ) {',
 
   'float intArg = floor( pos.z );',
@@ -68,9 +68,9 @@ const fs = [
   'const float lacunarity = 2.0;',
   'const float gain = 0.5;',
 
-  /**
+  /*
    * Adds multiple octives of noise together.
-   **/
+   */
   'float turbulence( vec3 pos ) {',
 
   'float sum  = 0.0;',
@@ -93,12 +93,12 @@ const fs = [
   'uniform float time;',
   'uniform sampler2D fireProfile;',
 
-  /**
+  /*
    * Samples the fire.
    *
    * @param loc the normalized location (0.0-1.0) to sample the fire
    * @param scale the 'size' of the fire in world space and time
-   **/
+   */
   'vec4 sampleFire( vec3 loc, vec4 scale ) {',
 
   // Convert xz to [-1.0, 1.0] range.
@@ -313,7 +313,7 @@ VolumetricFire.prototype.slice = function() {
     }
   }
 
-  // Aligning slices
+  /*----- ALIGN SLICES -----*/
   let sliceDistance = Math.floor(maxDistance / this._sliceSpacing) * this._sliceSpacing;
 
   let activeEdges = [];
@@ -389,9 +389,9 @@ VolumetricFire.prototype.slice = function() {
         edge.endIndex !== activeEdges[edge.prev].endIndex &&
         edge.endIndex !== activeEdges[edge.next].endIndex
       ) {
-        // split this edge.
+        /*----- SPLIT EDGE -----*/
         edge.expired = true;
-        // create two new edges.
+        /*----- CREATES 2 NEW EDGES -----*/
         let activeEdge1 = createEdge.call(
           this,
           edge.endIndex,
@@ -411,7 +411,7 @@ VolumetricFire.prototype.slice = function() {
         activeEdges[activeEdge2.next].prev = nextEdge - 1;
         firstEdge = nextEdge - 1;
       } else {
-        // merge edge.
+        /*----- MERGE EDGE -----*/
         let prev;
         let next;
         if (edge.endIndex === activeEdges[edge.prev].endIndex) {
@@ -425,7 +425,7 @@ VolumetricFire.prototype.slice = function() {
         prev.expired = true;
         next.expired = true;
 
-        // make new edge
+        /*----- CREATE NEW EDGE -----*/
         let activeEdge = createEdge.call(
           this,
           edge.endIndex,

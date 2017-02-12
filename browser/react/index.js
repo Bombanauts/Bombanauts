@@ -1,16 +1,16 @@
 'use strict';
 
-//REACT
+/*----- REACT -----*/
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-//STYLES
+/*----- STYLES -----*/
 import '../assets/stylesheets/style.scss';
 
-//THREE.JS
+/*----- THREEJS -----*/
 import * as THREE from 'three';
 
-//CANNON.JS
+/*----- CANNONJS -----*/
 import * as CANNON from 'cannon';
 
 import AppComponent from './App'

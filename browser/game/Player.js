@@ -51,7 +51,7 @@ export default class Player {
       textureFace
     ]
 
-    // creating player
+    /*----- CREATE PLAYER -----*/
     playerBox = new CANNON.Body({ mass: 0 });
     playerBox.addShape(boxShape)
     this.material = new THREE.MultiMaterial(materials)
@@ -59,11 +59,11 @@ export default class Player {
     playerMesh.name = this.socketId;
     playerBox.name = this.socketId;
 
-    // set spawn position
+    /*----- SET SPAWN POSITION -----*/
     playerMesh.position.set(this.x, this.y, this.z);
     playerBox.position.set(playerMesh.position.x, playerMesh.position.y, playerMesh.position.z);
 
-    //add player mesh and body to the world and scene
+    /*----- ADD MESH & BODY TO WORLD & SCENE -----*/
     if (!this.dead) {
       scene.add(playerMesh)
       world.add(playerBox)
@@ -86,7 +86,9 @@ export default class Player {
       scene.remove(this.playerMesh)
 
       this.dead = true;
-      return true; //returning for knowing if socket should emit on explosion call
+
+      /*----- RETURNS IF SOCKET SHOULD EMIT ON EXPLOSION CALL -----*/
+      return true;
     }
   }
 }

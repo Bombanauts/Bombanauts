@@ -2,7 +2,8 @@ import * as THREE from 'three'
 import * as CANNON from 'cannon'
 
 export const PointerLockControls = function(camera, cannonBody) {
-  const eyeYPos = 2; // eyes are 2 meters above the ground
+  /*----- EYES 2 METERS ABOVE GROUND -----*/
+  const eyeYPos = 2;
   const velocityFactor = 0.3;
   const jumpVelocity = 20;
   const scope = this;
@@ -21,15 +22,17 @@ export const PointerLockControls = function(camera, cannonBody) {
   yawObject.add(pitchObject);
   const quat = new THREE.Quaternion();
 
-  const contactNormal = new CANNON.Vec3(); // Normal in the contact, pointing *out* of whatever the player touched
+  /*----- NORMAL IN CONTACT, POINTING OUT OF WHATEVER PLAYER TOUCHES -----*/
+  const contactNormal = new CANNON.Vec3();
   const upAxis = new CANNON.Vec3(0, 1, 0);
 
   cannonBody.addEventListener('collide', function(e) {
     const contact = e.contact;
-    // contact.bi and contact.bj are the colliding bodies, and contact.ni is the collision normal.
-    // bi is the player body, flip the contact normal
+
+    /*----- CONTACT.BI & CONTACT.BJ ARE COLLIDING BODIES -----*/
     if (contact.bi.id === cannonBody.id) contact.ni.negate(contactNormal);
 
+    /*----- CONTACT.NI IS COLLISION NORMAL -----*/
     else contactNormal.copy(contact.ni);
 
     if (contactNormal.dot(upAxis) > 0.5) canJump = true;
@@ -51,23 +54,23 @@ export const PointerLockControls = function(camera, cannonBody) {
 
   const onKeyDown = function(event) {
     switch (event.keyCode) {
-      case 38: // up
-      case 87: // w
+      case 38: // UP
+      case 87: // W
         moveForward = true;
         break;
 
-      case 37: // left
-      case 65: // a
+      case 37: // LEFT
+      case 65: // A
         moveLeft = true;
         break;
 
-      case 40: // down
-      case 83: // s
+      case 40: // DOWN
+      case 83: // S
         moveBackward = true;
         break;
 
-      case 39: // right
-      case 68: // d
+      case 39: // RIGHT
+      case 68: // D
         moveRight = true;
         break;
     }
@@ -75,23 +78,23 @@ export const PointerLockControls = function(camera, cannonBody) {
 
   const onKeyUp = function(event) {
     switch (event.keyCode) {
-      case 38: // up
-      case 87: // w
+      case 38:
+      case 87:
         moveForward = false;
         break;
 
-      case 37: // left
-      case 65: // a
+      case 37:
+      case 65:
         moveLeft = false;
         break;
 
-      case 40: // down
-      case 83: // a
+      case 40:
+      case 83:
         moveBackward = false;
         break;
 
-      case 39: // right
-      case 68: // d
+      case 39:
+      case 68:
         moveRight = false;
         break;
     }
@@ -111,8 +114,8 @@ export const PointerLockControls = function(camera, cannonBody) {
     targetVec.set(0, 0, -1);
     quat.multiplyVector3(targetVec);
   }
-
-  // Moves the camera to the Cannon.js object position and adds velocity to the object if the run key is down
+  /*----- MOVES CAMERA TO CANNONJS OBJ POSITION -----*/
+  /*----- ADDS VELOCITY IF 'RUN' KEY IS DOWN -----*/
   const inputVelocity = new THREE.Vector3();
   const euler = new THREE.Euler();
   this.update = function(delta) {
@@ -138,14 +141,14 @@ export const PointerLockControls = function(camera, cannonBody) {
       inputVelocity.x = velocityFactor * delta;
     }
 
-    // Convert velocity to world coordinates
+    /*----- CONVERT VELOCITY TO WORLD COORDS -----*/
     euler.x = pitchObject.rotation.x;
     euler.y = yawObject.rotation.y;
     euler.order = 'XYZ';
     quat.setFromEuler(euler);
     inputVelocity.applyQuaternion(quat);
 
-    // Add to the object
+    /*----- ADD TO THE OBJECT -----*/
     velocity.x += inputVelocity.x;
     velocity.z += inputVelocity.z;
 
