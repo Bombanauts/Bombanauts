@@ -42,6 +42,8 @@ export default class Bomb {
   }
 
   init() {
+
+    /*----- BOMB EXPLOSION SOUND EFFECT -----*/
     const sound = store.getState().sound
 
     if (sound) {
@@ -58,18 +60,18 @@ export default class Bomb {
 
     let bombGeometry = new THREE.SphereGeometry(this.bombShape.radius, 32, 32);
 
-    // create the bomb
+    /*----- CREATE BOMB -----*/
     this.bombBody = new CANNON.Body({ mass: 10});
     this.bombBody.addShape(this.bombShape);
     this.bombMesh = new THREE.Mesh(bombGeometry, this.material);
 
-    // add it to the scene
+    /*----- ADD BOMB TO SCENE -----*/
     world.addBody(this.bombBody);
     scene.add(this.bombMesh);
 
     let colorBool = false;
 
-    //flashing bomb color before detonation
+    /*----- FLASHES BOMB RED/BLACK -----*/
     let clear;
     setTimeout(() => {
       clear = setInterval(() => {
@@ -78,7 +80,7 @@ export default class Bomb {
       colorBool = !colorBool;
     }, 100)}, 800)
 
-    //explode the bomb after 1.7 seconds
+    /*----- BOMB AFTER 1.7 SEC -----*/
     this.clearTimeout = setTimeout(() => {
       this.explode()
       clearInterval(clear)
@@ -93,6 +95,7 @@ export default class Bomb {
 
     const bombParticleGeometry = new THREE.SphereGeometry(0.2, 0.2, 0.2)
 
+    /*----- BOMB PARTICLES -----*/
     const particles = [];
     for (let i = 0; i < blockCount; i++) {
       const bomb = new Block(scene, world, { x: x, y: y, z: z }, 'bomb', bombParticleGeometry, this.material)
@@ -100,11 +103,11 @@ export default class Bomb {
     }
     blocksObj[this.bombMesh.id] = particles.slice()
 
-    // removes from three js and cannon js
+    /*----- REMOVE FROM THREEJS & CANNONJS -----*/
     scene.remove(this.bombMesh)
     world.remove(this.bombBody)
 
-    // create Fire
+    /*----- CREATE FIRE -----*/
     function createFire(x, y, z) {
       const fireWidth = 4
       const fireHeight = 12
@@ -123,7 +126,8 @@ export default class Bomb {
     const top = `${x}_${z + 4}`;
     const bottom = `${x}_${z - 4}`;
 
-    //check if wooden crates are destroyed, emit to the server to update map on explosion
+    /*----- CHECK IF CRATES ARE DESTROYED -----*/
+    /*----- EMITS TO SERVER TO UPDATE MAP UPON EXPLOSION -----*/
     if (destroyable[middle]) {
       this.fire = createFire(x, y, z)
       if (destroyable[middle].length) {
@@ -186,7 +190,7 @@ export default class Bomb {
 
     VolumetricFire.texturePath = '../../public/assets/images';
 
-    //remove fire from the scene
+    /*----- REMOVE FIRE FROM THE SCENE -----*/
     setTimeout(() => {
       if (this.fire) scene.remove(this.fire.mesh)
       if (this.fire2) scene.remove(this.fire2.mesh)
@@ -199,7 +203,7 @@ export default class Bomb {
       this.fire4 = null;
       this.fire5 = null;
 
-      //to speed up the animation function
+      /*----- SPEED UP ANIMATION FUNCTION -----*/
       this.bool = false;
     }, 1000)
   }

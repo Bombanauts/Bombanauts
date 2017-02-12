@@ -21,7 +21,7 @@ class Blocker extends Component {
       if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
         controls.enabled = true;
         blocker.style.display = 'none';
-      } else { // this is where we get the exit screen
+      } else { // EXIT SCREEN
         controls.enabled = false;
         blocker.style.display = '-webkit-box';
         blocker.style.display = '-moz-box';
@@ -37,7 +37,7 @@ class Blocker extends Component {
   handleClick(evt) {
     const element = document.body
 
-    // Ask browser to lock pointer
+    /*----- ASKS BROWSER TO LOCK POINTER -----*/
     element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
 
     element.requestPointerLock();

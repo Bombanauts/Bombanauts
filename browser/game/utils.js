@@ -27,19 +27,19 @@ export const generateMap = (mapArr) => {
   const mapArrWidth = mapArr.length,
     mapArrHeight = mapArr[0].length;
 
-  // CRATE
+  /*----- CRATE -----*/
   const crateTexture = new THREE.TextureLoader().load('images/crate.png');
   const crateMaterial = new THREE.MeshLambertMaterial({ map: crateTexture });
 
-  // WALL
+  //*----- WALL -----*/
   const wallTexture = new THREE.TextureLoader().load('images/brick.png');
   const wallMaterial = new THREE.MeshLambertMaterial({ map: wallTexture });
 
-  // FIXED CUBE
+  /*----- FIXED CUBE -----*/
   const fixedCubeTexture = new THREE.TextureLoader().load('images/Tileable1b.png');
   const fixedCubeMaterial = new THREE.MeshLambertMaterial({ map: fixedCubeTexture });
 
-  // PHYSICS BODY AND SHAPE FOR CRATE, WALL, FIXED CUBE
+  /* PHYSICS BODY & SHAPE FOR CRATE, WALL, & FIXED CUBE */
   const halfExtents = new CANNON.Vec3(2, 10, 2);
   const fixedCubeShape = new CANNON.Box(halfExtents);
   const fixedCubeGeometry = new THREE.BoxGeometry(halfExtents.x * 1.9, 3.8, halfExtents.z * 1.9);
@@ -87,8 +87,7 @@ export const roundFour = (num) => {
 export const animateFire = (bombObjects, clock, dead) => {
   let elapsed = clock.getElapsedTime()
 
-  // HELPER FUNCTION FOR ANIMATING FIRE
-
+  /*----- HELPER FUNCTION FOR ANIMATING FIRE -----*/
   const animateSingleFire = (fire, bombUserId) => {
     if (fire) {
       fire.update(elapsed)
@@ -106,8 +105,7 @@ export const animateFire = (bombObjects, clock, dead) => {
     }
   }
 
-  //RUNNING ANIMATE SINGLE FIRE FOR EVERY SQUERE AROUND THE BOMB
-
+  /* RUNNING ANIMATE SINGLE FIRE FOR EVERY SQUARE AROUND BOMB */
   for (let i = 0; i < bombObjects.length; i++) {
     if (bombObjects[i].bool) {
       let fire = 'fire'

@@ -20,12 +20,12 @@ export default class FixedCube {
   }
 
   init() {
-    // creating fixedCube
+    /*----- CREATE FIXED CUBE -----*/
     const fixedCubeBody = new CANNON.Body({ mass: 0 });
     fixedCubeBody.addShape(this.fixedCubeShape)
     const fixedCubeMesh = new THREE.Mesh(this.fixedCubeGeometry, this.material);
 
-    // set spawn position
+    /*----- SETS SPAWN POSITION -----*/
     fixedCubeMesh.position.set(this.x, this.y, this.z);
 
     fixedCubeBody.position.set(fixedCubeMesh.position.x, fixedCubeMesh.position.y, fixedCubeMesh.position.z);

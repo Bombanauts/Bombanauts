@@ -39,7 +39,7 @@ export default class BugReportForm extends Component {
     this.setState({ description: evt.target.value });
   }
 
-  submitForm() { // add it to github issues
+  submitForm() { // ADD TO GITHUB ISSUES
     this.clearForm()
   }
 

@@ -44,7 +44,7 @@ export const Block = function (scene, world, position, type, geometry, material)
   const MAX_SIZE = 0.5;
   const MIN_SIZE = 0.08;
 
-  //create cube or bomb particles
+  /*----- CREATE CUBE OR BOMB PARTICLES -----*/
   if (type === 'cube') {
     this.particle = new THREE.Mesh(geometry, material);
   }
@@ -57,14 +57,14 @@ export const Block = function (scene, world, position, type, geometry, material)
     position.y -= 6;
   }
 
-  // starting position
+  /*----- STARTING POSITION -----*/
   this.particle.position.x = position.x;
   this.particle.position.y = position.y;
   this.particle.position.z = position.z;
 
   this.reset(this.particle.position.x, this.particle.position.y, this.particle.position.z);
 
-  //add to scene
+  /*----- ADD TO SCENE -----*/
   scene.add(this.particle);
 }
 

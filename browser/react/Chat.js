@@ -18,15 +18,13 @@ class Chat extends Component {
   }
 
   componentDidMount() {
-    // enable chat start/close on enter key press
+    /*----- ENABLE CHAT START/CLOSE ON 'ENTER' -----*/
     window.addEventListener('keydown', (evt) => {
-      // enter to start chat
-      if (evt.keyCode === 13) {
+      if (evt.keyCode === 13) { //'ENTER' TO START
         this.props.startChat()
         controls.enabled = false;
       }
-      // back tick to stop chat
-      if (evt.keyCode === 192) {
+      if (evt.keyCode === 192) { // BACKTICK TO STOP
         this.props.stopChat()
         controls.enabled = true;
       }
@@ -34,7 +32,7 @@ class Chat extends Component {
   }
 
   componentDidUpdate() {
-    // set focus to chat box
+    /*----- SETS FOCUS TO CHAT BOX -----*/
     if (this.props.isChatting) this.refs.chat.focus()
   }
 
