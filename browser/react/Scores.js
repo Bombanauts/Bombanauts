@@ -31,17 +31,15 @@ export class Scores extends Component {
     });
     playersRows.push(ownInfo)
 
-    playersRows.sort( ( playerA, playerB ) => playerA.score - playerB.score)
+    playersRows.sort( ( playerA, playerB ) => playerB.score - playerA.score)
     return (
-        <div id='scores'>
-          <ul id='scoreslist'>
-          <li><h3>Score:</h3></li>
+        <div id="scores">
+          <ul id="scoreslist">
+          <li key="score"><h3>Score:</h3></li>
           <hr />
             {
               playersRows.length && playersRows.map( (playersRow, index) => {
-                return <div>
-                  <li key={`${index}`}>{`${playersRow.nickname}:   ${playersRow.score}`}</li>
-                  </div>
+                return <li key={`${index}`}>{`${playersRow.nickname}:   ${playersRow.score}`}</li>
               })
             }
           </ul>
