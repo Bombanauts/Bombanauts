@@ -81,6 +81,7 @@ io.on('connection', (socket) => {
 
   socket.on('set_nickname', (nickname) => {
     store.dispatch(setNickname(socket.id, nickname, socket.currentRoom))
+    io.in(socket.currentRoom).emit('new_message', `${nickname} has joined the game!`)
   })
 
   socket.on('get_players', () => {
@@ -190,16 +191,24 @@ io.on('connection', (socket) => {
 
   //remove the player from the state on socket disconnect
   socket.on('disconnect', () => {
+    let currentStatePlayers = store.getState().players[socket.currentRoom];
+    let playerNickname;
+    if (currentStatePlayers[socket.id] && currentStatePlayers[socket.id].nickname) {
+      playerNickname = currentStatePlayers[socket.id].nickname
+    }
+    io.in(socket.currentRoom).emit('new_message', `${playerNickname} has left the game!`)
+
     store.dispatch(removePlayer(socket.id, socket.currentRoom))
     store.dispatch(removePlayerBombs(socket.id, socket.currentRoom))
-    let currentStatePlayers = store.getState().players[socket.currentRoom];
     if (currentStatePlayers) {
       let currentPlayersLength = Object.keys(currentStatePlayers).length;
       if (!currentPlayersLength) {
         store.dispatch(setWinner(null, socket.currentRoom))
       }
     }
+
     io.in(socket.currentRoom).emit('remove_player', socket.id)
+
     console.log('socket id ' + socket.id + ' has disconnected. : (');
   })
 })
