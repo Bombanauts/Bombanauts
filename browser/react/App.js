@@ -28,7 +28,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    delay(300)
+    delay(500)
     .then(() => {
       initCannon()
       init()

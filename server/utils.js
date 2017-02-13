@@ -1,10 +1,10 @@
 const worldNames = require('./world-names');
-const store = require('./store');
-const { randomGeneration } = require('./maps/map');
+const store = require('./redux/store');
+const { randomGeneration } = require('./redux/maps/map');
 
-const { loadMap } = require('./maps/action-creator')
-const { setTime, getTime } = require('./timer/action-creator')
-const { setWinner } = require('./winner/action-creator')
+const { loadMap } = require('./redux/maps/action-creator')
+const { setTime, getTime } = require('./redux/timer/action-creator')
+const { setWinner } = require('./redux/winner/action-creator')
 
 //get room name
 const roomName = (connectedSocket, roomsList) => {

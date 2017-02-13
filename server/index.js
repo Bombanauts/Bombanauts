@@ -9,12 +9,12 @@ const socketio = require('socket.io')
 const {
   Maps,
   randomGeneration
-} = require('./maps/map');
+} = require('./redux/maps/map');
 
 const {
   updateMap,
   loadMap
-} = require('./maps/action-creator')
+} = require('./redux/maps/action-creator')
 const {
   updatePlayers,
   removePlayer,
@@ -22,26 +22,25 @@ const {
   setNickname,
   incrementScore,
   decrementScore
-} = require('./players/action-creator');
+} = require('./redux/players/action-creator');
 const {
   addBomb,
   updateBombPositions,
-  removePlayerBombs,
-  removeBomb
-} = require('./bombs/action-creator')
+  removePlayerBombs
+} = require('./redux/bombs/action-creator')
 const {
   setTime,
   getTime
-} = require('./timer/action-creator')
-const { setWinner } = require('./winner/action-creator')
+} = require('./redux/timer/action-creator')
+const { setWinner } = require('./redux/winner/action-creator')
 const {
   roomName,
   convertStateForFrontEnd,
   resetWorld
 } = require('./utils')
 
-const store = require('./store')
-const worldNames = require('./world-names')
+const store = require('./redux/store')
+
 server.on('request', app);
 
 
