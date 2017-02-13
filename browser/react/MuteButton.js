@@ -21,7 +21,7 @@ const styles = {
 const MuteButton = (props) => {
   if (props.sound) {
     return (
-      <div style={{ position: 'absolute', right: '1%', bottom: '1%'}}>
+      <div className="mute">
         <IconButton
           onClick={() => props.muteSound()}
           disableTouchRipple={true}
@@ -34,7 +34,7 @@ const MuteButton = (props) => {
     )
   } else {
     return (
-      <div style={{ position: 'absolute', right: '1%', bottom: '1%'}}>
+      <div className="mute">
         <IconButton
           onClick={() => props.unmuteSound()}
           disableTouchRipple={true}
