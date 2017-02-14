@@ -44,13 +44,12 @@ const store = require('./redux/store')
 server.on('request', app);
 
 
-// creates a new connection server for web sockets and integrates
-// it into our HTTP server
+/* CREATES NEW CONNECTION SERVIER FOR SOCKETS & INTEGRATES HTTP SERVER */
 const io = socketio(server)
 
-//  use socket server as an event emitter in order to listen for new connections
+/*----- USES SOCKET AS EVENT EMITTER TO LISTEN FOR NEW CONNECTIONS -----*/
 io.on('connection', (socket) => {
-    //manage which room the connected socket is joining (4 sockets max to a room)
+  /*----- MANAGES WHICH ROOM CONNECTED SOCKET IS JOINING (4 MAX) -----*/
   delete socket.adapter.rooms[socket.id]
   let rooms = io.sockets.adapter.rooms;
   let { currentRoomName, createdRoom } = roomName(socket, rooms)
@@ -61,8 +60,8 @@ io.on('connection', (socket) => {
   let currState;
 
   if (createdRoom) {
-    //initial setup for a new room
-    let randomMap = randomGeneration(Maps)
+    /*----- INITIAL SET UP FOR NEW ROOM -----*/
+\    let randomMap = randomGeneration(Maps)
     store.dispatch(loadMap(randomMap, socket.currentRoom))
     let currentTime = Date.now();
 
@@ -71,7 +70,7 @@ io.on('connection', (socket) => {
     currState = convertStateForFrontEnd(store.getState(), socket.currentRoom);
     socket.emit('initial', currState);
   } else {
-    //joining a room
+    /*----- JOINING ROOM -----*/
     currState = convertStateForFrontEnd(store.getState(), socket.currentRoom);
     socket.emit('initial', currState);
   }
@@ -87,7 +86,7 @@ io.on('connection', (socket) => {
     socket.emit('get_players', store.getState().players[socket.currentRoom]);
   })
 
-  //the primary socket emission, used 60x a second to update all player and bomb data
+  /*----- PRIMARY SOCKET EMISSION, 60X/SEC TO UPDATE ALL PLAYER & BOMB DATA -----*/
   socket.on('update_world', (data) => {
     store.dispatch(updatePlayers({ id: data.playerId, position: data.playerPosition, dead: data.dead, nickname: data.nickname }, socket.currentRoom));
     store.dispatch(updateBombPositions({ userId: data.playerId, bombs: data.playerBombs }, socket.currentRoom))
@@ -95,7 +94,7 @@ io.on('connection', (socket) => {
 
     let newState = convertStateForFrontEnd(store.getState(), socket.currentRoom)
 
-    //restart the world if the timer hits 0
+    /*----- RESTART WORLD IF TIMER IS 0 -----*/
     if (newState.timer <= 0) {
       resetWorld(Maps, socket.currentRoom, io)
     } else {
@@ -103,13 +102,13 @@ io.on('connection', (socket) => {
     }
   })
 
-  //add new bomb to the state when a player clicks
+  /*----- ADD NEW BOMB TO STATE ON CLICK -----*/
   socket.on('add_bomb', (data) => {
     store.dispatch(addBomb(data, socket.currentRoom))
     io.in(socket.currentRoom).emit('update_bomb_positions', store.getState().bombs[socket.currentRoom])
   })
 
-  //kill player on bomb collision
+  /*----- KILL PLAYER ON BOMB COLLISION -----*/
   socket.on('kill_player', (data) => {
     let room = socket.currentRoom;
     store.dispatch(killPlayer(data.id, room))
@@ -141,7 +140,7 @@ io.on('connection', (socket) => {
         }
       }
 
-      //win conditions for if only one player is left alive, or if a solo player dies
+      /*----- WIN CONDITIONS FOR WHEN 1 PLAYER LEFT OR IF SOLO PLAYER DIES -----*/
       if (currentPlayersLength >= 1 && alivePlayers.length <= 1) {
         if (alivePlayers[0]) store.dispatch(setWinner(alivePlayers[0].socketId, room))
         else {
@@ -163,7 +162,7 @@ io.on('connection', (socket) => {
     io.in(room).emit('update_world', newState)
   })
 
-  //chat messages
+  /*----- CHAT MESSAGES -----*/
   socket.on('new_message', (data) => {
     let currentState = store.getState();
     let room = socket.currentRoom;
@@ -178,17 +177,17 @@ io.on('connection', (socket) => {
     io.in(socket.currentRoom).emit('new_message', `${playerNickname} : ${data.message}`)
   })
 
-  //change the map on the state when a crate is destroyed
+  /*----- CHANGES MAP ON STATE WHEN BOX IS DESTROYED -----*/
   socket.on('destroy_cube', (data) => {
     store.dispatch(updateMap(data, socket.currentRoom))
   })
 
-  //restart the entire world on game end
+  /*----- RESTART WORLD ON GAME END -----*/
   socket.on('reset_world', (data) => {
     resetWorld(Maps, socket.currentRoom, io)
   })
 
-  //remove the player from the state on socket disconnect
+  /*----- REMOVE PLAYER FROM STATE ON DISCONNECT -----*/
   socket.on('disconnect', () => {
     store.dispatch(removePlayer(socket.id, socket.currentRoom))
     store.dispatch(removePlayerBombs(socket.id, socket.currentRoom))
