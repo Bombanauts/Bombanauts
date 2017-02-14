@@ -1,9 +1,9 @@
 import { expect } from 'chai'
 import { createStore } from 'redux'
-import { SET_WINNER } from '../../server/winner/constants'
-import { setWinner } from '../../server/winner/action-creator'
-import initialState from '../../server/winner/init-state'
-import winnerReducer from '../../server/winner/reducer'
+import { SET_WINNER } from '../../server/redux/winner/constants'
+import { setWinner } from '../../server/redux/winner/action-creator'
+import initialState from '../../server/redux/winner/init-state'
+import winnerReducer from '../../server/redux/winner/reducer'
 
 describe('Back end winner action creators', () => {
   const playerId = 'thisIsAnId'

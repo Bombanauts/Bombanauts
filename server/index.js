@@ -61,7 +61,7 @@ io.on('connection', (socket) => {
 
   if (createdRoom) {
     /*----- INITIAL SET UP FOR NEW ROOM -----*/
-\    let randomMap = randomGeneration(Maps)
+    let randomMap = randomGeneration(Maps)
     store.dispatch(loadMap(randomMap, socket.currentRoom))
     let currentTime = Date.now();
 

@@ -1,19 +1,18 @@
 import { expect } from 'chai'
 import { createStore } from 'redux'
-import { GENERATE_MAP, EXPLODE_BOX } from '../../server/maps/constants'
-import { loadMap, updateMap } from '../../server/maps/action-creator'
-import initialState from '../../server/maps/init-state'
-import mapsReducer from '../../server/maps/reducer'
-import { map } from '../../server/maps/map'
+import { GENERATE_MAP, EXPLODE_BOX } from '../../server/redux/maps/constants'
+import { loadMap, updateMap } from '../../server/redux/maps/action-creator'
+import initialState from '../../server/redux/maps/init-state'
+import mapsReducer from '../../server/redux/maps/reducer'
+import { map } from '../../server/redux/maps/map'
 
 describe('Back end maps action creators', () => {
   const roomId = 'Earth'
   const coordinates = {
-  	position: {
-  		x: 1,
-  		y: 2,
-  		z: 3
-  	}
+    position: {
+      j: 1,
+      k: 2
+    }
   }
 
   describe('loadMap', () => {
@@ -23,7 +22,7 @@ describe('Back end maps action creators', () => {
   })
 
   describe('updateMap', () => {
-    it('updates the map when boxes explode', () => {
+    it('updates the map accordingly when boxes explode', () => {
       expect(updateMap(coordinates, roomId).type).to.equal(EXPLODE_BOX)
     })
   })
