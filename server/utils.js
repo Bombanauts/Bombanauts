@@ -6,7 +6,7 @@ const { loadMap } = require('./redux/maps/action-creator')
 const { setTime, getTime } = require('./redux/timer/action-creator')
 const { setWinner } = require('./redux/winner/action-creator')
 
-//get room name
+/*----- GET ROOM NAME -----*/
 const roomName = (connectedSocket, roomsList) => {
   let roomsNames = Object.keys(roomsList).filter(room => {
     return room.length < 12
@@ -29,8 +29,7 @@ const roomName = (connectedSocket, roomsList) => {
   return { currentRoomName, createdRoom };
 }
 
-
-//filter the state for the front end by only pulling the state for a specific socket room
+/* FILTER STATE FOR FRONT END BY ONLY PULLING STATE FOR SPECIFIC ROOM */
 const convertStateForFrontEnd = (state, room) => {
   return {
     players: state.players[room],

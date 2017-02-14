@@ -5,7 +5,8 @@ const {
 
 const initialState = require('./init-state')
 
-//timer reducer has initial state of all of the room names, each of which is a key for an object with the start time and end time properties
+/*----- INITIAL STATE OF ALL ROOM NAMES -----*/
+/*----- CONTAINS START & END TIME PROPERTIES -----*/
 const timer = (state = initialState, action) => {
   let newState = Object.assign({}, state);
   switch (action.type) {

@@ -6,7 +6,8 @@ const {
 } = require('./constants')
 const initialState = require('./init-state');
 
-//bombs reducer has initial state of all of the room names, each of which is a key for an object containing player ID keys with properties of arrays of that player's current bombs
+/*----- HAS INITIAL STATE OF ALL ROOM NAMES -----*/
+/* EACH NAME CONTAINS PLAYERID KEYS W/ PROPERTIES OF PLAYER'S CURRENT BOMBS */
 const bombs = (state = initialState, action) => {
   let newState = Object.assign({}, state)
   switch (action.type) {

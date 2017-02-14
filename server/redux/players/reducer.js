@@ -13,7 +13,8 @@ const store = require('../store');
 
 const initialState = require('./init-state');
 
-//players reducer has initial state of all of the room names, each of which is a key for an object that contains keys of players' IDs and properties of an object containing that player's position and their death status
+/*----- INITIAL STATE HAS ALL ROOM NAMES -----*/
+/*----- CONTAINS PLAYERIDS W/ POSITIONS & DEATH STATUS -----*/
 const players = (state = initialState, action) => {
     let newState = Object.assign({}, state);
     switch (action.type) {
