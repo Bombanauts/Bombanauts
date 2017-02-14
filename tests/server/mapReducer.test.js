@@ -6,7 +6,7 @@ import initialState from '../../server/redux/maps/init-state'
 import mapsReducer from '../../server/redux/maps/reducer'
 import { Maps, randomGeneration } from '../../server/redux/maps/map'
 
-describe.only('back end maps reducer', () => {
+describe('back end maps reducer', () => {
   const roomId = 'Earth'
   const roomIdB = 'Wolf 1061b'
   let testStore;
