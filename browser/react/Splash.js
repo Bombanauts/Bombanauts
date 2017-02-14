@@ -4,7 +4,8 @@ import socket from '../socket';
 import { startGame } from '../redux/gameState/action-creator';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import MuteButton from './MuteButton';
+import MuteButton, { styles } from './MuteButton';
+import IconButton from 'material-ui/IconButton';
 
 class Splash extends Component {
   constructor(props) {
@@ -63,7 +64,19 @@ class Splash extends Component {
             </div>
           </div>
           <MuteButton />
-          <img id='bomberman' src='/images/bomberman.gif'></img>
+
+          <IconButton
+            href="https://github.com/Bombanauts/Bombanauts"
+            target="_blank"
+            disableTouchRipple={true}
+            iconClassName="material-icons"
+            className="git"
+            iconStyle={styles.largeIcon}
+            hoveredStyle={{color: "#cc2d2d"}}
+            style={styles.large}>
+            code
+          </IconButton>
+          <img id="bomberman" src="/images/bomberman.gif"></img>
       </div>
     )
   }
