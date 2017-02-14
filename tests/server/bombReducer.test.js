@@ -4,7 +4,7 @@ import { ADD_BOMB, UPDATE_BOMB_POSITIONS, REMOVE_PLAYER_BOMBS } from '../../serv
 import bombReducer from '../../server/redux/bombs/reducer'
 import initialState from '../../server/redux/bombs/init-state'
 
-describe('Back end bomb reducer', () => {
+describe('Back end bombs reducer', () => {
   let testStore;
   const room = 'Wolf 1061b'
   const roomB = 'Wolf 1061c'
