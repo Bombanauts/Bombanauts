@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { muteSound, unmuteSound } from '../redux/sound/action-creator';
 import IconButton from 'material-ui/IconButton';
 
-const styles = {
+export const styles = {
   largeIcon: {
     width: 60,
     height: 60,
