@@ -9,11 +9,10 @@ import { map } from '../../server/redux/maps/map'
 describe('Back end maps action creators', () => {
   const roomId = 'Earth'
   const coordinates = {
-  	position: {
-  		x: 1,
-  		y: 2,
-  		z: 3
-  	}
+    position: {
+      j: 1,
+      k: 2
+    }
   }
 
   describe('loadMap', () => {
@@ -23,7 +22,7 @@ describe('Back end maps action creators', () => {
   })
 
   describe('updateMap', () => {
-    it('updates the map when boxes explode', () => {
+    it('updates the map accordingly when boxes explode', () => {
       expect(updateMap(coordinates, roomId).type).to.equal(EXPLODE_BOX)
     })
   })
