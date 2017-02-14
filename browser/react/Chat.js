@@ -63,7 +63,7 @@ class Chat extends Component {
                   bottom: '5%',
                   marginLeft: '2%'}}>
         {lastFiveMessages}
-         {this.props.isChatting && <TextField
+         {this.props.isChatting ? <TextField
           id="chat"
           ref="chat"
           onChange={this.handleMessageChange}
@@ -71,7 +71,7 @@ class Chat extends Component {
           value={this.state.message}
           underlineFocusStyle={{ borderColor: '#ffffff'}}
           inputStyle={{ fontSize: 15, color: '#ffffff' }}
-          />}
+          /> : <h1 style={{fontSize: 15, color: '#ffffff'}}>Press Enter to Chat / Back Tick to Exit Chat</h1>}
       </div>
     )
   }
