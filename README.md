@@ -3,7 +3,7 @@
 [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen.svg?style=plastic)](http://bomberjs.herokuapp.com/) [![license](https://img.shields.io/github/license/mashape/apistatus.svg?style=plastic)](https://github.com/Bombanauts/Bombanauts/blob/master/LICENSE)
 
 ### Introduction
-[Bombanauts](http://bomberjs.herokuapp.com/), inspired by the original [Bomberman](https://en.wikipedia.org/wiki/Bomberman) game, is a 3D multiplayer online battle arena (MOBA) game where players can throw bombs at each other, make boxes explode, and even other players! Bombs explode into a cross of fire down the aisles destroying crates that stand in their way. The flames do not spawn on stones or walls. When the flames make contact with the wooden boxes (and players :smiling_imp:) they explode!
+[Bombanauts](http://bomberjs.herokuapp.com/), inspired by the original [Bomberman](https://en.wikipedia.org/wiki/Bomberman) game, is a 3D multiplayer online battle arena (MOBA) game where players can throw bombs at each other, make boxes explode, and even other players! Bombs explode into a cross of fire down the aisles destroying crates that stand in their way. When the flames make contact with the wooden boxes (and players :smiling_imp:) they explode!
 
 <img src="/public/assets/images/explosions.png" width=100%>
 
@@ -73,7 +73,7 @@ Then go to [http://localhost:1337/](http://localhost:1337/) and destroy!
 
 ### Special Thanks and Credits
 
-Thank you to our teaching fellows [tessaSac](https://github.com/tessaSAC), [leafoflegend](https://github.com/leafoflegend), and [babbins](https://github.com/babbins) for the consultations and project management.
+Thank you to our teaching fellows [tessaSAC](https://github.com/tessaSAC), [leafoflegend](https://github.com/leafoflegend), and [babbins](https://github.com/babbins) for the consultations and project management.
 
 Thank you to our Instructors [danceoval](https://github.com/danceoval) and [intersim](https://github.com/intersim) for the code feedback and reviews.
 
