@@ -16,8 +16,7 @@ let Maps = [ // 1  2  3  4  5  6  7  8  9  10 11 12
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // 14
   ]
 
-
-// for randomizing destroyable box tiles while ensuring spawns are clear
+/* RANDOMIZES DESTROYABLE BOXES & ENSURES SPAWN POSITIONS ARE CLEAR */
 const randomGeneration = (arr) => {
   let newArr = [[],[],[],[],[],[],[],[],[],[],[],[],[],[], []]
   for (let j = 0; j < arr.length; j++) {
@@ -36,7 +35,6 @@ const randomGeneration = (arr) => {
 }
 
 // Maps[0] = randomGeneration(Maps[0]);
-
 module.exports = {
   Maps,
   randomGeneration
