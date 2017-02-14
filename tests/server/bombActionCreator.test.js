@@ -1,6 +1,6 @@
 import { expect } from 'chai'
-import { ADD_BOMB, UPDATE_BOMB_POSITIONS, REMOVE_PLAYER_BOMBS } from '../../server/bombs/constants'
-import { addBomb, updateBombPositions, removePlayerBombs } from '../../server/bombs/action-creator'
+import { ADD_BOMB, UPDATE_BOMB_POSITIONS, REMOVE_PLAYER_BOMBS } from '../../server/redux/bombs/constants'
+import { addBomb, updateBombPositions, removePlayerBombs } from '../../server/redux/bombs/action-creator'
 
 describe('Back end bomb action creators', () => {
   const newBomb = {

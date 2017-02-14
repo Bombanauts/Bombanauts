@@ -1,10 +1,10 @@
 import { expect } from 'chai'
 import { createStore } from 'redux'
-import { GENERATE_MAP, EXPLODE_BOX } from '../../server/maps/constants'
-import { loadMap, updateMap } from '../../server/maps/action-creator'
-import initialState from '../../server/maps/init-state'
-import mapsReducer from '../../server/maps/reducer'
-import { map } from '../../server/maps/map'
+import { GENERATE_MAP, EXPLODE_BOX } from '../../server/redux/maps/constants'
+import { loadMap, updateMap } from '../../server/redux/maps/action-creator'
+import initialState from '../../server/redux/maps/init-state'
+import mapsReducer from '../../server/redux/maps/reducer'
+import { map } from '../../server/redux/maps/map'
 
 describe('Back end maps action creators', () => {
   const roomId = 'Earth'

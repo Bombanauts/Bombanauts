@@ -5,14 +5,14 @@ import {
   REMOVE_PLAYER,
   KILL_PLAYER,
   SET_NICKNAME
-} from '../../server/players/constants';
+} from '../../server/redux/players/constants';
 import {
   getPlayers,
   updatePlayers,
   removePlayer,
   killPlayer,
   setNickname
-} from '../../server/players/action-creator';
+} from '../../server/redux/players/action-creator';
 
 describe('Back end player action creators', () => {
 

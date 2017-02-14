@@ -1,8 +1,8 @@
 import { expect } from 'chai'
 import { createStore } from 'redux'
-import { ADD_BOMB, UPDATE_BOMB_POSITIONS, REMOVE_PLAYER_BOMBS } from '../../server/bombs/constants'
-import bombReducer from '../../server/bombs/reducer'
-import initialState from '../../server/bombs/init-state'
+import { ADD_BOMB, UPDATE_BOMB_POSITIONS, REMOVE_PLAYER_BOMBS } from '../../server/redux/bombs/constants'
+import bombReducer from '../../server/redux/bombs/reducer'
+import initialState from '../../server/redux/bombs/init-state'
 
 describe('Back end bomb reducer', () => {
   let testStore;
