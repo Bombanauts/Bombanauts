@@ -72,7 +72,7 @@ class Splash extends Component {
             iconClassName="material-icons"
             className="git"
             iconStyle={styles.largeIcon}
-            hoveredStyle={{color: "#cc2d2d"}}
+            hoveredStyle={{color: '#cc2d2d'}}
             style={styles.large}>
             code
           </IconButton>
