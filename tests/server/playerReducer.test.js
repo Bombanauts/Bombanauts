@@ -6,9 +6,9 @@ import {
   REMOVE_PLAYER,
   KILL_PLAYER,
   SET_NICKNAME
-} from '../../server/players/constants'
-import playerReducer from '../../server/players/reducer'
-import initialState from '../../server/players/init-state'
+} from '../../server/redux/players/constants'
+import playerReducer from '../../server/redux/players/reducer'
+import initialState from '../../server/redux/players/init-state'
 
 describe('Back end player reducer', () => {
   let testStore;
