@@ -16,15 +16,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dye784/BombermanJS.git"
+    "url": "git+https://github.com/bombanauts/Bombanauts.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/dye784/BombermanJS/issues"
+    "url": "https://github.com/bombanauts/Bombanauts/issues"
   },
-  "homepage": "https://github.com/dye784/BombermanJS#readme",
+  "homepage": "https://github.com/bombanauts/Bombanauts#readme",
   "dependencies": {
     "babel": "^6.5.2",
     "babel-core": "^6.22.1",
