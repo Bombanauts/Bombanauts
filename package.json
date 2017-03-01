@@ -11,7 +11,7 @@
     "test-watch": "mocha --compilers js:babel-register --watch tests/**/*.test.js",
     "build": "webpack",
     "build-watch": "webpack -w",
-    "heroku-postbuild": "webpack -p --config ./webpack.prod.config.js --progress",
+    "heroku-postbuild": "webpack -p --config ./webpack.config.js --progress",
     "start": "NODE_ENV=production node server/index.js",
     "start-dev": "nodemon server/index.js"
   },
