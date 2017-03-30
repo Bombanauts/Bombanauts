@@ -1,5 +1,9 @@
 node_modules
+bower_components
 public/bundle.js
 public/bundle.js.map
 .DS_Store
+.DS_Store?
 npm-debug.log
+yarn.lock
+*.log
