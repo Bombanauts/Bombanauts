@@ -107,7 +107,7 @@ export default class Bomb {
     world.remove(this.bombBody)
 
     /*----- CREATE FIRE -----*/
-    function createFire(x, y, z) {
+    const createFire = (x, y, z) => {
       const fireWidth = 4
       const fireHeight = 12
       const fireDepth = 4
@@ -127,64 +127,41 @@ export default class Bomb {
 
     /*----- CHECK IF CRATES ARE DESTROYED -----*/
     /*----- EMITS TO SERVER TO UPDATE MAP UPON EXPLOSION -----*/
-    if (destroyable[middle]) {
-      this.fire = createFire(x, y, z)
-      if (destroyable[middle].length) {
-        if (destroyable[middle][1].explode()) {
+
+    const updateMap = (destroyableArea, location) => {
+      if (destroyableArea[location].length) {
+        if (destroyable[location][1].explode()) {
           socket.emit('destroy_cube', {
-            j: destroyable[middle][1].j,
-            k: destroyable[middle][1].k
+            j: destroyable[location][1].j,
+            k: destroyable[location][1].k
           })
         }
       }
+    }
+
+    if (destroyable[middle]) {
+      this.fire = createFire(x, y, z)
+      updateMap(destroyable, middle)
     }
 
     if (destroyable[right]) {
       this.fire2 = createFire(x + 4, y, z)
-      if (destroyable[right].length) {
-        if (destroyable[right][1].explode()) {
-          socket.emit('destroy_cube', {
-            j: destroyable[right][1].j,
-            k: destroyable[right][1].k
-          })
-        }
-      }
+      updateMap(destroyable, right)
     }
 
     if (destroyable[left]) {
       this.fire3 = createFire(x - 4, y, z)
-      if (destroyable[left].length) {
-        if (destroyable[left][1].explode()) {
-          socket.emit('destroy_cube', {
-            j: destroyable[left][1].j,
-            k: destroyable[left][1].k
-          })
-        }
-      }
+      updateMap(destroyable, left)
     }
 
     if (destroyable[top]) {
       this.fire4 = createFire(x, y, z + 4)
-      if (destroyable[top].length) {
-       if (destroyable[top][1].explode()) {
-        socket.emit('destroy_cube', {
-          j: destroyable[top][1].j,
-          k: destroyable[top][1].k
-        })
-       }
-      }
+      updateMap(destroyable, top)
     }
 
     if (destroyable[bottom]) {
       this.fire5 = createFire(x, y, z - 4)
-      if (destroyable[bottom].length) {
-        if (destroyable[bottom][1].explode()) {
-          socket.emit('destroy_cube', {
-            j: destroyable[bottom][1].j,
-            k: destroyable[bottom][1].k
-          })
-        }
-      }
+      updateMap(destroyable, bottom)
     }
 
     VolumetricFire.texturePath = '../../public/assets/images';
