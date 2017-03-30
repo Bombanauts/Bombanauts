@@ -19,33 +19,21 @@ export const styles = {
 
 
 const MuteButton = (props) => {
-  if (props.sound) {
-    return (
-      <div className="mute">
-        <IconButton
-          onClick={() => props.muteSound()}
-          disableTouchRipple={true}
-          iconClassName="material-icons"
-          iconStyle={styles.largeIcon}
-          style={styles.large}>
-          volume_up
-        </IconButton>
-      </div>
-    )
-  } else {
-    return (
-      <div className="mute">
-        <IconButton
-          onClick={() => props.unmuteSound()}
-          disableTouchRipple={true}
-          iconClassName="material-icons"
-          iconStyle={styles.largeIcon}
-          style={styles.large}>
-          volume_off
-        </IconButton>
-      </div>
-    )
-  }
+  const muteOrUnmute = props.sound ? props.muteSound : props.unmuteSound;
+  const icon = props.sound ? "volume_up" : "volume_off";
+
+  return (
+    <div className="mute">
+      <IconButton
+        onClick={muteOrUnmute}
+        disableTouchRipple={true}
+        iconClassName="material-icons"
+        iconStyle={styles.largeIcon}
+        style={styles.large}>
+        {icon}
+      </IconButton>
+    </div>
+  )
 }
 
 const mapStateToProps = (state) => ({
