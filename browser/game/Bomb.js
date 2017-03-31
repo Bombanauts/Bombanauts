@@ -119,7 +119,12 @@ export default class Bomb {
       destroyBoxForEveryone(destroyable, bottom)
     }
 
-    /*----- REMOVE FIRE FROM THE SCENE -----*/
+    // inits fire removal
+    this.removeFire();
+  }
+
+  /*----- REMOVE FIRE FROM THE SCENE -----*/
+  removeFire() {
     setTimeout(() => {
       if (this.fire) scene.remove(this.fire.mesh)
       if (this.fire2) scene.remove(this.fire2.mesh)
