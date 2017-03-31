@@ -84,7 +84,7 @@ export default class Bomb {
     scene.remove(this.bombMesh)
     world.remove(this.bombBody)
 
-    /*----- CREATE FIRE -----*/
+    /*----- COORDINATES TO CHECK -----*/
     const middle = `${x}_${z}`;
     const right = `${x + 4}_${z}`;
     const left = `${x - 4}_${z}`;

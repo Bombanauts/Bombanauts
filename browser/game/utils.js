@@ -221,7 +221,7 @@ export const destroyBoxForEveryone = (destroyableArea, location) => {
 }
 
 export const createFire = (scene, camera, x, y, z) => {
-
+  VolumetricFire.texturePath = '../../public/assets/images'
   const fireWidth = 4
   const fireHeight = 12
   const fireDepth = 4
@@ -230,10 +230,7 @@ export const createFire = (scene, camera, x, y, z) => {
   fire.mesh.frustumCulled = false;
   fire.mesh.position.set(x, y, z)
   scene.add(fire.mesh)
-  VolumetricFire.texturePath = '../../public/assets/images';
   return fire
-
-
 }
 
 // CREATING TEXT SPRITE FOR PLAYER
