@@ -12,10 +12,11 @@ import {
   listener
 } from './main'
 
-import { VolumetricFire } from './ParticleEngine'
 import {
   destroyable,
-  roundFour
+  roundFour,
+  destroyBoxForEveryone,
+  createFire
 } from './utils'
 import { Block } from './Explosion.js'
 import store from '../redux/store'
@@ -36,31 +37,20 @@ export default class Bomb {
     this.fire3;
     this.fire4;
     this.fire5;
-
-    this.init = this.init.bind(this);
-    this.explode = this.explode.bind(this);
   }
 
   init() {
     /*----- BOMB EXPLOSION SOUND EFFECT -----*/
-    const sound = store.getState().sound
+    const sound = store.getState().sound;
 
-    if (sound) {
-      let explosionSound = new THREE.PositionalAudio( listener );
-      const explosionLoader = new THREE.AudioLoader();
-      explosionLoader.load( 'sounds/explosion.mp3', function( buffer ) {
-        explosionSound.setBuffer( buffer );
-        explosionSound.setRefDistance( 10 );
-        explosionSound.play()
-      });
-    }
+    if (sound) { this.initSound(); }
 
     this.bombShape = new CANNON.Sphere(1.5);
 
-    let bombGeometry = new THREE.SphereGeometry(this.bombShape.radius, 32, 32);
+    const bombGeometry = new THREE.SphereGeometry(this.bombShape.radius, 32, 32);
 
     /*----- CREATE BOMB -----*/
-    this.bombBody = new CANNON.Body({ mass: 10});
+    this.bombBody = new CANNON.Body({ mass: 10 });
     this.bombBody.addShape(this.bombShape);
     this.bombMesh = new THREE.Mesh(bombGeometry, this.material);
 
@@ -68,23 +58,8 @@ export default class Bomb {
     world.addBody(this.bombBody);
     scene.add(this.bombMesh);
 
-    let colorBool = false;
-
     /*----- FLASHES BOMB RED/BLACK -----*/
-    let clear;
-    setTimeout(() => {
-      clear = setInterval(() => {
-      if (!colorBool) this.bombMesh.material.color.setHex(0x510000)
-      else if (colorBool) this.bombMesh.material.color.setHex(0x000000)
-      colorBool = !colorBool;
-    }, 100)}, 800)
-
-    /*----- BOMB AFTER 1.7 SEC -----*/
-    this.clearTimeout = setTimeout(() => {
-      this.explode()
-      clearInterval(clear)
-      this.bombMesh.material = this.material;
-    }, 1700)
+    this.initFlashing();
   }
 
   explode() {
@@ -106,19 +81,7 @@ export default class Bomb {
     scene.remove(this.bombMesh)
     world.remove(this.bombBody)
 
-    /*----- CREATE FIRE -----*/
-    function createFire(x, y, z) {
-      const fireWidth = 4
-      const fireHeight = 12
-      const fireDepth = 4
-      const sliceSpacing = 0.5
-      const fire = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
-      fire.mesh.frustumCulled = false;
-      fire.mesh.position.set(x, y, z)
-      scene.add(fire.mesh)
-      return fire
-    }
-
+    /*----- COORDINATES TO CHECK -----*/
     const middle = `${x}_${z}`;
     const right = `${x + 4}_${z}`;
     const left = `${x - 4}_${z}`;
@@ -127,69 +90,38 @@ export default class Bomb {
 
     /*----- CHECK IF CRATES ARE DESTROYED -----*/
     /*----- EMITS TO SERVER TO UPDATE MAP UPON EXPLOSION -----*/
+
     if (destroyable[middle]) {
-      this.fire = createFire(x, y, z)
-      if (destroyable[middle].length) {
-        if (destroyable[middle][1].explode()) {
-          socket.emit('destroy_cube', {
-            j: destroyable[middle][1].j,
-            k: destroyable[middle][1].k
-          })
-        }
-      }
+      this.fire = createFire(scene, camera, x, y, z)
+      destroyBoxForEveryone(destroyable, middle)
     }
 
     if (destroyable[right]) {
-      this.fire2 = createFire(x + 4, y, z)
-      if (destroyable[right].length) {
-        if (destroyable[right][1].explode()) {
-          socket.emit('destroy_cube', {
-            j: destroyable[right][1].j,
-            k: destroyable[right][1].k
-          })
-        }
-      }
+      this.fire2 = createFire(scene, camera, x + 4, y, z)
+      destroyBoxForEveryone(destroyable, right)
     }
 
     if (destroyable[left]) {
-      this.fire3 = createFire(x - 4, y, z)
-      if (destroyable[left].length) {
-        if (destroyable[left][1].explode()) {
-          socket.emit('destroy_cube', {
-            j: destroyable[left][1].j,
-            k: destroyable[left][1].k
-          })
-        }
-      }
+      this.fire3 = createFire(scene, camera, x - 4, y, z)
+      destroyBoxForEveryone(destroyable, left)
     }
 
     if (destroyable[top]) {
-      this.fire4 = createFire(x, y, z + 4)
-      if (destroyable[top].length) {
-       if (destroyable[top][1].explode()) {
-        socket.emit('destroy_cube', {
-          j: destroyable[top][1].j,
-          k: destroyable[top][1].k
-        })
-       }
-      }
+      this.fire4 = createFire(scene, camera, x, y, z + 4)
+      destroyBoxForEveryone(destroyable, top)
     }
 
     if (destroyable[bottom]) {
-      this.fire5 = createFire(x, y, z - 4)
-      if (destroyable[bottom].length) {
-        if (destroyable[bottom][1].explode()) {
-          socket.emit('destroy_cube', {
-            j: destroyable[bottom][1].j,
-            k: destroyable[bottom][1].k
-          })
-        }
-      }
+      this.fire5 = createFire(scene, camera, x, y, z - 4)
+      destroyBoxForEveryone(destroyable, bottom)
     }
 
-    VolumetricFire.texturePath = '../../public/assets/images';
+    // inits fire removal
+    this.removeFire();
+  }
 
-    /*----- REMOVE FIRE FROM THE SCENE -----*/
+  /*----- REMOVE FIRE FROM THE SCENE -----*/
+  removeFire() {
     setTimeout(() => {
       if (this.fire) scene.remove(this.fire.mesh)
       if (this.fire2) scene.remove(this.fire2.mesh)
@@ -205,6 +137,35 @@ export default class Bomb {
       /*----- SPEED UP ANIMATION FUNCTION -----*/
       this.bool = false;
     }, 1000)
+  }
+
+  initSound() {
+    const explosionSound = new THREE.PositionalAudio(listener);
+    const explosionLoader = new THREE.AudioLoader();
+    explosionLoader.load( 'sounds/explosion.mp3', (buffer) => {
+      explosionSound.setBuffer(buffer);
+      explosionSound.setRefDistance(10);
+      explosionSound.play();
+    });
+  }
+
+  initFlashing() {
+    let colorBool = false;
+
+    let clear;
+    setTimeout(() => {
+      clear = setInterval(() => {
+      if (!colorBool) this.bombMesh.material.color.setHex(0x510000)
+      else if (colorBool) this.bombMesh.material.color.setHex(0x000000)
+      colorBool = !colorBool;
+    }, 100)}, 800)
+
+    /*----- EXPLODE AFTER 1.7 SEC -----*/
+    this.clearTimeout = setTimeout(() => {
+      this.explode()
+      clearInterval(clear)
+      this.bombMesh.material = this.material;
+    }, 1700)
   }
 }
 

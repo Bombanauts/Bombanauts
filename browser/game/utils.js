@@ -16,6 +16,8 @@ import DestroyableCube from './Cube'
 import Wall from './Wall'
 import FixedCube from './FixedCube'
 
+import { VolumetricFire } from './ParticleEngine'
+
 export const boundary = {}
 export const fixedBox = {}
 export let destroyable;
@@ -207,6 +209,29 @@ export const delay = (time) => {
   })
 }
 
+export const destroyBoxForEveryone = (destroyableArea, location) => {
+  if (destroyableArea[location].length) {
+    if (destroyable[location][1].explode()) {
+      socket.emit('destroy_cube', {
+        j: destroyable[location][1].j,
+        k: destroyable[location][1].k
+      })
+    }
+  }
+}
+
+export const createFire = (scene, camera, x, y, z) => {
+  const fireWidth = 4
+  const fireHeight = 12
+  const fireDepth = 4
+  const sliceSpacing = 0.5
+  const fire = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
+  fire.mesh.frustumCulled = false;
+  fire.mesh.position.set(x, y, z)
+  scene.add(fire.mesh)
+  VolumetricFire.texturePath = '../../public/assets/images'
+  return fire
+}
 
 // CREATING TEXT SPRITE FOR PLAYER
 // export const makeTextSprite = (message, fontsize) => {

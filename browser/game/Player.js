@@ -14,8 +14,8 @@ import {
 
 import { Block } from './Explosion'
 
-
 let playerMesh, playerBox, sprite;
+
 export default class Player {
   constructor(socketId, x, y, z, dead, nickname) {
     this.x = x;
@@ -37,10 +37,10 @@ export default class Player {
     const boxShape = new CANNON.Box(halfExtents);
     const boxGeometry = new THREE.BoxGeometry(halfExtents.x * 1.5, halfExtents.y * 1.5, halfExtents.z * 1.5);
 
-    let face = new THREE.TextureLoader().load('images/creeperface.jpg');
-    let body = new THREE.TextureLoader().load('images/creeperbody.jpg');
-    let textureFace = new THREE.MeshLambertMaterial({ map: face });
-    let textureBody = new THREE.MeshLambertMaterial({ map: body });
+    const face = new THREE.TextureLoader().load('images/creeperface.jpg');
+    const body = new THREE.TextureLoader().load('images/creeperbody.jpg');
+    const textureFace = new THREE.MeshLambertMaterial({ map: face });
+    const textureBody = new THREE.MeshLambertMaterial({ map: body });
 
     const materials = [
       textureFace,
