@@ -37,9 +37,6 @@ export default class Bomb {
     this.fire3;
     this.fire4;
     this.fire5;
-
-    this.init = this.init.bind(this);
-    this.explode = this.explode.bind(this);
   }
 
   init() {
