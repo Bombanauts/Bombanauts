@@ -207,6 +207,16 @@ export const delay = (time) => {
   })
 }
 
+export const destroyBoxForEveryone = (destroyableArea, location) => {
+  if (destroyableArea[location].length) {
+    if (destroyable[location][1].explode()) {
+      socket.emit('destroy_cube', {
+        j: destroyable[location][1].j,
+        k: destroyable[location][1].k
+      })
+    }
+  }
+}
 
 // CREATING TEXT SPRITE FOR PLAYER
 // export const makeTextSprite = (message, fontsize) => {

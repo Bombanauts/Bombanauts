@@ -15,7 +15,8 @@ import {
 import { VolumetricFire } from './ParticleEngine'
 import {
   destroyable,
-  roundFour
+  roundFour,
+  destroyBoxForEveryone
 } from './utils'
 import { Block } from './Explosion.js'
 import store from '../redux/store'
@@ -43,24 +44,16 @@ export default class Bomb {
 
   init() {
     /*----- BOMB EXPLOSION SOUND EFFECT -----*/
-    const sound = store.getState().sound
+    const sound = store.getState().sound;
 
-    if (sound) {
-      let explosionSound = new THREE.PositionalAudio( listener );
-      const explosionLoader = new THREE.AudioLoader();
-      explosionLoader.load( 'sounds/explosion.mp3', function( buffer ) {
-        explosionSound.setBuffer( buffer );
-        explosionSound.setRefDistance( 10 );
-        explosionSound.play()
-      });
-    }
+    if (sound) { this.initSound(); }
 
     this.bombShape = new CANNON.Sphere(1.5);
 
-    let bombGeometry = new THREE.SphereGeometry(this.bombShape.radius, 32, 32);
+    const bombGeometry = new THREE.SphereGeometry(this.bombShape.radius, 32, 32);
 
     /*----- CREATE BOMB -----*/
-    this.bombBody = new CANNON.Body({ mass: 10});
+    this.bombBody = new CANNON.Body({ mass: 10 });
     this.bombBody.addShape(this.bombShape);
     this.bombMesh = new THREE.Mesh(bombGeometry, this.material);
 
@@ -79,7 +72,7 @@ export default class Bomb {
       colorBool = !colorBool;
     }, 100)}, 800)
 
-    /*----- BOMB AFTER 1.7 SEC -----*/
+    /*----- EXPLODE AFTER 1.7 SEC -----*/
     this.clearTimeout = setTimeout(() => {
       this.explode()
       clearInterval(clear)
@@ -128,40 +121,29 @@ export default class Bomb {
     /*----- CHECK IF CRATES ARE DESTROYED -----*/
     /*----- EMITS TO SERVER TO UPDATE MAP UPON EXPLOSION -----*/
 
-    const updateMap = (destroyableArea, location) => {
-      if (destroyableArea[location].length) {
-        if (destroyable[location][1].explode()) {
-          socket.emit('destroy_cube', {
-            j: destroyable[location][1].j,
-            k: destroyable[location][1].k
-          })
-        }
-      }
-    }
-
     if (destroyable[middle]) {
       this.fire = createFire(x, y, z)
-      updateMap(destroyable, middle)
+      destroyBoxForEveryone(destroyable, middle)
     }
 
     if (destroyable[right]) {
       this.fire2 = createFire(x + 4, y, z)
-      updateMap(destroyable, right)
+      destroyBoxForEveryone(destroyable, right)
     }
 
     if (destroyable[left]) {
       this.fire3 = createFire(x - 4, y, z)
-      updateMap(destroyable, left)
+      destroyBoxForEveryone(destroyable, left)
     }
 
     if (destroyable[top]) {
       this.fire4 = createFire(x, y, z + 4)
-      updateMap(destroyable, top)
+      destroyBoxForEveryone(destroyable, top)
     }
 
     if (destroyable[bottom]) {
       this.fire5 = createFire(x, y, z - 4)
-      updateMap(destroyable, bottom)
+      destroyBoxForEveryone(destroyable, bottom)
     }
 
     VolumetricFire.texturePath = '../../public/assets/images';
@@ -183,6 +165,20 @@ export default class Bomb {
       this.bool = false;
     }, 1000)
   }
+
+  initSound() {
+    const explosionSound = new THREE.PositionalAudio(listener);
+    const explosionLoader = new THREE.AudioLoader();
+    explosionLoader.load( 'sounds/explosion.mp3', (buffer) => {
+      explosionSound.setBuffer(buffer);
+      explosionSound.setRefDistance(10);
+      explosionSound.play();
+    });
+  }
+
+  // initFlashing() {
+
+  // }
 }
 
 export { Bomb }
