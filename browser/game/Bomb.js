@@ -61,23 +61,8 @@ export default class Bomb {
     world.addBody(this.bombBody);
     scene.add(this.bombMesh);
 
-    let colorBool = false;
-
     /*----- FLASHES BOMB RED/BLACK -----*/
-    let clear;
-    setTimeout(() => {
-      clear = setInterval(() => {
-      if (!colorBool) this.bombMesh.material.color.setHex(0x510000)
-      else if (colorBool) this.bombMesh.material.color.setHex(0x000000)
-      colorBool = !colorBool;
-    }, 100)}, 800)
-
-    /*----- EXPLODE AFTER 1.7 SEC -----*/
-    this.clearTimeout = setTimeout(() => {
-      this.explode()
-      clearInterval(clear)
-      this.bombMesh.material = this.material;
-    }, 1700)
+    this.initFlashing();
   }
 
   explode() {
@@ -162,9 +147,24 @@ export default class Bomb {
     });
   }
 
-  // initFlashing() {
+  initFlashing() {
+    let colorBool = false;
 
-  // }
+    let clear;
+    setTimeout(() => {
+      clear = setInterval(() => {
+      if (!colorBool) this.bombMesh.material.color.setHex(0x510000)
+      else if (colorBool) this.bombMesh.material.color.setHex(0x000000)
+      colorBool = !colorBool;
+    }, 100)}, 800)
+
+    /*----- EXPLODE AFTER 1.7 SEC -----*/
+    this.clearTimeout = setTimeout(() => {
+      this.explode()
+      clearInterval(clear)
+      this.bombMesh.material = this.material;
+    }, 1700)
+  }
 }
 
 export { Bomb }
