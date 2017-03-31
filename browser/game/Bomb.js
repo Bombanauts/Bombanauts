@@ -12,11 +12,11 @@ import {
   listener
 } from './main'
 
-import { VolumetricFire } from './ParticleEngine'
 import {
   destroyable,
   roundFour,
-  destroyBoxForEveryone
+  destroyBoxForEveryone,
+  createFire
 } from './utils'
 import { Block } from './Explosion.js'
 import store from '../redux/store'
@@ -100,18 +100,6 @@ export default class Bomb {
     world.remove(this.bombBody)
 
     /*----- CREATE FIRE -----*/
-    const createFire = (x, y, z) => {
-      const fireWidth = 4
-      const fireHeight = 12
-      const fireDepth = 4
-      const sliceSpacing = 0.5
-      const fire = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
-      fire.mesh.frustumCulled = false;
-      fire.mesh.position.set(x, y, z)
-      scene.add(fire.mesh)
-      return fire
-    }
-
     const middle = `${x}_${z}`;
     const right = `${x + 4}_${z}`;
     const left = `${x - 4}_${z}`;
@@ -122,31 +110,29 @@ export default class Bomb {
     /*----- EMITS TO SERVER TO UPDATE MAP UPON EXPLOSION -----*/
 
     if (destroyable[middle]) {
-      this.fire = createFire(x, y, z)
+      this.fire = createFire(scene, camera, x, y, z)
       destroyBoxForEveryone(destroyable, middle)
     }
 
     if (destroyable[right]) {
-      this.fire2 = createFire(x + 4, y, z)
+      this.fire2 = createFire(scene, camera, x + 4, y, z)
       destroyBoxForEveryone(destroyable, right)
     }
 
     if (destroyable[left]) {
-      this.fire3 = createFire(x - 4, y, z)
+      this.fire3 = createFire(scene, camera, x - 4, y, z)
       destroyBoxForEveryone(destroyable, left)
     }
 
     if (destroyable[top]) {
-      this.fire4 = createFire(x, y, z + 4)
+      this.fire4 = createFire(scene, camera, x, y, z + 4)
       destroyBoxForEveryone(destroyable, top)
     }
 
     if (destroyable[bottom]) {
-      this.fire5 = createFire(x, y, z - 4)
+      this.fire5 = createFire(scene, camera, x, y, z - 4)
       destroyBoxForEveryone(destroyable, bottom)
     }
-
-    VolumetricFire.texturePath = '../../public/assets/images';
 
     /*----- REMOVE FIRE FROM THE SCENE -----*/
     setTimeout(() => {
