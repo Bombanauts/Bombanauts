@@ -19,7 +19,7 @@ import {
 
 let sphereShape, world, physicsMaterial;
 let camera, scene, renderer, light;
-let geometry, material, sh;
+let geometry, material, mesh;
 let controls, time = Date.now();
 let clock;
 
