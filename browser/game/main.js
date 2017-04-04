@@ -25,10 +25,9 @@ let geometry, material, mesh;
 let controls, time = Date.now();
 let clock;
 
-
 export let listener;
 export let sphereBody;
-export const walls = [];
+export let walls = [];
 export let bombs = [];
 export let bombMeshes = [];
 export let boxes = [];
@@ -43,7 +42,6 @@ export const blockCount = 50;
 
 let bombObjects = [];
 let count = 1;
-let prevPlayerStateLength = 0;
 let dead = false;
 let nickname = '';
 let allowBomb = true;
@@ -62,12 +60,10 @@ const bombMaterial = new THREE.MeshPhongMaterial({
   shininess: 100
 })
 
-
 export function initCannon() {
   /*----- SETS UP WORLD & CHECKS FOR OTHER PLAYERS -----*/
-  if (socket) {
-    socket.emit('get_players', {});
-  }
+  if (socket) { socket.emit('get_players', {}); }
+
   world = new CANNON.World();
   world.quatNormalizeSkip = 0;
   world.quatNormalizeFast = false;
@@ -77,21 +73,17 @@ export function initCannon() {
   solver.iterations = 7;
   solver.tolerance = 0.1;
   const split = true;
-  if (split)
-    world.solver = new CANNON.SplitSolver(solver);
-  else
-    world.solver = solver;
+
+  if (split) { world.solver = new CANNON.SplitSolver(solver); }
+  else { world.solver = solver; }
 
   /*----- INCREASE SOLVER ITERATIONS (DEF: 10) -----*/
   world.solver.iterations = 20;
 
   /*----- FORCE SOLVER TO USE ALL ITERATIONS -----*/
   world.solver.tolerance = 0;
-
   world.gravity.set(0, -40, 0);
   world.broadphase = new CANNON.NaiveBroadphase();
-
-
   physicsMaterial = new CANNON.Material('groundMaterial');
 
   /*----- ADJUSTS CONSTRAINT EQUATION PARAMS FOR GROUND/GROUND CONTACT -----*/
@@ -108,8 +100,8 @@ export function initCannon() {
   world.addContactMaterial(physicsContactMaterial);
 
   /*----- CREATE A SPHERE -----*/
-  const mass = 100,
-    radius = 1.3;
+  const mass = 100;
+  const radius = 1.3;
   sphereShape = new CANNON.Sphere(radius);
   sphereBody = new CANNON.Body({ mass: mass, material: physicsMaterial });
   sphereBody.addShape(sphereShape);
@@ -155,7 +147,7 @@ export function init() {
   geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
   const texture = new THREE.TextureLoader().load('images/grass.png');
   material = new THREE.MeshLambertMaterial({ map: texture });
-  
+
   /*----- REPEAT TEXTURE TILING FOR FLOOR -----*/
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
@@ -184,7 +176,7 @@ export function init() {
   listener = new THREE.AudioListener();
   camera.add(listener);
 
-  let others = store.getState().players;
+  const others = store.getState().players;
   let newPlayer;
 
   for (let player in others) {
@@ -196,7 +188,6 @@ export function init() {
       playerInstances.push(newPlayer)
     }
   }
-  prevPlayerStateLength = players.length;
 
   function shootBomb(velocity) {
     if (controls.enabled == true && !dead && allowBomb) {
@@ -205,7 +196,7 @@ export function init() {
       let y = sphereBody.position.y;
       let z = sphereBody.position.z;
 
-      const newBomb = new Bomb(count++, { x: x, y: y, z: z }, bombMaterial, socket.id);
+      const newBomb = new Bomb(count++, { x, y, z }, bombMaterial, socket.id);
       newBomb.init()
       allowBomb = false;
       setTimeout(() => {
@@ -218,7 +209,7 @@ export function init() {
       socket.emit('add_bomb', {
         userId: socket.id,
         bombId: bombInfo.id,
-        position: { x: x, y: y, z: z }
+        position: { x, y, z }
       })
 
       /*----- REMOVE FROM YOUR FRONTEND BOMBS ARR -----*/
@@ -232,7 +223,7 @@ export function init() {
         })
       }, 1800)
 
-      /*----- ADD BOMB & MESH TO YOUR BOMBS ARR -----*/ 
+      /*----- ADD BOMB & MESH TO YOUR BOMBS ARR -----*/
       yourBombs.push(bombInfo)
       bombObjects.push(newBomb)
       yourBombMeshes.push(newBomb.bombMesh);
@@ -255,10 +246,10 @@ export function init() {
   }
 
   if (controls) {
-    window.addEventListener('click', function(e) {
-      shootBomb(8)
+    window.addEventListener('click', (e) => {
+      shootBomb(shootVelo)
     })
-    window.addEventListener('keydown', function(event) {
+    window.addEventListener('keydown', (event) => {
       if (event.keyCode === 32) {
         shootBomb(40)
       }
@@ -349,7 +340,7 @@ export function init() {
 
     /*----- UPDATE PLAYER POSITIONS -----*/
     animatePlayers(players, playerIds, others, playerMeshes)
-    
+
     /*----- ANIMATE EXPLOSION PARTICLES -----*/
     animateExplosion(blocksObj)
 
@@ -394,7 +385,7 @@ export function restartWorld() {
   createMap();
 
   sphereBody.position.x = spawnPositions[playerArr.indexOf(socket.id)].x;
-  sphereBody.position.y = 5
+  sphereBody.position.y = 5;
   sphereBody.position.z = spawnPositions[playerArr.indexOf(socket.id)].z;
   dead = false;
 }
