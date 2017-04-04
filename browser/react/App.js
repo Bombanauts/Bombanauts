@@ -45,7 +45,7 @@ class App extends Component {
           { isPlaying && <Chat /> }
           { isPlaying && <Announcer /> }
           { !isPlaying && <Splash /> }
-          { winner && <Winner /> }
+          { winner && <Winner winner={ winner } /> }
           <Blocker dead={dead} />
           { dead && <Dead /> }
           { isPlaying && !winner && <Timer /> }
