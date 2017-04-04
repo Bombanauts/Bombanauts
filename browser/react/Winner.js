@@ -1,6 +1,6 @@
 import React from 'react';
 import socket from '../socket';
-import { Scores } from './Scores';
+import Scores from './Scores';
 import store from '../redux/store';
 
 const Winner = (props) => {

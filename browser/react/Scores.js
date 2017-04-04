@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import store from '../redux/store';
 import { delay } from '../game/utils';
 
-export class Scores extends Component {
+export default class Scores extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,7 +14,7 @@ export class Scores extends Component {
   componentDidMount() {
     delay(100)
     .then(() => {
-      let storeState = store.getState()
+      const storeState = store.getState()
       this.setState({
         players: storeState.players,
         ownInfo: storeState.ownInfo
@@ -23,10 +23,10 @@ export class Scores extends Component {
   }
 
   render() {
-    let ownInfo = this.state.ownInfo;
-    let players = this.state.players;
-    let playersIds = Object.keys(players)
-    let playersRows = playersIds.map( playerId => {
+    const ownInfo = this.state.ownInfo;
+    const players = this.state.players;
+    const playersIds = Object.keys(players)
+    const playersRows = playersIds.map( playerId => {
       return players[playerId];
     });
     playersRows.push(ownInfo)

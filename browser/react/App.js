@@ -1,22 +1,16 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux';
 
-import { initCannon, init, animate, controls } from '../game/main';
-
+import { initCannon, init, animate } from '../game/main';
 import { delay } from '../game/utils';
 
 import Blocker from './Blocker';
 import Splash from './Splash';
 import Announcer from './Announcer';
-import { Scores } from './Scores';
 import Chat from './Chat';
 import Winner from './Winner';
 import Dead from './Dead';
 import Timer from './Timer';
-
-const fontStyle = {
-  'fontSize': '40px'
-}
 
 class App extends Component {
   constructor(props) {
