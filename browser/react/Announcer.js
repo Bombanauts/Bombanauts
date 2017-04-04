@@ -2,33 +2,27 @@ import React, { Component } from 'react';
 import store from '../redux/store';
 import { connect } from 'react-redux';
 
-export class Announcer extends Component {
-  constructor(props) {
-    super(props)
+export const Announcer = (props) => {
+  let killerName;
+  let victimName;
+  if (props.killer) {
+    killerName = props.killer.nickname
+    victimName = props.victim.nickname
   }
 
-  render() {
-    let killerName;
-    let victimName;
-    if (this.props.killer) {
-      killerName = this.props.killer.nickname
-      victimName = this.props.victim.nickname
-    }
-
-    if (killerName !== undefined && killerName !== '') {
-      return (
-        <div>
-        { killerName === victimName ?
-          <h1 className='center' id='announcer'>{killerName} committed suicide.</h1> :
-          <h1 className='center' id='announcer'>{killerName} killed {victimName}.</h1> }
-        </div>
-      )
-    }
-    else {
-      return (
-        <div></div>
-      )
-    }
+  if (killerName !== undefined && killerName !== '') {
+    return (
+      <div>
+      { killerName === victimName ?
+        <h1 className='center' id='announcer'>{killerName} committed suicide.</h1> :
+        <h1 className='center' id='announcer'>{killerName} killed {victimName}.</h1> }
+      </div>
+    )
+  }
+  else {
+    return (
+      <div></div>
+    )
   }
 }
 
