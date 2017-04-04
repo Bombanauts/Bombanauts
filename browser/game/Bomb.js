@@ -1,5 +1,3 @@
-import socket from '../socket'
-
 const THREE = require('three')
 const CANNON = require('cannon')
 

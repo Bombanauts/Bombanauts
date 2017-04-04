@@ -53,25 +53,29 @@ class Chat extends Component {
   }
 
   render() {
-    const lastFiveMessages = this.props.lastFiveMessages.map((message, idx) => {
-        return (<h1 key={`${idx}`} style={{ fontSize: 15, color: '#ffffff' }}>{message}</h1>)
+    const lastFiveMessages = this.props.lastFiveMessages;
+    const isChatting = this.props.isChatting;
+    const handleMessageChange = this.handleMessageChange;
+    const submitMessage = this.submitMessage;
+    const message = this.state.message;
+
+    const chatMessages = lastFiveMessages.map((chatMessage, idx) => {
+      return (<h1 key={`${idx}`} style={{ fontSize: 15, color: '#ffffff' }}>{chatMessage}</h1>)
     })
 
     return (
-      <div style={{
-                  position: 'absolute',
-                  bottom: '5%',
-                  marginLeft: '2%'}}>
-        {lastFiveMessages}
-         {this.props.isChatting ? <TextField
+      <div style={{ position: 'absolute', bottom: '5%', marginLeft: '2%' }}>
+        {chatMessages}
+        {isChatting ?
+        <TextField
           id="chat"
           ref="chat"
-          onChange={this.handleMessageChange}
-          onKeyDown={this.submitMessage}
-          value={this.state.message}
-          underlineFocusStyle={{ borderColor: '#ffffff'}}
+          onChange={handleMessageChange}
+          onKeyDown={submitMessage}
+          value={message}
+          underlineFocusStyle={{ borderColor: '#ffffff' }}
           inputStyle={{ fontSize: 15, color: '#ffffff' }}
-          /> : <h1 style={{fontSize: 15, color: '#ffffff'}}>Press Enter to Chat / Back Tick to Exit Chat</h1>}
+        /> : <h1 style={{ fontSize: 15, color: '#ffffff' }}>Press Enter to Chat / Back Tick to Exit Chat</h1>}
       </div>
     )
   }
