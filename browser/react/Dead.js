@@ -1,9 +1,22 @@
 import React from 'react'
 
-export default function Dead () {
+const Dead = () => {
   return (
-    <div>
-      <h1  style={{position: "absolute", right: 300}}> You are dead. </h1>
+    <div style={{ backgroundColor: '#700303',
+            position: 'absolute',
+            opacity: '0.7',
+            width: '100vw',
+            height: '100vh',
+            pointerEvents: 'none'}}>
+      <span style={{
+      fontSize: 50,
+      margin: 'auto',
+      textAlign: 'center',
+      position: 'relative',
+      display: 'table',
+      top: 60}}>You died.</span>
     </div>
   )
 }
+
+export default Dead;

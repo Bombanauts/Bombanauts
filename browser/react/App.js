@@ -15,6 +15,7 @@ import Announcer from './Announcer';
 import { Scores } from './Scores';
 import Chat from './Chat';
 import Winner from './Winner';
+import Dead from './Dead';
 
 const fontStyle = {
   'fontSize': '40px'
@@ -62,21 +63,7 @@ class App extends Component {
   )}
 
           <Blocker dead={this.props.dead} />
-          { this.props.dead && <div style={{ backgroundColor: '#700303',
-            position: 'absolute',
-            opacity: '0.7',
-            width: '100vw',
-            height: '100vh',
-            pointerEvents: 'none'}}>
-              <span style={{
-              fontSize: 50,
-              margin: 'auto',
-              textAlign: 'center',
-              position: 'relative',
-              display: 'table',
-              top: 60}}>You died.</span>
-            </div>
-          }
+          { this.props.dead && <Dead /> }
           <Timer />
       </div>
     )
