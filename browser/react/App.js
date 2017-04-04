@@ -61,7 +61,7 @@ class App extends Component {
           { /*this.props.winner && <Winner winner={this.props.winner} /> */}
           <Blocker dead={this.props.dead} />
           { this.props.dead && <Dead /> }
-          { this.props.isPlaying && <Timer /> }
+          { this.props.isPlaying &&  <Timer />}
       </div>
     )
   }
