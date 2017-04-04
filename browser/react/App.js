@@ -61,7 +61,7 @@ class App extends Component {
 
           <Blocker dead={this.props.dead} />
           { this.props.dead && <Dead /> }
-          <Timer />
+          { this.props.isPlaying && <Timer /> }
       </div>
     )
   }

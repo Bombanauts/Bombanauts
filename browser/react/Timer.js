@@ -8,16 +8,16 @@ export class Timer extends Component {
   }
 
   render() {
-    if (this.props.isPlaying) {
+    // if (this.props.isPlaying) {
       return (
         <div className='timer'>
           {this.props.time ? ( minuteConvert(this.props.time)) : '' }
         </div>
       )
-    }
-    else {
-      return null;
-    }
+    // }
+    // else {
+    //   return null;
+    // }
   }
 }
 
