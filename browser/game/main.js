@@ -2,9 +2,7 @@ import * as THREE from 'three'
 import * as CANNON from 'cannon'
 
 import store from '../redux/store'
-
 import socket, { playerArr } from '../socket'
-
 import { PointerLockControls } from './PointerLockControls'
 
 import Player from './Player'
