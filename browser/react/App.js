@@ -1,9 +1,6 @@
 import React, {Component} from 'react'
 import ReactCountdownClock from 'react-countdown-clock';
 import { connect } from 'react-redux';
-import socket from '../socket';
-import store from '../redux/store';
-import Timer from './Timer';
 
 import { initCannon, init, animate, controls } from '../game/main';
 
@@ -16,6 +13,7 @@ import { Scores } from './Scores';
 import Chat from './Chat';
 import Winner from './Winner';
 import Dead from './Dead';
+import Timer from './Timer';
 
 const fontStyle = {
   'fontSize': '40px'

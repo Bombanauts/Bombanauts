@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import store from '../redux/store';
+import React from 'react';
 import { connect } from 'react-redux';
 
 export const Announcer = (props) => {
