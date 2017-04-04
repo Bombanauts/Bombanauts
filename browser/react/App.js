@@ -33,13 +33,13 @@ class App extends Component {
 
     return (
       <div>
-          { isPlaying && <Chat /> }
-          { isPlaying && <Announcer /> }
-          { !isPlaying && <Splash /> }
-          { winner && <Winner winner={winner} /> }
-          <Blocker dead={dead} />
-          { dead && <Dead /> }
-          { isPlaying && !winner && <Timer /> }
+        { isPlaying && <Chat /> }
+        { isPlaying && <Announcer /> }
+        { !isPlaying && <Splash /> }
+        { winner && <Winner winner={winner} /> }
+        <Blocker dead={dead} />
+        { dead && <Dead /> }
+        { isPlaying && !winner && <Timer /> }
       </div>
     )
   }
