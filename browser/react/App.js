@@ -36,15 +36,19 @@ class App extends Component {
   }
 
   render() {
+    const isPlaying = this.props.isPlaying;
+    const winner = this.props.winner;
+    const dead = this.props.dead;
+
     return (
       <div>
-          {this.props.isPlaying && <Chat />}
-          {this.props.isPlaying && <Announcer />}
-          {!this.props.isPlaying && <Splash />}
-          {this.props.winner && <Winner />}
-          <Blocker dead={this.props.dead} />
-          { this.props.dead && <Dead /> }
-          { this.props.isPlaying && !this.props.winner && <Timer /> }
+          { isPlaying && <Chat /> }
+          { isPlaying && <Announcer /> }
+          { !isPlaying && <Splash /> }
+          { winner && <Winner /> }
+          <Blocker dead={dead} />
+          { dead && <Dead /> }
+          { isPlaying && !winner && <Timer /> }
       </div>
     )
   }
