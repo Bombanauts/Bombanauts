@@ -19,13 +19,12 @@ import {
 
 let sphereShape, world, physicsMaterial;
 let camera, scene, renderer, light;
-let geometry, material, mesh;
+let geometry, material, sh;
 let controls, time = Date.now();
 let clock;
 
 export let listener;
 export let sphereBody;
-export let walls = [];
 export let bombs = [];
 export let bombMeshes = [];
 export let boxes = [];
