@@ -24,9 +24,6 @@ const fontStyle = {
 class App extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      time: 0
-    }
   }
 
   componentDidMount() {
