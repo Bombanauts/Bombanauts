@@ -3,8 +3,6 @@ import * as CANNON from 'cannon'
 
 import store from '../redux/store'
 
-import socket from '../socket'
-
 import {
   scene,
   world,
