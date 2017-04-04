@@ -1,9 +1,5 @@
 import React, {Component} from 'react'
-import ReactCountdownClock from 'react-countdown-clock';
 import { connect } from 'react-redux';
-import socket from '../socket';
-import store from '../redux/store';
-import Timer from './Timer';
 
 import { initCannon, init, animate, controls } from '../game/main';
 
@@ -14,6 +10,9 @@ import Splash from './Splash';
 import Announcer from './Announcer';
 import { Scores } from './Scores';
 import Chat from './Chat';
+import Winner from './Winner';
+import Dead from './Dead';
+import Timer from './Timer';
 
 const fontStyle = {
   'fontSize': '40px'
@@ -22,9 +21,6 @@ const fontStyle = {
 class App extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      time: 0
-    }
   }
 
   componentDidMount() {
@@ -37,46 +33,19 @@ class App extends Component {
   }
 
   render() {
-    let winnerId = this.props.winner
-
-    const players = store.getState().players
-    let winnerNickname = '';
-    if (socket.id === winnerId && winnerId) {
-        winnerNickname = 'You win!'
-        socket.emit('reset_world', {})
-    } else if (winnerId) {
-      winnerNickname = players[winnerId].nickname + ' wins!';
-    }
+    const isPlaying = this.props.isPlaying;
+    const winner = this.props.winner;
+    const dead = this.props.dead;
 
     return (
       <div>
-          {this.props.isPlaying && <Chat />}
-          {this.props.isPlaying && <Announcer  />}
-          {!this.props.isPlaying && <Splash />}
-          { winnerId &&
-            (<div>
-               <h1 id='winner' className='center'>{winnerNickname}</h1>
-               <Scores />
-             </div>
-            )
-          }
-          <Blocker dead={this.props.dead} />
-          { this.props.dead && <div style={{ backgroundColor: '#700303',
-            position: 'absolute',
-            opacity: '0.7',
-            width: '100vw',
-            height: '100vh',
-            pointerEvents: 'none'}}>
-              <span style={{
-              fontSize: 50,
-              margin: 'auto',
-              textAlign: 'center',
-              position: 'relative',
-              display: 'table',
-              top: 60}}>You died.</span>
-            </div>
-          }
-          <Timer />
+          { isPlaying && <Chat /> }
+          { isPlaying && <Announcer /> }
+          { !isPlaying && <Splash /> }
+          { winner && <Winner winner={winner} /> }
+          <Blocker dead={dead} />
+          { dead && <Dead /> }
+          { isPlaying && !winner && <Timer /> }
       </div>
     )
   }
@@ -86,7 +55,7 @@ const mapStateToProps = (state) => {
   return {
     dead: state.dead,
     winner: state.winner,
-    isPlaying: state.isPlaying
+    isPlaying: state.isPlaying,
   }
 }
 

@@ -1,24 +1,12 @@
 import React, { Component } from 'react'
-import store from '../redux/store';
 import { connect } from 'react-redux';
 
-export class Timer extends Component {
-  constructor(props) {
-    super(props)
-  }
-
-  render() {
-    if (this.props.isPlaying) {
-      return (
-        <div className='timer'>
-          {this.props.time ? ( minuteConvert(this.props.time)) : '' }
-        </div>
-      )
-    }
-    else {
-      return null;
-    }
-  }
+export const Timer = props => {
+  return (
+    <div className='timer'>
+      {props.time ? ( minuteConvert(props.time)) : '' }
+    </div>
+  )
 }
 
 const mapStateToProps = (state) => {
