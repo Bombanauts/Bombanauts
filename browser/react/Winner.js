@@ -5,7 +5,7 @@ import store from '../redux/store';
 
 const Winner = (props) => {
   const winnerId = props.winner;
-  const players = store.getState.players;
+  const players = store.getState().players;
   let winnerNickname;
 
   if (socket.id === winnerId && winnerId) {
