@@ -14,6 +14,7 @@ import Splash from './Splash';
 import Announcer from './Announcer';
 import { Scores } from './Scores';
 import Chat from './Chat';
+import Winner from './Winner';
 
 const fontStyle = {
   'fontSize': '40px'
@@ -47,19 +48,19 @@ class App extends Component {
     } else if (winnerId) {
       winnerNickname = players[winnerId].nickname + ' wins!';
     }
-
+// { this.props.winner && <Winner winner={this.props.winner} />}
     return (
       <div>
           {this.props.isPlaying && <Chat />}
-          {this.props.isPlaying && <Announcer  />}
+          {this.props.isPlaying && <Announcer />}
           {!this.props.isPlaying && <Splash />}
-          { winnerId &&
-            (<div>
-               <h1 id='winner' className='center'>{winnerNickname}</h1>
-               <Scores />
-             </div>
-            )
-          }
+{this.props.winner && (
+    <div>
+      <h1 id='winner' className='center'>{winnerNickname}</h1>
+      <Scores />
+     </div>
+  )}
+
           <Blocker dead={this.props.dead} />
           { this.props.dead && <div style={{ backgroundColor: '#700303',
             position: 'absolute',
