@@ -42,29 +42,28 @@ class Splash extends Component {
             <h1 id="title">Bombanauts</h1>
             <div id="nickname-form">
               <TextField
-                  id="nickname"
-                  onChange={this.updateNickname}
-                  // onKeyDown={this.handleEnterKey}
-                  maxLength={15}
-                  hintText="Nickname"
-                  hintStyle={{color: '#D5D1D0'}}
-                  floatingLabelText="Nickname"
-                  floatingLabelStyle={{ color: '#cc2d2d' }}
-                  underlineFocusStyle={{ borderColor: '#cc2d2d'}}
-                  inputStyle={{ color: '#D5D1D0' }}
-                  />
+                id="nickname"
+                onChange={this.updateNickname}
+                // onKeyDown={this.handleEnterKey}
+                maxLength={15}
+                hintText="Nickname"
+                hintStyle={{color: '#D5D1D0'}}
+                floatingLabelText="Nickname"
+                floatingLabelStyle={{ color: '#cc2d2d' }}
+                underlineFocusStyle={{ borderColor: '#cc2d2d'}}
+                inputStyle={{ color: '#D5D1D0' }}
+              />
               <RaisedButton
-                  disabled={!this.state.nickname}
-                  onClick={this.setNickname}
-                  backgroundColor="#cc2d2d"
-                  disabledBackgroundColor='#D5D1D0'
-                  label="Play"
-                  style={{ display: 'block', borderColor: 'none'}}
-                   />
+                disabled={!this.state.nickname}
+                onClick={this.setNickname}
+                backgroundColor="#cc2d2d"
+                disabledBackgroundColor='#D5D1D0'
+                label="Play"
+                style={{ display: 'block', borderColor: 'none'}}
+              />
             </div>
           </div>
           <MuteButton />
-
           <IconButton
             href="https://github.com/Bombanauts/Bombanauts"
             target="_blank"
