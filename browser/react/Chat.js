@@ -60,11 +60,11 @@ class Chat extends Component {
     const message = this.state.message;
 
     const chatMessages = lastFiveMessages.map((chatMessage, idx) => {
-      return (<h1 key={`${idx}`} style={{ fontSize: 15, color: '#ffffff' }}>{chatMessage}</h1>)
+      return (<h1 key={`${idx}`} className='chat-message'>{chatMessage}</h1>)
     })
 
     return (
-      <div style={{ position: 'absolute', bottom: '5%', marginLeft: '2%' }}>
+      <div className='chat-box'>
         {chatMessages}
         {isChatting ?
         <TextField
@@ -75,7 +75,7 @@ class Chat extends Component {
           value={message}
           underlineFocusStyle={{ borderColor: '#ffffff' }}
           inputStyle={{ fontSize: 15, color: '#ffffff' }}
-        /> : <h1 style={{ fontSize: 15, color: '#ffffff' }}>Press Enter to Chat / Back Tick to Exit Chat</h1>}
+        /> : <h1 className='chat-message'>Press Enter to Chat / Back Tick to Exit Chat</h1>}
       </div>
     )
   }
