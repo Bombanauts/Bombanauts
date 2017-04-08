@@ -17,7 +17,6 @@ export const styles = {
   },
 };
 
-
 const MuteButton = (props) => {
   const muteOrUnmute = props.sound ? props.muteSound : props.unmuteSound;
   const icon = props.sound ? "volume_up" : "volume_off";
