@@ -1,0 +1,17 @@
+.dead-overlay {
+  background-color: #700303;
+  position: absolute;
+  opacity: 0.7;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+}
+
+.dead-message {
+  font-size: 50;
+  margin: auto;
+  text-align: center;
+  position: relative;
+  display: table;
+  top: 60;
+}
