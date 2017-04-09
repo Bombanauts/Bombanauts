@@ -1,10 +1,10 @@
 const { ADD_BOMB, UPDATE_BOMB_POSITIONS, REMOVE_PLAYER_BOMBS } = require('./constants');
-const initialState = require('./init-state');
+const initialState = require('../init-state');
 
 /*----- HAS INITIAL STATE OF ALL ROOM NAMES -----*/
 /* EACH NAME CONTAINS PLAYERID KEYS W/ PROPERTIES OF PLAYER'S CURRENT BOMBS */
 const bombs = (state = initialState, action) => {
-  const newState = Object.assign({}, state);
+  let newState = Object.assign({}, state); // may be a problem because of line 11;
   switch (action.type) {
     case ADD_BOMB:
       const newBomb = action.newBomb;

@@ -1,5 +1,5 @@
 const { GENERATE_MAP, EXPLODE_BOX } = require('./constants');
-const initialState = require('./init-state');
+const initialState = require('../init-state');
 
 /*----- INITIAL STATE HAS ALL ROOM NAMES -----*/
 /*----- EACH CONTAINS PROPERTIES OF 2D ARRAY MAP -----*/

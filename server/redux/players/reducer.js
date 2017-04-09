@@ -1,6 +1,6 @@
 const { GET_PLAYERS, UPDATE_PLAYERS, REMOVE_PLAYER,
     KILL_PLAYER, SET_NICKNAME, INCREMENT_SCORE, DECREMENT_SCORE } = require('./constants');
-const initialState = require('./init-state');
+const initialState = require('../init-state');
 
 /*----- INITIAL STATE HAS ALL ROOM NAMES -----*/
 /*----- CONTAINS PLAYERIDS W/ POSITIONS & DEATH STATUS -----*/

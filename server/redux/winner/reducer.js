@@ -1,6 +1,6 @@
 const { SET_WINNER } = require('./constants');
 
-const initialState = require('./init-state');
+const initialState = require('../init-state');
 
 const winner = (state = initialState, action) => {
   const newState = Object.assign({}, state);

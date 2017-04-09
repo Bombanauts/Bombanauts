@@ -1,6 +1,6 @@
 const { SET_TIME, GET_TIME } = require('./constants');
 
-const initialState = require('./init-state')
+const initialState = require('../init-state');
 
 /*----- INITIAL STATE OF ALL ROOM NAMES -----*/
 /*----- CONTAINS START & END TIME PROPERTIES -----*/
