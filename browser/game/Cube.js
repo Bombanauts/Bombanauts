@@ -1,14 +1,7 @@
-import * as THREE from 'three'
-import * as CANNON from 'cannon'
-
-import { scene,
-world,
-blockCount,
-blocksObj
-}
-from './main'
-
-import { Block } from './Explosion.js'
+import * as THREE from 'three';
+import * as CANNON from 'cannon';
+import { scene, world, blockCount, blocksObj } from './main';
+import { Block } from './Explosion';
 
 export default class DestroyableCube {
   constructor(material, texture, fixedCubeShape, fixedCubeGeometry, x, y, z, j, k) {
@@ -23,7 +16,7 @@ export default class DestroyableCube {
     this.material = material;
     this.texture = texture;
     this.fixedCubeShape = fixedCubeShape;
-    this.fixedCubeGeometry = fixedCubeGeometry
+    this.fixedCubeGeometry = fixedCubeGeometry;
   }
 
   init() {
