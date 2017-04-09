@@ -1,8 +1,4 @@
-const {
-  ADD_BOMB,
-  UPDATE_BOMB_POSITIONS,
-  REMOVE_PLAYER_BOMBS
-} = require('./constants')
+const { ADD_BOMB, UPDATE_BOMB_POSITIONS, REMOVE_PLAYER_BOMBS } = require('./constants');
 
 const addBomb = (newBomb, roomId) => {
   return {
