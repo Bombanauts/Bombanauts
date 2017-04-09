@@ -1,8 +1,5 @@
-const THREE = require('three')
-
-import { scene,
-blocksObj
-} from './main'
+import * as THREE from 'three';
+import { scene, blocksObj } from './main';
 
 export const Particle = function (width, height, depth) {
   THREE.Geometry.call(this);
