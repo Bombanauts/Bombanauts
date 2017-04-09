@@ -7,25 +7,26 @@ import { controls } from '../game/main';
 
 class Chat extends Component {
   constructor(props) {
-    super(props)
+    super(props);
+    this.state = { message: '' };
 
-    this.state = {
-      message: ''
-    }
-
-    this.submitMessage = this.submitMessage.bind(this)
-    this.handleMessageChange = this.handleMessageChange.bind(this)
+    this.submitMessage = this.submitMessage.bind(this);
+    this.handleMessageChange = this.handleMessageChange.bind(this);
   }
 
   componentDidMount() {
     /*----- ENABLE CHAT START/CLOSE ON 'ENTER' -----*/
     window.addEventListener('keydown', (evt) => {
-      if (evt.keyCode === 13) { //'ENTER' TO START
-        this.props.startChat()
+
+      //'ENTER' TO START
+      if (evt.keyCode === 13) {
+        this.props.startChat();
         controls.enabled = false;
       }
-      if (evt.keyCode === 192) { // BACKTICK TO STOP
-        this.props.stopChat()
+
+      // BACKTICK TO STOP
+      if (evt.keyCode === 192) {
+        this.props.stopChat();
         controls.enabled = true;
       }
     }, false)
@@ -33,7 +34,7 @@ class Chat extends Component {
 
   componentDidUpdate() {
     /*----- SETS FOCUS TO CHAT BOX -----*/
-    if (this.props.isChatting) this.refs.chat.focus()
+    if (this.props.isChatting) { this.refs.chat.focus(); }
   }
 
   submitMessage(evt) {
@@ -43,13 +44,13 @@ class Chat extends Component {
         id: socket.id,
         message: this.state.message
       })
-      this.setState({ message: '' })
-      this.props.stopChat()
+      this.setState({ message: '' });
+      this.props.stopChat();
     }
   }
 
   handleMessageChange(evt) {
-    this.setState({ message: evt.target.value })
+    this.setState({ message: evt.target.value });
   }
 
   render() {
@@ -60,7 +61,7 @@ class Chat extends Component {
     const message = this.state.message;
 
     const chatMessages = lastFiveMessages.map((chatMessage, idx) => {
-      return (<h1 key={`${idx}`} style={{ fontSize: 15, color: '#ffffff' }}>{chatMessage}</h1>)
+      return (<h1 key={`${idx}`} style={{ fontSize: 15, color: '#ffffff' }}>{chatMessage}</h1>);
     })
 
     return (
@@ -92,4 +93,4 @@ const mapDispatchToProps = (dispatch) => ({
   stopChat: () => dispatch(stopChat())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Chat)
+export default connect(mapStateToProps, mapDispatchToProps)(Chat);
