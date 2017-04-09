@@ -1,21 +1,12 @@
-import * as THREE from 'three'
-import * as CANNON from 'cannon'
-
-import store from '../redux/store'
-import socket, { playerArr } from '../socket'
-import { PointerLockControls } from './PointerLockControls'
-
-import Player from './Player'
-import Bomb from './Bomb'
-import {
-  animateFire,
-  animatePlayers,
-  animateExplosion,
-  animateBombs,
-  deleteWorld,
-  createMap,
-  getShootDir
-} from './utils'
+import * as THREE from 'three';
+import * as CANNON from 'cannon';
+import store from '../redux/store';
+import socket, { playerArr } from '../socket';
+import { PointerLockControls } from './PointerLockControls';
+import Player from './Player';
+import Bomb from './Bomb';
+import { animateFire, animatePlayers, animateExplosion, animateBombs,
+  deleteWorld, createMap, getShootDir } from './utils';
 
 let sphereShape, world, physicsMaterial;
 let camera, scene, renderer, light;
