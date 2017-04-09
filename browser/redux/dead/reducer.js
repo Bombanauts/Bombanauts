@@ -1,19 +1,12 @@
-import { KILL_PLAYER, REVIVE_PLAYER, ANNOUNCE_KILL } from './action-creator.js'
+import { KILL_PLAYER, REVIVE_PLAYER } from './action-creator.js';
 
-let initialState = false;
-
-export const dead = (state = initialState, action) => {
-  let newState = state
+export const dead = (state = false, action) => {
   switch (action.type) {
     case KILL_PLAYER:
-      newState = true;
-      break;
+      return true;
     case REVIVE_PLAYER:
-      newState = false;
-      break;
+      return false;
     default:
       return state;
   }
-
-  return newState
-}
+};

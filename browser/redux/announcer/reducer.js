@@ -6,7 +6,7 @@ const initialState = {
 }
 
 export const announcement = (state = initialState, action) => {
-  let newState = Object.assign({}, state)
+  const newState = Object.assign({}, state);
   switch (action.type) {
     case ANNOUNCE_KILL:
       newState.killer = action.killer;

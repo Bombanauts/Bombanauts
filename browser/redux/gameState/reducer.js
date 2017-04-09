@@ -1,17 +1,10 @@
-import { START_GAME } from './constants'
+import { START_GAME } from './constants';
 
-const initialState = false
-
-export const isPlaying = (state = initialState, action) => {
-  let newState = state
-
+export const isPlaying = (state = false, action) => {
   switch (action.type) {
     case START_GAME:
-      newState = true;
-      break;
+      return true;
     default:
       return state;
   }
-
-  return newState
-}
+};
