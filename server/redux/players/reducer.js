@@ -8,7 +8,7 @@ const players = (state = initialState, action) => {
   let newState = Object.assign({}, state);
   switch (action.type) {
     case GET_PLAYERS:
-        return newState[action.roomId];
+      return newState[action.roomId];
     case UPDATE_PLAYERS:
       if (action.player.id) {
         let currentPlayer = newState[action.roomId][action.player.id];
