@@ -36,7 +36,10 @@ module.exports = {
           presets: ['react', 'es2015', 'stage-2']
         }
       },
-      {test: /\.scss?$/, loaders: ['style', 'css', 'sass']},
+      {
+        test: /\.scss?$/,
+        loaders: ['style', 'css', 'sass']
+      },
       {
         test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)(\?.*$|$)/,
         loader: 'file'
