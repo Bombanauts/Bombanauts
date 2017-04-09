@@ -1,4 +1,4 @@
 const GENERATE_MAP = "GENERATE_MAP";
 const EXPLODE_BOX = "EXPLODE_BOX";
 
-module.exports = { GENERATE_MAP, EXPLODE_BOX }
+module.exports = { GENERATE_MAP, EXPLODE_BOX };
