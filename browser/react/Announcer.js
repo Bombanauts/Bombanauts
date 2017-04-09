@@ -26,11 +26,9 @@ export const Announcer = (props) => {
 };
 
 
-const mapStateToProps = (state) => {
-  return {
-    killer: state.announcement.killer,
-    victim: state.announcement.victim
-  }
-};
+const mapStateToProps = (state) => ({
+  killer: state.announcement.killer,
+  victim: state.announcement.victim
+});
 
 export default connect(mapStateToProps)(Announcer);
