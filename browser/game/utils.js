@@ -1,25 +1,21 @@
-import * as THREE from 'three'
-import * as CANNON from 'cannon'
+import * as THREE from 'three';
+import * as CANNON from 'cannon';
 
-import {
-  boxes,
-  boxMeshes,
-  sphereBody
-} from './main'
+import { boxes, boxMeshes, sphereBody } from './main';
 
-import socket from '../socket'
+import socket from '../socket';
 
-import { killPlayer } from '../redux/dead/action-creator'
-import store from '../redux/store'
+import { killPlayer } from '../redux/dead/action-creator';
+import store from '../redux/store';
 
-import DestroyableCube from './Cube'
-import Wall from './Wall'
-import FixedCube from './FixedCube'
+import DestroyableCube from './Cube';
+import Wall from './Wall';
+import FixedCube from './FixedCube';
 
-import { VolumetricFire } from './ParticleEngine'
+import { VolumetricFire } from './ParticleEngine';
 
-export const boundary = {}
-export const fixedBox = {}
+export const boundary = {};
+export const fixedBox = {};
 export let destroyable;
 
 export const generateMap = (mapArr) => {
@@ -56,7 +52,7 @@ export const generateMap = (mapArr) => {
 
       if (mapArr[j][k] === 2) { // CREATE BOX
         const fixedCube = new FixedCube(fixedCubeMaterial, fixedCubeTexture, fixedCubeShape, fixedCubeGeometry, x, y, z);
-        fixedCube.init()
+        fixedCube.init();
         boxes.push(fixedCube.fixedCubeBody);
         boxMeshes.push(fixedCube.fixedCubeMesh);
       } else if (mapArr[j][k] === 1) { // CREATE WALL
@@ -64,35 +60,33 @@ export const generateMap = (mapArr) => {
         wall.init();
         boxes.push(wall.wallBody);
         boxMeshes.push(wall.wallMesh);
-      } else if (mapArr[j][k] === 3) { //DESTROYABLE BOX
+      } else if (mapArr[j][k] === 3) { // DESTROYABLE BOX
         const destroyableBox = new DestroyableCube(crateMaterial, crateTexture, fixedCubeShape, fixedCubeGeometry, x, y, z, j, k);
         destroyableBox.init();
         boxes.push(destroyableBox.cubeBox);
         boxMeshes.push(destroyableBox.cubeMesh);
-        destroyable[`${x}_${z}`] = [true, destroyableBox]
+        destroyable[`${x}_${z}`] = [true, destroyableBox];
       } else if (mapArr[j][k] === 0) { // GRASS
-        destroyable[`${x}_${z}`] = true
+        destroyable[`${x}_${z}`] = true;
       }
     }
   }
-}
+};
 
 export const createMap = () => {
-  let map = store.getState().map
+  let map = store.getState().map;
   generateMap(map);
-}
+};
 
-export const roundFour = (num) => {
-  return Math.round(num / 4) * 4
-}
+export const roundFour = (num) => Math.round(num / 4) * 4;
 
 export const animateFire = (bombObjects, clock, dead) => {
-  let elapsed = clock.getElapsedTime()
+  let elapsed = clock.getElapsedTime();
 
   /*----- HELPER FUNCTION FOR ANIMATING FIRE -----*/
   const animateSingleFire = (fire, bombUserId) => {
     if (fire) {
-      fire.update(elapsed)
+      fire.update(elapsed);
       if (fire.mesh.position.x === roundFour(sphereBody.position.x) &&
         fire.mesh.position.z === roundFour(sphereBody.position.z)) {
         if (!dead) {
@@ -101,11 +95,11 @@ export const animateFire = (bombObjects, clock, dead) => {
             id: socket.id,
             killedBy: bombUserId
           })
-          store.dispatch(killPlayer())
+          store.dispatch(killPlayer());
         }
       }
     }
-  }
+  };
 
   /* RUNNING ANIMATE SINGLE FIRE FOR EVERY SQUARE AROUND BOMB */
   for (let i = 0; i < bombObjects.length; i++) {
@@ -114,7 +108,7 @@ export const animateFire = (bombObjects, clock, dead) => {
       for (let k = 1; k <= 5; k++) {
         let currentFire = fire;
         if (k !== 1) {
-          currentFire += k
+          currentFire += k;
         }
         animateSingleFire(bombObjects[i][currentFire], bombObjects[i].userId)
       }
@@ -122,12 +116,12 @@ export const animateFire = (bombObjects, clock, dead) => {
   }
 
   return dead;
-}
+};
 
 export const animatePlayers = (players, playerIds, others, playerMeshes) => {
   for (let i = 0; i < players.length; i++) {
     if (others[playerIds[i]] && !others[playerIds[i]].dead) {
-      let { x, y, z } = others[playerIds[i]]
+      let { x, y, z } = others[playerIds[i]];
       playerMeshes[i].position.set(x, y, z);
       // // if(playerMeshes[i].sprite) {
       //   playerMeshes[i].sprite.position.set(x, y + 2.25, z);
@@ -137,7 +131,7 @@ export const animatePlayers = (players, playerIds, others, playerMeshes) => {
       players[i].position.z = z;
     }
   }
-}
+};
 
 export const animateExplosion = (blocksObj) => {
   for (let block in blocksObj) {
@@ -146,26 +140,26 @@ export const animateExplosion = (blocksObj) => {
         blocksObj[block][i].loop(block);
       }
     } else {
-      delete blocksObj[block]
+      delete blocksObj[block];
     }
   }
-}
+};
 
 export const animateBombs = (yourBombs, yourBombMeshes, bombs, stateBombs, bombMeshes, prevStateLength) => {
   let indexAdd = bombs.length - stateBombs.length;
 
   for (let i = 0; i < prevStateLength; i++) {
-    let { x, y, z } = stateBombs[i].position
+    let { x, y, z } = stateBombs[i].position;
     bombs[i + indexAdd].position.x = x;
     bombs[i + indexAdd].position.y = y;
     bombs[i + indexAdd].position.z = z;
-    bombMeshes[i + indexAdd].position.copy(bombs[i + indexAdd].position)
+    bombMeshes[i + indexAdd].position.copy(bombs[i + indexAdd].position);
   }
 
   for (let i = 0; i < yourBombs.length; i++) {
-    yourBombMeshes[i].position.copy(yourBombs[i].position)
+    yourBombMeshes[i].position.copy(yourBombs[i].position);
   }
-}
+};
 
 export const deleteWorld = (scene, world, boxMeshes, boxes, bombs, bombMeshes, yourBombs, bombObjects, yourBombMeshes, players, playerMeshes) => {
   for (let i = 0; i < boxMeshes.length; i++) {
@@ -175,17 +169,17 @@ export const deleteWorld = (scene, world, boxMeshes, boxes, bombs, bombMeshes, y
     world.remove(boxes[i]);
   }
   for (let i = 0; i < bombs.length; i++) {
-    world.remove(bombs[i])
+    world.remove(bombs[i]);
   }
   for (let i = 0; i < bombMeshes.length; i++) {
-    scene.remove(bombMeshes[i])
+    scene.remove(bombMeshes[i]);
   }
   for (let i = 0; i < bombObjects.length; i++) {
-    if (bombObjects[i].clearTimeout) clearTimeout(bombObjects[i].clearTimeout)
-    if (bombObjects[i].bombBody) world.remove(bombObjects[i].bombBody)
+    if (bombObjects[i].clearTimeout) clearTimeout(bombObjects[i].clearTimeout);
+    if (bombObjects[i].bombBody) world.remove(bombObjects[i].bombBody);
   }
   for (let i = 0; i < yourBombMeshes.length; i++) {
-    scene.remove(yourBombMeshes[i])
+    scene.remove(yourBombMeshes[i]);
   }
   for (let i = 0; i < playerMeshes.length; i++) {
     scene.remove(playerMeshes[i]);
@@ -193,7 +187,7 @@ export const deleteWorld = (scene, world, boxMeshes, boxes, bombs, bombMeshes, y
   for (let i = 0; i < players.length; i++) {
     world.remove(players[i]);
   }
-}
+};
 
 export const getShootDir = (projector, camera, targetVec) => {
   const vector = targetVec;
@@ -201,13 +195,13 @@ export const getShootDir = (projector, camera, targetVec) => {
   projector.unprojectVector(vector, camera);
   const ray = new THREE.Ray(sphereBody.position, vector.sub(sphereBody.position).normalize());
   targetVec.copy(ray.direction);
-}
+};
 
 export const delay = (time) => {
   return new Promise(resolve => {
-    setTimeout(resolve, time)
-  })
-}
+    setTimeout(resolve, time);
+  });
+};
 
 export const destroyBoxForEveryone = (destroyableArea, location) => {
   if (destroyableArea[location].length) {
@@ -215,23 +209,23 @@ export const destroyBoxForEveryone = (destroyableArea, location) => {
       socket.emit('destroy_cube', {
         j: destroyable[location][1].j,
         k: destroyable[location][1].k
-      })
+      });
     }
   }
-}
+};
 
 export const createFire = (scene, camera, x, y, z) => {
-  const fireWidth = 4
-  const fireHeight = 12
-  const fireDepth = 4
-  const sliceSpacing = 0.5
-  const fire = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera)
+  const fireWidth = 4;
+  const fireHeight = 12;
+  const fireDepth = 4;
+  const sliceSpacing = 0.5;
+  const fire = new VolumetricFire(fireWidth, fireHeight, fireDepth, sliceSpacing, camera);
   fire.mesh.frustumCulled = false;
-  fire.mesh.position.set(x, y, z)
-  scene.add(fire.mesh)
-  VolumetricFire.texturePath = '../../public/assets/images'
-  return fire
-}
+  fire.mesh.position.set(x, y, z);
+  scene.add(fire.mesh);
+  VolumetricFire.texturePath = '../../public/assets/images';
+  return fire;
+};
 
 // CREATING TEXT SPRITE FOR PLAYER
 // export const makeTextSprite = (message, fontsize) => {
