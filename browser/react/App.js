@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { initCannon, init, animate } from '../game/main';
@@ -14,16 +14,16 @@ import Timer from './Timer';
 
 class App extends Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
 
   componentDidMount() {
     delay(500)
     .then(() => {
-      initCannon()
-      init()
-      animate()
-    })
+      initCannon();
+      init();
+      animate();
+    });
   }
 
   render() {
@@ -45,12 +45,10 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    dead: state.dead,
-    winner: state.winner,
-    isPlaying: state.isPlaying,
-  }
-}
+const mapStateToProps = (state) => ({
+  dead: state.dead,
+  winner: state.winner,
+  isPlaying: state.isPlaying,
+});
 
 export default connect(mapStateToProps)(App);
