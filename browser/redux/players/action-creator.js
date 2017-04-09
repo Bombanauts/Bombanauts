@@ -1,8 +1,4 @@
-import {
-  UPDATE_PLAYER_LOCATIONS,
-  ADD_PLAYER,
-  REMOVE_PLAYER
-} from './constants';
+import { UPDATE_PLAYER_LOCATIONS, ADD_PLAYER, REMOVE_PLAYER } from './constants';
 
 export const updatePlayerLocations = (otherPlayers) => ({
   type: UPDATE_PLAYER_LOCATIONS,
