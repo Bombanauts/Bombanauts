@@ -1,33 +1,30 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import socket from '../socket';
-import { startGame } from '../redux/gameState/action-creator';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import MuteButton, { styles } from './MuteButton';
 import IconButton from 'material-ui/IconButton';
+
+import socket from '../socket';
+import MuteButton, { styles } from './MuteButton';
+import { startGame } from '../redux/gameState/action-creator';
 
 class Splash extends Component {
   constructor(props) {
-    super(props)
+    super(props);
+    this.state = { nickname: '' };
 
-    this.state = {
-      nickname: ''
-    }
-    this.updateNickname = this.updateNickname.bind(this)
-    this.setNickname = this.setNickname.bind(this)
+    this.updateNickname = this.updateNickname.bind(this);
+    this.setNickname = this.setNickname.bind(this);
     // this.handleEnterKey = this.handleEnterKey.bind(this)
   }
 
   updateNickname(event) {
-    this.setState({
-      nickname: event.target.value
-    })
+    this.setState({ nickname: event.target.value });
   }
 
   setNickname() {
     socket.emit('set_nickname', this.state.nickname);
-    this.props.start()
+    this.props.start();
   }
 
   // press enter to set nickname
@@ -50,7 +47,7 @@ class Splash extends Component {
                 hintStyle={{color: '#D5D1D0'}}
                 floatingLabelText="Nickname"
                 floatingLabelStyle={{ color: '#cc2d2d' }}
-                underlineFocusStyle={{ borderColor: '#cc2d2d'}}
+                underlineFocusStyle={{ borderColor: '#cc2d2d' }}
                 inputStyle={{ color: '#D5D1D0' }}
               />
               <RaisedButton
@@ -59,7 +56,7 @@ class Splash extends Component {
                 backgroundColor="#cc2d2d"
                 disabledBackgroundColor='#D5D1D0'
                 label="Play"
-                style={{ display: 'block', borderColor: 'none'}}
+                style={{ display: 'block', borderColor: 'none' }}
               />
             </div>
           </div>
@@ -71,7 +68,7 @@ class Splash extends Component {
             iconClassName="material-icons"
             className="git"
             iconStyle={styles.largeIcon}
-            hoveredStyle={{color: '#cc2d2d'}}
+            hoveredStyle={{color: '#cc2d2d' }}
             style={styles.large}>
             code
           </IconButton>
@@ -81,8 +78,6 @@ class Splash extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  start: () => dispatch(startGame())
-})
+const mapDispatchToProps = (dispatch) => ({ start: () => dispatch(startGame()) });
 
-export default connect(null, mapDispatchToProps)(Splash)
+export default connect(null, mapDispatchToProps)(Splash);
