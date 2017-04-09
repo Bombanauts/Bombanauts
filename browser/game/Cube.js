@@ -22,15 +22,15 @@ export default class DestroyableCube {
   init() {
     /*----- CREATE PLAYER -----*/
     const cubeBox = new CANNON.Body({ mass: 0 });
-    cubeBox.addShape(this.fixedCubeShape)
+    cubeBox.addShape(this.fixedCubeShape);
     const cubeMesh = new THREE.Mesh(this.fixedCubeGeometry, this.material);
 
     /*----- SETS SPAWN POSITION -----*/
     cubeMesh.position.set(this.x, this.y, this.z);
     cubeBox.position.set(cubeMesh.position.x, cubeMesh.position.y, cubeMesh.position.z);
 
-    scene.add(cubeMesh)
-    world.add(cubeBox)
+    scene.add(cubeMesh);
+    world.add(cubeBox);
 
     this.cubeMesh = cubeMesh;
     this.cubeBox = cubeBox;
@@ -38,15 +38,15 @@ export default class DestroyableCube {
 
   explode () {
     if (!this.exploded) {
-      const boxParticleGeometry = new THREE.BoxGeometry(0.4, 0.4, 0.4)
+      const boxParticleGeometry = new THREE.BoxGeometry(0.4, 0.4, 0.4);
       const particles = [];
       for (let i = 0; i < blockCount; i++) {
         const block = new Block(scene, world, {x: this.x, y: this.y, z: this.z}, 'cube', boxParticleGeometry, this.material);
         particles.push(block);
       }
       blocksObj[this.cubeMesh.id] = particles.slice();
-      world.remove(this.cubeBox)
-      scene.remove(this.cubeMesh)
+      world.remove(this.cubeBox);
+      scene.remove(this.cubeMesh);
       this.exploded = true;
       /*----- RETURNS IF SOCKET SHOULD EMIT ON EXPLOSION CALL -----*/
       return true;
