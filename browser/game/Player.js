@@ -1,16 +1,10 @@
-import * as THREE from 'three'
-import * as CANNON from 'cannon'
+import * as THREE from 'three';
+import * as CANNON from 'cannon';
 
-import store from '../redux/store'
+import store from '../redux/store';
 
-import {
-  scene,
-  world,
-  blockCount,
-  blocksObj
-} from './main'
-
-import { Block } from './Explosion'
+import { scene, world, blockCount, blocksObj } from './main';
+import { Block } from './Explosion';
 
 let playerMesh, playerBox, sprite;
 
@@ -27,7 +21,7 @@ export default class Player {
     this.material;
     this.sprite;
 
-    this.init = this.init.bind(this)
+    this.init = this.init.bind(this);
   }
 
   init() {
@@ -51,8 +45,8 @@ export default class Player {
 
     /*----- CREATE PLAYER -----*/
     playerBox = new CANNON.Body({ mass: 0 });
-    playerBox.addShape(boxShape)
-    this.material = new THREE.MultiMaterial(materials)
+    playerBox.addShape(boxShape);
+    this.material = new THREE.MultiMaterial(materials);
     playerMesh = new THREE.Mesh(boxGeometry, this.material);
     playerMesh.name = this.socketId;
     playerBox.name = this.socketId;
@@ -63,8 +57,8 @@ export default class Player {
 
     /*----- ADD MESH & BODY TO WORLD & SCENE -----*/
     if (!this.dead) {
-      scene.add(playerMesh)
-      world.add(playerBox)
+      scene.add(playerMesh);
+      world.add(playerBox);
     }
 
     this.playerMesh = playerMesh;
@@ -80,8 +74,8 @@ export default class Player {
         particles.push(player);
       }
       blocksObj[this.playerMesh.id] = particles.slice();
-      world.remove(this.playerBox)
-      scene.remove(this.playerMesh)
+      world.remove(this.playerBox);
+      scene.remove(this.playerMesh);
 
       this.dead = true;
 
@@ -91,4 +85,4 @@ export default class Player {
   }
 }
 
-export { sprite }
+export { sprite };
