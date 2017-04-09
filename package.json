@@ -18,7 +18,22 @@
     "type": "git",
     "url": "git+https://github.com/bombanauts/Bombanauts.git"
   },
-  "keywords": [],
+  "keywords": [
+    "3d",
+    "three",
+    "three.js",
+    "cannon",
+    "cannon.js",
+    "bomberman",
+    "bombanauts",
+    "game-development",
+    "react",
+    "redux",
+    "sockets",
+    "express",
+    "javascript",
+    "multiplayer",
+  ],
   "author": "Sam Wheeler, Steve Kuo, Bogdan Polovko, and Damon Ye",
   "license": "MIT",
   "bugs": {
