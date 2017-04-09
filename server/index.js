@@ -118,8 +118,9 @@ io.on('connection', (socket) => {
 
       /*----- WIN CONDITIONS FOR WHEN 1 PLAYER LEFT OR IF SOLO PLAYER DIES -----*/
       if (currentPlayersLength >= 1 && alivePlayers.length <= 1) {
-        if (alivePlayers[0]) store.dispatch(setWinner(alivePlayers[0].socketId, room))
-        else {
+        if (alivePlayers[0]) {
+          store.dispatch(setWinner(alivePlayers[0].socketId, room));
+        } else {
           const state = store.getState();
           io.in(room).emit('reset_world', {
             players: state.players[room],
@@ -136,7 +137,7 @@ io.on('connection', (socket) => {
     const newState = convertStateForFrontEnd(currentState, room);
     io.in(room).emit('set_winner', newState.winner);
     io.in(room).emit('update_world', newState);
-  })
+  });
 
   /*----- CHAT MESSAGES -----*/
   socket.on('new_message', (data) => {
@@ -146,22 +147,21 @@ io.on('connection', (socket) => {
     let playerNickname;
     if (currentPlayers[data.id] && currentPlayers[data.id].nickname) {
       playerNickname = currentPlayers[data.id].nickname;
-    }
-    else {
+    } else {
       playerNickname = '';
     }
     io.in(socket.currentRoom).emit('new_message', `${playerNickname} : ${data.message}`);
-  })
+  });
 
   /*----- CHANGES MAP ON STATE WHEN BOX IS DESTROYED -----*/
   socket.on('destroy_cube', (data) => {
     store.dispatch(updateMap(data, socket.currentRoom));
-  })
+  });
 
   /*----- RESTART WORLD ON GAME END -----*/
-  socket.on('reset_world', (data) => {
+  socket.on('reset_world', () => {
     resetWorld(Maps, socket.currentRoom, io);
-  })
+  });
 
   /*----- REMOVE PLAYER FROM STATE ON DISCONNECT -----*/
   socket.on('disconnect', () => {
