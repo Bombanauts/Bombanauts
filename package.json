@@ -1,7 +1,7 @@
 {
   "name": "BombermanJS",
   "version": "1.0.0",
-  "description": "",
+  "description": "Bombanauts, inspired by the original Bomberman game, is a 3D multiplayer online battle arena (MOBA) game where players can throw bombs at each other, make boxes explode, and even other players! Bombs explode into a cross of fire down the aisles destroying crates that stand in their way. When the flames make contact with the wooden boxes (and players 😈) they explode!",
   "main": "webpack.config.js",
   "directories": {
     "test": "tests"
@@ -18,8 +18,23 @@
     "type": "git",
     "url": "git+https://github.com/bombanauts/Bombanauts.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "3d",
+    "three",
+    "three.js",
+    "cannon",
+    "cannon.js",
+    "bomberman",
+    "bombanauts",
+    "game-development",
+    "react",
+    "redux",
+    "sockets",
+    "express",
+    "javascript",
+    "multiplayer",
+  ],
+  "author": "Sam Wheeler, Steve Kuo, Bogdan Polovko, and Damon Ye",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/bombanauts/Bombanauts/issues"
