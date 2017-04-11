@@ -1,15 +1,15 @@
-const { SET_WINNER } = require('./constants')
+const { SET_WINNER } = require('./constants');
 
-const initialState = require('./init-state')
+const initialState = require('./init-state');
 
 const winner = (state = initialState, action) => {
-  let newState = Object.assign({}, state)
+  const newState = Object.assign({}, state);
   switch (action.type) {
     case SET_WINNER:
-      newState[action.roomId] = action.playerId
-      return newState
+      newState[action.roomId] = action.playerId;
+      return newState;
     default:
-      return newState
+      return newState;
   }
 }
 

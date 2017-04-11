@@ -1,7 +1,4 @@
-import {
-  SET_SCORE,
-  SET_NAME
-} from './constants';
+import { SET_SCORE, SET_NAME } from './constants';
 
 const initialState = {
   score: 0,
@@ -9,7 +6,7 @@ const initialState = {
 }
 
 export const ownInfo = (state = initialState, action) => {
-  let newState = Object.assign({}, state);
+  const newState = Object.assign({}, state);
 
   switch (action.type) {
     case SET_NAME:
@@ -22,5 +19,5 @@ export const ownInfo = (state = initialState, action) => {
       return state;
   }
 
-  return newState
+  return newState;
 }

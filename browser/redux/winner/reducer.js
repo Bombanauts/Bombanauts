@@ -1,15 +1,14 @@
-import { SET_WINNER } from './constants'
+import { SET_WINNER } from './constants';
 
-const initialState = null;
+const winner = (state = null, action) => {
+  switch (action.type) {
+    case SET_WINNER:
+      return action.playerId;
+    default:
+      return state;
+  }
 
-const winner = (state = initialState, action) => {
-	switch(action.type) {
-		case SET_WINNER:
-			let newState = action.playerId
-			return newState
-		default:
-			return state
-	}
+  return state;
 }
 
-export default winner
+export default winner;

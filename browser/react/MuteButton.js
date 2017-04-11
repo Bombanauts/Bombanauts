@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { muteSound, unmuteSound } from '../redux/sound/action-creator';
 import IconButton from 'material-ui/IconButton';
+
+import { muteSound, unmuteSound } from '../redux/sound/action-creator';
 
 export const styles = {
   largeIcon: {
@@ -44,4 +45,4 @@ const mapDispatchToProps = (dispatch) => ({
   unmuteSound: () => dispatch(unmuteSound())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(MuteButton)
+export default connect(mapStateToProps, mapDispatchToProps)(MuteButton);

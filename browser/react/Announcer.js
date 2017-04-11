@@ -5,8 +5,8 @@ export const Announcer = (props) => {
   let killerName;
   let victimName;
   if (props.killer) {
-    killerName = props.killer.nickname
-    victimName = props.victim.nickname
+    killerName = props.killer.nickname;
+    victimName = props.victim.nickname;
   }
 
   if (killerName !== undefined && killerName !== '') {
@@ -23,14 +23,12 @@ export const Announcer = (props) => {
       <div></div>
     )
   }
-}
+};
 
 
-const mapStateToProps = (state) => {
-  return {
-    killer: state.announcement.killer,
-    victim: state.announcement.victim
-  }
-}
+const mapStateToProps = (state) => ({
+  killer: state.announcement.killer,
+  victim: state.announcement.victim
+});
 
 export default connect(mapStateToProps)(Announcer);

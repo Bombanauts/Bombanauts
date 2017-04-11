@@ -1,7 +1,4 @@
-const {
-  SET_TIME,
-  GET_TIME
-} = require('./constants');
+const { SET_TIME, GET_TIME } = require('./constants');
 
 const initialState = require('./init-state')
 

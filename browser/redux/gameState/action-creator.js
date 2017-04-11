@@ -1,7 +1,3 @@
 import { START_GAME } from './constants';
 
-export const startGame = () => {
-  return {
-    type: START_GAME
-  }
-}
+export const startGame = () => ({ type: START_GAME });

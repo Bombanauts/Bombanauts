@@ -1,18 +1,11 @@
-import {
-  UPDATE_BOMB_LOCATIONS,
-  REMOVE_PLAYER_BOMBS
-} from './constants'
+import { UPDATE_BOMB_LOCATIONS, REMOVE_PLAYER_BOMBS } from './constants';
 
-export const updateBombLocations = (allBombs) => {
-  return {
-    type: UPDATE_BOMB_LOCATIONS,
-    allBombs
-  }
-}
+export const updateBombLocations = (allBombs) => ({
+  type: UPDATE_BOMB_LOCATIONS,
+  allBombs
+})
 
-export const removePlayerBombs = (id) => {
-  return {
-    type: REMOVE_PLAYER_BOMBS,
-    id
-  }
-}
+export const removePlayerBombs = (id) => ({
+  type: REMOVE_PLAYER_BOMBS,
+  id
+})

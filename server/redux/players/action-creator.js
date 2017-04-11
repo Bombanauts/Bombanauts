@@ -1,12 +1,5 @@
-const {
-  GET_PLAYERS,
-  UPDATE_PLAYERS,
-  REMOVE_PLAYER,
-  KILL_PLAYER,
-  SET_NICKNAME,
-  INCREMENT_SCORE,
-  DECREMENT_SCORE
-} = require('./constants');
+const { GET_PLAYERS, UPDATE_PLAYERS, REMOVE_PLAYER, KILL_PLAYER,
+  SET_NICKNAME, INCREMENT_SCORE, DECREMENT_SCORE } = require('./constants');
 
 const getPlayers = (roomId) => ({
   type: GET_PLAYERS,

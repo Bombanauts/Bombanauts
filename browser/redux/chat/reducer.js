@@ -6,22 +6,24 @@ const initialState = {
 };
 
 export const chat = (state = initialState, action) => {
-  let newState = Object.assign({}, state)
-  const newChat = Array.from(newState.lastFiveMessages)
+  const newState = Object.assign({}, state);
+  const newChat = Array.from(newState.lastFiveMessages);
 
   switch (action.type) {
     case START_CHAT:
-      newState.isChatting = true
+      newState.isChatting = true;
       return newState;
     case STOP_CHAT:
-      newState.isChatting = false
+      newState.isChatting = false;
       return newState;
     case RECEIVE_MESSAGE:
-      if (newChat.length > 0 && newChat.length > 3) newChat.shift()
-      newChat.push(action.message)
-      newState.lastFiveMessages = newChat
+      if (newChat.length > 0 && newChat.length > 3) newChat.shift();
+      newChat.push(action.message);
+      newState.lastFiveMessages = newChat;
       return newState;
     default:
       return state;
   }
-}
+
+  return state;
+};

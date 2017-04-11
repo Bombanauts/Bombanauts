@@ -1,7 +1,4 @@
-//THREE.JS
 import * as THREE from 'three';
-
-//CANNON.JS
 import * as CANNON from 'cannon';
 
 import { scene, world } from './main';
@@ -14,23 +11,23 @@ export default class Wall {
     this.wallMesh = {};
     this.wallBody = {};
     this.material = material;
-    this.texture = texture
+    this.texture = texture;
     this.fixedCubeShape = fixedCubeShape;
     this.fixedCubeGeometry = fixedCubeGeometry;
-    }
+  }
 
-    init() {
+  init() {
     /*----- CREATE WALL -----*/
     const wallBody = new CANNON.Body({ mass: 0 });
-    wallBody.addShape(this.fixedCubeShape)
-    const wallMesh = new THREE.Mesh( this.fixedCubeGeometry, this.material );
+    wallBody.addShape(this.fixedCubeShape);
+    const wallMesh = new THREE.Mesh(this.fixedCubeGeometry, this.material);
 
     /*----- SET SPAWN POSITION -----*/
     wallMesh.position.set(this.x, this.y, this.z);
     wallBody.position.set(this.x, this.y, this.z);
 
-    scene.add(wallMesh)
-    world.add(wallBody)
+    scene.add(wallMesh);
+    world.add(wallBody);
 
     this.wallMesh = wallMesh;
     this.wallBody = wallBody;

@@ -1,4 +1,4 @@
-const { SET_WINNER } = require('./constants')
+const { SET_WINNER } = require('./constants');
 
 const setWinner = (playerId, roomId) => ({
   type: SET_WINNER,
@@ -6,6 +6,4 @@ const setWinner = (playerId, roomId) => ({
   roomId
 })
 
-module.exports = {
-  setWinner
-}
+module.exports = { setWinner };

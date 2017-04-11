@@ -1,20 +1,16 @@
-import {
-  SET_TIME,
-  GET_TIME
-} from './constants';
+import { SET_TIME } from './constants';
 
 const initialState = 180;
 
-
-const timer = (state = initialState, action) => {
-  let newState = state;
+const timer = (state = 180, action) => {
   switch (action.type) {
     case SET_TIME:
-      newState = action.time;
-      return newState;
+      return action.time;
     default:
-      return newState;
+      return state;
   }
+
+  return state;
 }
 
-export default timer
+export default timer;

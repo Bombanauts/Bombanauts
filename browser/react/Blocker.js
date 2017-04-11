@@ -1,15 +1,12 @@
-import React, { Component } from 'react'
-import { controls } from '../game/main'
-import MuteButton from './MuteButton'
+import React, { Component } from 'react';
+import { controls } from '../game/main';
+import MuteButton from './MuteButton';
 
 class Blocker extends Component {
   constructor(props) {
-    super(props)
-    this.state = {
-      instructions: true
-    }
-
-    this.handleClick = this.handleClick.bind(this)
+    super(props);
+    this.state = { instructions: true };
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
@@ -27,7 +24,7 @@ class Blocker extends Component {
         blocker.style.display = '-moz-box';
         blocker.style.display = 'box';
         instructions.style.display = '';
-        this.setState({ instructions: true })
+        this.setState({ instructions: true });
       }
     }
 
@@ -35,13 +32,13 @@ class Blocker extends Component {
   }
 
   handleClick(evt) {
-    const element = document.body
+    const element = document.body;
 
     /*----- ASKS BROWSER TO LOCK POINTER -----*/
     element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
 
     element.requestPointerLock();
-    this.setState({ instructions: false })
+    this.setState({ instructions: false });
   }
 
   render() {

@@ -1,8 +1,6 @@
 import { MUTE, UNMUTE } from './constants';
 
-const initialState = true;
-
-export const sound = (state = initialState, action) => {
+export const sound = (state = true, action) => {
   switch (action.type) {
     case MUTE:
       return false;
@@ -11,4 +9,6 @@ export const sound = (state = initialState, action) => {
     default:
       return state;
   }
+
+  return state;
 }
