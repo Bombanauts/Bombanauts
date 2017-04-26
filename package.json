@@ -69,7 +69,7 @@
     "socket.io-react": "^1.1.2",
     "style-loader": "^0.13.1",
     "three": "^0.84.0",
-    "webpack": "^1.15.0"
+    "webpack": "^2.4.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
