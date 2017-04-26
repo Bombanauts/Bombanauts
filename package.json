@@ -32,7 +32,7 @@
     "sockets",
     "express",
     "javascript",
-    "multiplayer",
+    "multiplayer"
   ],
   "author": "Sam Wheeler, Steve Kuo, Bogdan Polovko, and Damon Ye",
   "license": "MIT",
