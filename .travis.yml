@@ -3,3 +3,5 @@ node_js:
     - "iojs"
     - "7"
 cache: yarn
+install:
+  - npm install
