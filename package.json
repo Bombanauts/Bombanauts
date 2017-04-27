@@ -6,11 +6,14 @@
   "directories": {
     "test": "tests"
   },
+  "engines": {
+    "node": ">= 7.0.0"
+  },
   "scripts": {
     "test": "mocha --compilers js:babel-core/register tests/**/*.test.js",
     "test-watch": "mocha --compilers js:babel-register --watch tests/**/*.test.js",
     "build": "webpack",
-    "build-watch": "webpack -w",
+    "build-watch": "npm run build -- -w",
     "start": "NODE_ENV=production node server/index.js",
     "start-dev": "nodemon server/index.js"
   },
