@@ -13,7 +13,7 @@ module.exports = {
   context: __dirname,
   devtool: 'source-map',
   resolve: {
-    extensions: ['', '.js', '.jsx', '.scss']
+    extensions: ['*', '.js', '.jsx', '.scss']
   },
   // plugins: [
   //   new webpack.DefinePlugin({
@@ -31,14 +31,14 @@ module.exports = {
       {
         test: /jsx?$/,
         exclude: /(node_modules|bower_components)/,
-        loader: 'babel',
+        loader: 'babel-loader',
         query: {
           presets: ['react', 'es2015', 'stage-2'],
         }
       },
       {
         test: /\.scss?$/,
-        loaders: ['style', 'css', 'sass']
+        loaders: ['style-loader', 'css-loader', 'sass-loader']
       },
       {
         test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)(\?.*$|$)/,
