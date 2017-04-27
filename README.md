@@ -1,6 +1,6 @@
 # Bombanauts
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen.svg?style=plastic)](http://bombanauts.herokuapp.com/) [![license](https://img.shields.io/github/license/mashape/apistatus.svg?style=plastic)](https://github.com/Bombanauts/Bombanauts/blob/master/LICENSE)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen.svg?)](http://bombanauts.herokuapp.com/) [![license](https://img.shields.io/github/license/mashape/apistatus.svg?)](https://github.com/Bombanauts/Bombanauts/blob/master/LICENSE) [![Build Status](https://travis-ci.org/Bombanauts/Bombanauts.svg?branch=master)](https://travis-ci.org/Bombanauts/Bombanauts)
 
 ### Introduction
 [Bombanauts](http://bombanauts.herokuapp.com/), inspired by the original [Bomberman](https://en.wikipedia.org/wiki/Bomberman) game, is a 3D multiplayer online battle arena (MOBA) game where players can throw bombs at each other, make boxes explode, and even other players! Bombs explode into a cross of fire down the aisles destroying crates that stand in their way. When the flames make contact with the wooden boxes (and players :smiling_imp:) they explode!
