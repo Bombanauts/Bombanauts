@@ -1,6 +1,3 @@
-// WE NEED THIS SOCKET OBJ TO SEND REQUESTS TO OUR SERVER
-const socket = io('/');
-
 import * as THREE from 'three';
 import { world, scene, playerInstances, restartWorld, listener } from './game/main';
 import { sprite } from './game/Player';
@@ -15,6 +12,7 @@ import { setTime } from './redux/timer/action-creator';
 import { setWinner } from './redux/winner/action-creator';
 import { revivePlayer } from './redux/dead/action-creator';
 
+const socket = io('/');
 export let playerArr = [];
 let count = 0;
 
@@ -25,7 +23,7 @@ socket.on('connect', () => {
     store.dispatch(updateBombLocations(initialData.bombs));
     store.dispatch(loadMap(initialData.map));
     store.dispatch(setTime(initialData.timer));
-  })
+  });
 
   /*----- UPDATES WORLD 60 TIMES/SEC -----*/
   socket.on('update_world', (data) => {
@@ -61,10 +59,10 @@ socket.on('connect', () => {
     store.dispatch(announce(data.killerNickname, data.victimNickname));
     setTimeout(() => {
       store.dispatch(removeAnnouncement());
-    }, 3000)
-    let playerToKill = playerInstances.filter(player => {
+    }, 3000);
+    let playerToKill = playerInstances.filter((player) => {
       return player.socketId === data.id;
-    })[0]
+    })[0];
 
     if (playerToKill) {
       let state = store.getState();
@@ -75,14 +73,14 @@ socket.on('connect', () => {
         const audioLoader = new THREE.AudioLoader();
 
         if (currentStateAnnouncement.killer.nickname === currentStateAnnouncement.victim.nickname) {
-          audioLoader.load('sounds/witch.mp3', function(buffer) {
+          audioLoader.load('sounds/witch.mp3', (buffer) => {
             positionalAudio.setBuffer(buffer);
             positionalAudio.setRefDistance(10);
             positionalAudio.play();
           });
         }
 
-        audioLoader.load('sounds/die.mp3', function(buffer) {
+        audioLoader.load('sounds/die.mp3', (buffer) => {
           positionalAudio.setBuffer(buffer);
           positionalAudio.setRefDistance(10);
           positionalAudio.play();
@@ -108,7 +106,7 @@ socket.on('connect', () => {
 
   /*----- REMOVES PLAYER'S PHISICAL BODY & VISUAL BODY -----*/
   socket.on('remove_player', (id) => {
-    store.dispatch(removePlayer(id))
+    store.dispatch(removePlayer(id));
     let playerBody = world.bodies.filter((child) => {
       return child.name === id;
     })[0];
@@ -127,7 +125,6 @@ socket.on('connect', () => {
   socket.on('new_message', (message) => {
     store.dispatch(receiveMessage(message));
   });
-
 });
 
 export default socket;
