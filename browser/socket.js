@@ -60,14 +60,12 @@ socket.on('connect', () => {
     setTimeout(() => {
       store.dispatch(removeAnnouncement());
     }, 3000);
-    let playerToKill = playerInstances.filter((player) => {
-      return player.socketId === data.id;
-    })[0];
+    const playerToKill = playerInstances.filter((player) => player.socketId === data.id)[0];
 
     if (playerToKill) {
-      let state = store.getState();
-      let currentStateAnnouncement = state.announcement;
-      let sound = state.sound;
+      const state = store.getState();
+      const currentStateAnnouncement = state.announcement;
+      const sound = state.sound;
       if (sound) {
         const positionalAudio = new THREE.PositionalAudio(listener);
         const audioLoader = new THREE.AudioLoader();
@@ -107,14 +105,10 @@ socket.on('connect', () => {
   /*----- REMOVES PLAYER'S PHISICAL BODY & VISUAL BODY -----*/
   socket.on('remove_player', (id) => {
     store.dispatch(removePlayer(id));
-    let playerBody = world.bodies.filter((child) => {
-      return child.name === id;
-    })[0];
-    let playerMesh = scene.children.filter((child) => {
-      return child.name === id;
-    })[0];
+    const playerBody = world.bodies.filter((child) => child.name === id)[0];
+    const playerMesh = scene.children.filter((child) => child.name === id)[0];
 
-    if (playerBody) world.remove(playerBody)
+    if (playerBody) { world.remove(playerBody); }
     if (playerMesh) {
       scene.remove(playerMesh);
       scene.remove(sprite);
