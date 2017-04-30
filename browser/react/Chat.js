@@ -5,6 +5,16 @@ import { startChat, stopChat } from '../redux/chat/action-creator';
 import socket from '../socket';
 import { controls } from '../game/main';
 
+const styles = {
+  borderStyles: {
+    borderColor: '#ffffff'
+  },
+  fontStyles: {
+    ontSize: 15,
+    color: '#ffffff'
+  }
+}
+
 class Chat extends Component {
   constructor(props) {
     super(props);
@@ -74,8 +84,8 @@ class Chat extends Component {
           onChange={handleMessageChange}
           onKeyDown={submitMessage}
           value={message}
-          underlineFocusStyle={{ borderColor: '#ffffff' }}
-          inputStyle={{ fontSize: 15, color: '#ffffff' }}
+          underlineFocusStyle={styles.borderStyles}
+          inputStyle={styles.fontStyles}
         /> : <h1 className='chat-message'>Press Enter to Chat / Back Tick to Exit Chat</h1>}
       </div>
     )
