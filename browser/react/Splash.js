@@ -8,6 +8,22 @@ import socket from '../socket';
 import MuteButton, { styles } from './MuteButton';
 import { startGame } from '../redux/gameState/action-creator';
 
+const splashStyles = {
+  colorGray: {
+    color: '#D5D1D0'
+  },
+  colorRed: {
+    color: '#CC2D2D'
+  },
+  borderColor: {
+    borderColor: '#CC2D2D'
+  },
+  buttonStyle: {
+    display: 'block',
+    borderColor: 'none'
+  }
+}
+
 class Splash extends Component {
   constructor(props) {
     super(props);
@@ -44,19 +60,19 @@ class Splash extends Component {
                 // onKeyDown={this.handleEnterKey}
                 maxLength={15}
                 hintText="Nickname"
-                hintStyle={{color: '#D5D1D0'}}
+                hintStyle={splashStyles.colorGray}
                 floatingLabelText="Nickname"
-                floatingLabelStyle={{ color: '#cc2d2d' }}
-                underlineFocusStyle={{ borderColor: '#cc2d2d' }}
-                inputStyle={{ color: '#D5D1D0' }}
+                floatingLabelStyle={splashStyles.colorRed}
+                underlineFocusStyle={splashStyles.borderColor}
+                inputStyle={splashStyles.colorGray}
               />
               <RaisedButton
                 disabled={!this.state.nickname}
                 onClick={this.setNickname}
-                backgroundColor="#cc2d2d"
-                disabledBackgroundColor='#D5D1D0'
+                backgroundColor={splashStyles.colorRed.color}
+                disabledBackgroundColor={splashStyles.colorGray.color}
                 label="Play"
-                style={{ display: 'block', borderColor: 'none' }}
+                style={splashStyles.buttonStyle}
               />
             </div>
           </div>
@@ -68,7 +84,7 @@ class Splash extends Component {
             iconClassName="material-icons"
             className="git"
             iconStyle={styles.largeIcon}
-            hoveredStyle={{color: '#cc2d2d' }}
+            hoveredStyle={splashStyles.colorRed}
             style={styles.large}>
             code
           </IconButton>
