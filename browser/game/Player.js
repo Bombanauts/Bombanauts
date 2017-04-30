@@ -2,26 +2,23 @@ import * as THREE from 'three';
 import * as CANNON from 'cannon';
 
 import store from '../redux/store';
-
 import { scene, world, blockCount, blocksObj } from './main';
 import { Block } from './Explosion';
 
-let playerMesh, playerBox, sprite;
+let sprite;
 
 export default class Player {
   constructor(socketId, x, y, z, dead, nickname) {
+    this.socketId = socketId;
     this.x = x;
     this.y = y;
     this.z = z;
-    this.playerMesh = [];
-    this.playerBox = [];
-    this.socketId = socketId;
-    this.nickname = store.getState().players[socketId].nickname;
     this.dead = dead;
+    this.nickname = store.getState().players[socketId].nickname;
     this.material;
+    this.playerMesh;
+    this.playerBox;
     this.sprite;
-
-    this.init = this.init.bind(this);
   }
 
   init() {
@@ -41,15 +38,16 @@ export default class Player {
       textureBody,
       textureFace,
       textureFace
-    ]
+    ];
 
     /*----- CREATE PLAYER -----*/
-    playerBox = new CANNON.Body({ mass: 0 });
+    const playerBox = new CANNON.Body({ mass: 0 });
     playerBox.addShape(boxShape);
-    this.material = new THREE.MultiMaterial(materials);
-    playerMesh = new THREE.Mesh(boxGeometry, this.material);
-    playerMesh.name = this.socketId;
     playerBox.name = this.socketId;
+
+    this.material = new THREE.MultiMaterial(materials);
+    const playerMesh = new THREE.Mesh(boxGeometry, this.material);
+    playerMesh.name = this.socketId;
 
     /*----- SET SPAWN POSITION -----*/
     playerMesh.position.set(this.x, this.y, this.z);
@@ -67,7 +65,7 @@ export default class Player {
 
   explode() {
     if (!this.dead) {
-      const boxParticleGeometry = new THREE.BoxGeometry(0.4, 0.4, 0.4)
+      const boxParticleGeometry = new THREE.BoxGeometry(0.4, 0.4, 0.4);
       const particles = [];
       for (let i = 0; i < blockCount; i++) {
         const player = new Block(scene, world, { x: this.x, y: this.y, z: this.z }, 'player', boxParticleGeometry, this.material);
