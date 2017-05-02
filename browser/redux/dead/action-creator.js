@@ -1,5 +1,4 @@
-export const KILL_PLAYER = 'KILL_PLAYER';
-export const REVIVE_PLAYER = 'REVIVE_PLAYER';
+import { KILL_PLAYER, REVIVE_PLAYER } from './constants';
 
 export const killPlayer = () => ({ type: KILL_PLAYER });
 
