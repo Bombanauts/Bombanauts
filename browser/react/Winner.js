@@ -9,8 +9,8 @@ const Winner = (props) => {
   let winnerNickname;
 
   if (socket.id === winnerId && winnerId) {
-      winnerNickname = 'You win!'
-      socket.emit('reset_world', {})
+    winnerNickname = 'You win!';
+    socket.emit('reset_world', {});
   } else if (winnerId) {
     winnerNickname = players[winnerId].nickname + ' wins!';
   }
@@ -19,7 +19,7 @@ const Winner = (props) => {
     <div>
       <h1 id='winner' className='center'>{winnerNickname}</h1>
       <Scores />
-     </div>
+    </div>
   )
 }
 
