@@ -27,3 +27,7 @@ export const chat = (state = initialState, action) => {
 
   return state;
 };
+
+export const getIsChatting = (state) => state.chat.isChatting;
+
+export const getLastFiveMessages = (state) => state.chat.lastFiveMessages;
