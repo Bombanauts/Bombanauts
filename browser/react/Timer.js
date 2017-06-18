@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { getCurrentTime } from '../redux/timer/reducer';
+
 export const Timer = props => {
   return (
     <div className='timer'>
@@ -10,7 +12,7 @@ export const Timer = props => {
 }
 
 const mapStateToProps = (state) => ({
-  time: state.timer,
+  time: getCurrentTime(state),
   isPlaying: state.isPlaying
 })
 
