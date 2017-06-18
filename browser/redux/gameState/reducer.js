@@ -8,3 +8,5 @@ export const isPlaying = (state = false, action) => {
       return state;
   }
 };
+
+export const getIsPlaying = (state) => state.isPlaying;
