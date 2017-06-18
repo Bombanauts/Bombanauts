@@ -7,8 +7,6 @@ const winner = (state = null, action) => {
     default:
       return state;
   }
-
-  return state;
 }
 
 export default winner;
