@@ -12,3 +12,5 @@ const winner = (state = null, action) => {
 }
 
 export default winner;
+
+export const getWinner = (state) => state.winner;
