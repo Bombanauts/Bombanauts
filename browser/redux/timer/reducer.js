@@ -14,3 +14,5 @@ const timer = (state = 180, action) => {
 }
 
 export default timer;
+
+export const getCurrentTime = (state) => state.timer;
