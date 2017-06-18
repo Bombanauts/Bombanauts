@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { startChat, stopChat } from '../redux/chat/action-creator';
 import socket from '../socket';
 import { controls } from '../game/main';
+import { getIsChatting, getLastFiveMessages } from '../redux/chat/reducer';
 
 const styles = {
   borderStyles: {
@@ -64,11 +65,9 @@ class Chat extends Component {
   }
 
   render() {
-    const lastFiveMessages = this.props.lastFiveMessages;
-    const isChatting = this.props.isChatting;
-    const handleMessageChange = this.handleMessageChange;
-    const submitMessage = this.submitMessage;
-    const message = this.state.message;
+    const { handleMessageChange, submitMessage } = this;
+    const { lastFiveMessages, isChatting } = this.props;
+    const { message } = this.state;
 
     const chatMessages = lastFiveMessages.map((chatMessage, idx) => {
       return (<h1 key={`${idx}`} className='chat-message'>{chatMessage}</h1>)
@@ -93,14 +92,11 @@ class Chat extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  isChatting: state.chat.isChatting,
+  isChatting: getIsChatting(state),
   isPlaying: state.isPlaying,
-  lastFiveMessages: state.chat.lastFiveMessages
-})
+  lastFiveMessages: getLastFiveMessages(state)
+});
 
-const mapDispatchToProps = (dispatch) => ({
-  startChat: () => dispatch(startChat()),
-  stopChat: () => dispatch(stopChat())
-})
+const mapDispatchToProps = { startChat, stopChat };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Chat);
