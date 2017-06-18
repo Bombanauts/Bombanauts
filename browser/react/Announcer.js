@@ -1,34 +1,22 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { getKillerNickname, getVictimNickname } from '../redux/announcer/reducer';
 
 export const Announcer = (props) => {
-  let killerName;
-  let victimName;
-  if (props.killer) {
-    killerName = props.killer.nickname;
-    victimName = props.victim.nickname;
-  }
+  const { killerNickname, victimNickname } = props;
 
-  if (killerName !== undefined && killerName !== '') {
-    return (
-      <div>
-      { killerName === victimName ?
-        <h1 className='center' id='announcer'>{killerName} committed suicide.</h1> :
-        <h1 className='center' id='announcer'>{killerName} killed {victimName}.</h1> }
-      </div>
-    )
-  }
-  else {
-    return (
-      <div></div>
-    )
-  }
+  return (
+    <div>
+      { killerNickname.length !== 0 && (killerNickname === victimNickname ?
+      <h1 className='center' id='announcer'>{killerNickname} committed suicide.</h1> :
+      <h1 className='center' id='announcer'>{killerNickname} killed {victimNickname}.</h1>) }
+    </div>
+  )
 };
 
-
 const mapStateToProps = (state) => ({
-  killer: state.announcement.killer,
-  victim: state.announcement.victim
+  killerNickname: getKillerNickname(state),
+  victimNickname: getVictimNickname(state)
 });
 
 export default connect(mapStateToProps)(Announcer);
