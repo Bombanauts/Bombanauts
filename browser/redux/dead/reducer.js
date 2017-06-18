@@ -12,3 +12,5 @@ export const dead = (state = false, action) => {
 
   return state;
 };
+
+export const getDeadStatus = (state) => state.dead;
