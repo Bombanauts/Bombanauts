@@ -5,6 +5,7 @@ import { startChat, stopChat } from '../redux/chat/action-creator';
 import socket from '../socket';
 import { controls } from '../game/main';
 import { getIsChatting, getLastFiveMessages } from '../redux/chat/reducer';
+import { getIsPlaying } from '../redux/gameState/reducer';
 
 const styles = {
   borderStyles: {
@@ -93,7 +94,7 @@ class Chat extends Component {
 
 const mapStateToProps = (state) => ({
   isChatting: getIsChatting(state),
-  isPlaying: state.isPlaying,
+  isPlaying: getIsPlaying(state),
   lastFiveMessages: getLastFiveMessages(state)
 });
 
