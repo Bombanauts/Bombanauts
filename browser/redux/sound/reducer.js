@@ -12,3 +12,5 @@ export const sound = (state = true, action) => {
 
   return state;
 }
+
+export const getIsMuted = (state) => state.sound;
