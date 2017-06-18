@@ -24,8 +24,6 @@ export const chat = (state = initialState, action) => {
     default:
       return state;
   }
-
-  return state;
 };
 
 export const getIsChatting = (state) => state.chat.isChatting;
