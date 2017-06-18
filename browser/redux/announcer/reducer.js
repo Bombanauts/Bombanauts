@@ -20,3 +20,7 @@ export const announcement = (state = initialState, action) => {
 
   return newState;
 }
+
+export const getKiller = (state) => state.announcement.killer;
+
+export const getVictim = (state) => state.announcement.victim;
