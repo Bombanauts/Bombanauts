@@ -21,3 +21,7 @@ export const ownInfo = (state = initialState, action) => {
 
   return newState;
 }
+
+export const getOwnNickname = (state) => state.ownInfo.nickname;
+
+export const getOwnScore = (state) => state.ownInfo.score;

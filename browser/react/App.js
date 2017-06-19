@@ -12,11 +12,11 @@ import Winner from './Winner';
 import Dead from './Dead';
 import Timer from './Timer';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-  }
+import { getIsPlaying } from '../redux/gameState/reducer';
+import { getWinner } from '../redux/winner/reducer';
+import { getDeadStatus } from '../redux/dead/reducer';
 
+class App extends Component {
   componentDidMount() {
     delay(500)
     .then(() => {
@@ -27,9 +27,7 @@ class App extends Component {
   }
 
   render() {
-    const isPlaying = this.props.isPlaying;
-    const winner = this.props.winner;
-    const dead = this.props.dead;
+    const { isPlaying, winner, dead } = this.props;
 
     return (
       <div>
@@ -46,9 +44,9 @@ class App extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  dead: state.dead,
-  winner: state.winner,
-  isPlaying: state.isPlaying,
+  dead: getDeadStatus(state),
+  winner: getWinner(state),
+  isPlaying: getIsPlaying(state),
 });
 
 export default connect(mapStateToProps)(App);

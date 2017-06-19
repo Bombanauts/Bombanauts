@@ -40,7 +40,7 @@ class Splash extends Component {
 
   setNickname() {
     socket.emit('set_nickname', this.state.nickname);
-    this.props.start();
+    this.props.startGame();
   }
 
   // press enter to set nickname
@@ -94,6 +94,6 @@ class Splash extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({ start: () => dispatch(startGame()) });
+const mapDispatchToProps = { startGame };
 
 export default connect(null, mapDispatchToProps)(Splash);

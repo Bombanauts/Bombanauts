@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import IconButton from 'material-ui/IconButton';
 
 import { muteSound, unmuteSound } from '../redux/sound/action-creator';
+import { getIsMuted } from '../redux/sound/reducer';
 
 export const styles = {
   largeIcon: {
@@ -19,8 +20,9 @@ export const styles = {
 };
 
 const MuteButton = (props) => {
-  const muteOrUnmute = props.sound ? props.muteSound : props.unmuteSound;
-  const icon = props.sound ? "volume_up" : "volume_off";
+  const { sound, muteSound, unmuteSound } = props;
+  const muteOrUnmute = sound ? muteSound : unmuteSound;
+  const icon = sound ? "volume_up" : "volume_off";
 
   return (
     <div className="mute">
@@ -36,13 +38,8 @@ const MuteButton = (props) => {
   )
 }
 
-const mapStateToProps = (state) => ({
-  sound: state.sound
-})
+const mapStateToProps = (state) => ({ sound: getIsMuted(state) });
 
-const mapDispatchToProps = (dispatch) => ({
-  muteSound: () => dispatch(muteSound()),
-  unmuteSound: () => dispatch(unmuteSound())
-})
+const mapDispatchToProps = { muteSound, unmuteSound };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MuteButton);

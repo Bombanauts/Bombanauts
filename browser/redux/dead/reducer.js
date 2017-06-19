@@ -9,6 +9,6 @@ export const dead = (state = false, action) => {
     default:
       return state;
   }
-
-  return state;
 };
+
+export const getDeadStatus = (state) => state.dead;

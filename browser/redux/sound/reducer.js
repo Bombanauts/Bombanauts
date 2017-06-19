@@ -9,6 +9,6 @@ export const sound = (state = true, action) => {
     default:
       return state;
   }
-
-  return state;
 }
+
+export const getIsMuted = (state) => state.sound;

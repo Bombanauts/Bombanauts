@@ -1,22 +1,21 @@
 import { ANNOUNCE_KILL, REMOVE_ANNOUNCEMENT } from './constants';
 
 const initialState = {
-  killer: '',
-  victim: ''
+  killerNickname: '',
+  victimNickname: ''
 }
 
 export const announcement = (state = initialState, action) => {
-  const newState = Object.assign({}, state);
   switch (action.type) {
     case ANNOUNCE_KILL:
-      newState.killer = action.killer;
-      newState.victim = action.victim;
-      break;
+      return Object.assign({}, state, action);
     case REMOVE_ANNOUNCEMENT:
       return initialState;
     default:
       return state;
   }
-
-  return newState;
 }
+
+export const getKillerNickname = (state) => state.announcement.killerNickname;
+
+export const getVictimNickname = (state) => state.announcement.victimNickname;
