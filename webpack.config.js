@@ -2,8 +2,10 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
+  mode: "development",
   entry: './browser/react/index.js',
   output: {
     path: path.join(__dirname, 'public'),
@@ -13,27 +15,23 @@ module.exports = {
   context: __dirname,
   devtool: 'source-map',
   resolve: {
-    extensions: ['*', '.js', '.jsx', '.scss']
+    extensions: ['.js', '.jsx', '.scss'],
+    // alias: {
+    //   cannon: path.resolve(process.cwd(), 'node_modules/cannon')
+    // },
+    // modules: ['node_modules']
   },
-  // plugins: [
-  //   new webpack.DefinePlugin({
-  //     'process.env': {
-  //       NODE_ENV: JSON.stringify('production')
-  //     }
-  //   }),
-  //   new webpack.optimize.UglifyJsPlugin({
-  //     sourceMap: false,
-  //     mangle: false
-  //   })
-  // ],
+  optimization: {
+    minimizer: [new UglifyJsPlugin()],
+  },
   module: {
-    loaders: [
+    rules: [
       {
-        test: /jsx?$/,
-        exclude: /(node_modules|bower_components)/,
+        test: /\.(js|jsx)$/,
+        exclude: /(node_modules)/,
         loader: 'babel-loader',
-        query: {
-          presets: ['react', 'es2015', 'stage-2'],
+        options: {
+          presets: ['@babel/preset-env', '@babel/preset-react'],
         }
       },
       {
