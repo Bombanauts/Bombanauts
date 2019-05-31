@@ -3,9 +3,8 @@
 const path = require('path');
 const CompressionPlugin = require('compression-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const isProductionBuild = process.env.NODE_ENV === 'production';
 
-module.exports = {
+module.exports = (env, argv) => ({
   entry: './browser/react/index.js',
   output: {
     path: path.join(__dirname, 'public'),
@@ -13,7 +12,7 @@ module.exports = {
     filename: '[name].bundle.js'
   },
   context: __dirname,
-  devtool: isProductionBuild ? '' : 'source-map',
+  devtool: argv.mode === 'production' ? '' : 'source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.scss'],
   },
@@ -30,7 +29,7 @@ module.exports = {
   },
   plugins: [
     new CompressionPlugin()
-  ].concat(isProductionBuild ? new BundleAnalyzerPlugin() : []),
+  ].concat(argv.mode === 'production' ? [] : new BundleAnalyzerPlugin()),
   module: {
     rules: [
       {
@@ -51,4 +50,4 @@ module.exports = {
       }
     ]
   }
-};
+});
