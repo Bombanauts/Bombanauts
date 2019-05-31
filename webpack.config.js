@@ -1,29 +1,36 @@
 'use strict';
 
 const path = require('path');
-const webpack = require('webpack');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const isProductionBuild = process.env.NODE_ENV === 'production';
 
 module.exports = {
-  mode: "development",
   entry: './browser/react/index.js',
   output: {
     path: path.join(__dirname, 'public'),
     publicPath: '/',
-    filename: './bundle.js'
+    filename: '[name].bundle.js'
   },
   context: __dirname,
-  devtool: 'source-map',
+  devtool: isProductionBuild ? '' : 'source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.scss'],
-    // alias: {
-    //   cannon: path.resolve(process.cwd(), 'node_modules/cannon')
-    // },
-    // modules: ['node_modules']
   },
   optimization: {
-    minimizer: [new UglifyJsPlugin()],
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all'
+        }
+      }
+    }
   },
+  plugins: [
+    new CompressionPlugin()
+  ].concat(isProductionBuild ? new BundleAnalyzerPlugin() : []),
   module: {
     rules: [
       {
@@ -43,8 +50,5 @@ module.exports = {
         loader: 'file'
       }
     ]
-  },
-  stats: {
-    warnings: false
   }
 };
