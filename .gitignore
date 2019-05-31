@@ -1,7 +1,13 @@
 node_modules
 bower_components
-public/bundle.js
-public/bundle.js.map
+public/main.bundle.js
+public/main.bundle.js.gz
+public/main.bundle.js.map
+public/main.bundle.js.map.gz
+public/vendors.bundle.js
+public/vendors.bundle.js.gz
+public/vendors.bundle.js.map
+public/vendors.bundle.js.map.gz
 .DS_Store
 .DS_Store?
 npm-debug.log

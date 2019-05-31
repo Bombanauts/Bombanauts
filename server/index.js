@@ -4,6 +4,7 @@ const http = require('http');
 const server = http.createServer();
 const port = process.env.PORT || 1337;
 const express = require('express');
+const expressStaticGzip = require('express-static-gzip');
 const app = express();
 const socketio = require('socket.io');
 
@@ -189,7 +190,7 @@ io.on('connection', (socket) => {
 
 app.use(express.static(path.join(__dirname, '..', 'public', 'assets')));
 
-app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use(expressStaticGzip(path.join(__dirname, '..', 'public')));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));

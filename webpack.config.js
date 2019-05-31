@@ -1,39 +1,44 @@
 'use strict';
 
 const path = require('path');
-const webpack = require('webpack');
+const CompressionPlugin = require('compression-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const isProductionBuild = process.env.NODE_ENV === 'production';
 
 module.exports = {
   entry: './browser/react/index.js',
   output: {
     path: path.join(__dirname, 'public'),
     publicPath: '/',
-    filename: './bundle.js'
+    filename: '[name].bundle.js'
   },
   context: __dirname,
-  devtool: 'source-map',
+  devtool: isProductionBuild ? '' : 'source-map',
   resolve: {
-    extensions: ['*', '.js', '.jsx', '.scss']
+    extensions: ['.js', '.jsx', '.scss'],
   },
-  // plugins: [
-  //   new webpack.DefinePlugin({
-  //     'process.env': {
-  //       NODE_ENV: JSON.stringify('production')
-  //     }
-  //   }),
-  //   new webpack.optimize.UglifyJsPlugin({
-  //     sourceMap: false,
-  //     mangle: false
-  //   })
-  // ],
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all'
+        }
+      }
+    }
+  },
+  plugins: [
+    new CompressionPlugin()
+  ].concat(isProductionBuild ? new BundleAnalyzerPlugin() : []),
   module: {
-    loaders: [
+    rules: [
       {
-        test: /jsx?$/,
-        exclude: /(node_modules|bower_components)/,
+        test: /\.(js|jsx)$/,
+        exclude: /(node_modules)/,
         loader: 'babel-loader',
-        query: {
-          presets: ['react', 'es2015', 'stage-2'],
+        options: {
+          presets: ['@babel/preset-env', '@babel/preset-react'],
         }
       },
       {
@@ -45,8 +50,5 @@ module.exports = {
         loader: 'file'
       }
     ]
-  },
-  stats: {
-    warnings: false
   }
 };
